@@ -1,0 +1,261 @@
+{
+  "wan22": {
+    "name": "Wan 2.2 \u00b7 Image to Video",
+    "description": "Animate a starting image. Reuses your UMT5 text encoder.",
+    "family": "wan22",
+    "kind": "video",
+    "files": [
+      {
+        "label": "Wan 2.2 TI2V 5B",
+        "filename": "wan2.2_ti2v_5B_fp16.safetensors",
+        "folder": "diffusion_models",
+        "size": 9999658848,
+        "sha256": "456f901338bd9eadbded3828b819109a9b68e8a525ca5cf8d0049a69fcfeca1e",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/ee6f4a40737a995bf5818954cfce6d59443b0f04/split_files/diffusion_models/wan2.2_ti2v_5B_fp16.safetensors"
+      },
+      {
+        "label": "Wan 2.2 VAE",
+        "filename": "wan2.2_vae.safetensors",
+        "folder": "vae",
+        "size": 1409400960,
+        "sha256": "e40321bd36b9709991dae2530eb4ac303dd168276980d3e9bc4b6e2b75fed156",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/ee6f4a40737a995bf5818954cfce6d59443b0f04/split_files/vae/wan2.2_vae.safetensors"
+      }
+    ]
+  },
+  "ltx2": {
+    "name": "LTX-2 \u00b7 Audio & Video",
+    "description": "19B distilled FP8 model. Text or image to video with optional audio; uses CPU offloading on 16 GB GPUs.",
+    "family": "ltx2",
+    "kind": "video",
+    "files": [
+      {
+        "label": "LTX-2 distilled FP8",
+        "filename": "ltx-2-19b-distilled-fp8.safetensors",
+        "folder": "checkpoints",
+        "size": 27078716346,
+        "sha256": "8ae14327130c6ffdc87705b02c8e7654aa5c6d9a7f28a52d0acc1c30cb0d2932",
+        "url": "https://huggingface.co/Lightricks/LTX-2/resolve/dfcc2108383fe1aaa0584bdf55d368a4bdadd90c/ltx-2-19b-distilled-fp8.safetensors"
+      },
+      {
+        "label": "LTX-2 Gemma text encoder FP8",
+        "filename": "gemma_3_12B_it_fp8_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 13205434827,
+        "sha256": "60216ce97c01c3a8753c2dfd0a89fc76e16fbe446d1a32ef8f1b528ac8bae466",
+        "url": "https://huggingface.co/Comfy-Org/ltx-2/resolve/ccde4ba417d7900669fd56dd292a883cee11ff37/split_files/text_encoders/gemma_3_12B_it_fp8_scaled.safetensors"
+      }
+    ]
+  },
+  "juggernaut": {
+    "name": "Juggernaut XL v9",
+    "description": "SDXL model for realistic photography and detailed subjects.",
+    "family": "sdxl",
+    "kind": "image",
+    "files": [
+      {
+        "label": "Juggernaut XL v9",
+        "filename": "Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors",
+        "folder": "checkpoints",
+        "size": 7105348188,
+        "sha256": "c9e3e68f89b8e38689e1097d4be4573cf308de4e3fd044c64ca697bdb4aa8bca",
+        "url": "https://huggingface.co/RunDiffusion/Juggernaut-XL-v9/resolve/cf419233522daa0b9ea36c3aff98fa2cab1fb0fb/Juggernaut-XL_v9_RunDiffusionPhoto_v2.safetensors"
+      }
+    ],
+    "editing": true,
+    "defaults": {
+      "steps": 28,
+      "cfg": 6
+    }
+  },
+  "dreamshaper": {
+    "name": "DreamShaper XL Turbo 2.1",
+    "description": "Fast SDXL model for illustrations, fantasy and stylized images.",
+    "family": "sdxl",
+    "kind": "image",
+    "files": [
+      {
+        "label": "DreamShaper XL Turbo 2.1",
+        "filename": "DreamShaperXL_Turbo_v2_1.safetensors",
+        "folder": "checkpoints",
+        "size": 6939220250,
+        "sha256": "4496b36d48bfd7cfe4e5dbce3485db567bcefa2bef7238d290dbd45612125083",
+        "url": "https://huggingface.co/Lykon/dreamshaper-xl-v2-turbo/resolve/f70ad5bce436c640d23fc02cd0a6ccc787280b6e/DreamShaperXL_Turbo_v2_1.safetensors"
+      }
+    ],
+    "editing": true,
+    "defaults": {
+      "steps": 8,
+      "cfg": 2
+    }
+  },
+  "zimage": {
+    "name": "Z-Image-Turbo",
+    "description": "Fast text-to-image generation with natural language prompts.",
+    "family": "zimage",
+    "kind": "image",
+    "editing": false,
+    "defaults": {
+      "steps": 8,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "z_image_turbo_bf16.safetensors",
+        "filename": "z_image_turbo_bf16.safetensors",
+        "folder": "diffusion_models",
+        "size": 12309866400,
+        "sha256": "2407613050b809ffdff18a4ac99af83ea6b95443ecebdf80e064a79c825574a6",
+        "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/6fc90a3b1b653e935a0d175e260736de25b84df5/split_files/diffusion_models/z_image_turbo_bf16.safetensors"
+      },
+      {
+        "label": "qwen_3_4b_fp8_mixed.safetensors",
+        "filename": "qwen_3_4b_fp8_mixed.safetensors",
+        "folder": "text_encoders",
+        "size": 5631994051,
+        "sha256": "72450b19758172c5a7273cf7de729d1c17e7f434a104a00167624cba94f68f15",
+        "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/6fc90a3b1b653e935a0d175e260736de25b84df5/split_files/text_encoders/qwen_3_4b_fp8_mixed.safetensors"
+      },
+      {
+        "label": "ae.safetensors",
+        "filename": "ae.safetensors",
+        "folder": "vae",
+        "size": 335304388,
+        "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
+        "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/6fc90a3b1b653e935a0d175e260736de25b84df5/split_files/vae/ae.safetensors"
+      }
+    ]
+  },
+  "fluxklein": {
+    "name": "FLUX.2 Klein 4B",
+    "description": "Fast image generation and instruction editing with multiple references.",
+    "family": "flux2",
+    "kind": "image",
+    "editing": true,
+    "defaults": {
+      "steps": 4,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "flux-2-klein-4b-fp8.safetensors",
+        "filename": "flux-2-klein-4b-fp8.safetensors",
+        "folder": "diffusion_models",
+        "size": 4070624520,
+        "sha256": "97ed34fe0567e436200f2faee3939b88f2b5d99f8af2a4dc16532c4245c0ccb6",
+        "url": "https://huggingface.co/black-forest-labs/FLUX.2-klein-4b-fp8/resolve/5b4408e59397a4a37ccb46afe426d8ed86379441/flux-2-klein-4b-fp8.safetensors"
+      },
+      {
+        "label": "qwen_3_4b_fp8_mixed.safetensors",
+        "filename": "qwen_3_4b_fp8_mixed.safetensors",
+        "folder": "text_encoders",
+        "size": 5631994051,
+        "sha256": "72450b19758172c5a7273cf7de729d1c17e7f434a104a00167624cba94f68f15",
+        "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/6fc90a3b1b653e935a0d175e260736de25b84df5/split_files/text_encoders/qwen_3_4b_fp8_mixed.safetensors"
+      },
+      {
+        "label": "flux2-vae.safetensors",
+        "filename": "flux2-vae.safetensors",
+        "folder": "vae",
+        "size": 336213556,
+        "sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5",
+        "url": "https://huggingface.co/Comfy-Org/flux2-dev/resolve/ed33133cd56476eac818c0943b6f9419b3e4a3a1/split_files/vae/flux2-vae.safetensors"
+      }
+    ]
+  },
+  "qwenimage": {
+    "name": "Qwen-Image-2512",
+    "description": "Detailed image generation with strong typography. Large model; uses RAM offloading.",
+    "family": "qwen",
+    "kind": "image",
+    "editing": false,
+    "defaults": {
+      "steps": 40,
+      "cfg": 4
+    },
+    "files": [
+      {
+        "label": "qwen_image_2512_fp8_e4m3fn.safetensors",
+        "filename": "qwen_image_2512_fp8_e4m3fn.safetensors",
+        "folder": "diffusion_models",
+        "size": 20430679144,
+        "sha256": "5dc80554d5d83390046a2f4a94ece06afb7700bf7b0aaf8bde9769793875876b",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/diffusion_models/qwen_image_2512_fp8_e4m3fn.safetensors"
+      },
+      {
+        "label": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+        "filename": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 9384670680,
+        "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors"
+      },
+      {
+        "label": "qwen_image_vae.safetensors",
+        "filename": "qwen_image_vae.safetensors",
+        "folder": "vae",
+        "size": 253806246,
+        "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/vae/qwen_image_vae.safetensors"
+      }
+    ]
+  },
+  "illustrious": {
+    "name": "Illustrious XL 2.0",
+    "description": "Illustration and anime image generation, redraw and masked editing.",
+    "family": "sdxl",
+    "kind": "image",
+    "editing": true,
+    "defaults": {
+      "steps": 28,
+      "cfg": 5
+    },
+    "files": [
+      {
+        "label": "Illustrious-XL-v2.0.safetensors",
+        "filename": "Illustrious-XL-v2.0.safetensors",
+        "folder": "checkpoints",
+        "size": 6938040674,
+        "sha256": "c2a1a3eaa13d4c107dc7e00c3fe830cab427aa026362740ea094745b3422a331",
+        "url": "https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0/resolve/69459c1fe6f46db41ab31e6114f05acc0e06bcaa/Illustrious-XL-v2.0.safetensors"
+      }
+    ]
+  },
+  "qwenedit": {
+    "name": "Qwen Image Edit 2511",
+    "description": "Instruction editing with up to three images. Large model; uses RAM offloading.",
+    "family": "qwenedit",
+    "kind": "editor",
+    "editing": true,
+    "defaults": {
+      "steps": 40,
+      "cfg": 3
+    },
+    "files": [
+      {
+        "label": "qwen_image_edit_2511_fp8mixed.safetensors",
+        "filename": "qwen_image_edit_2511_fp8mixed.safetensors",
+        "folder": "diffusion_models",
+        "size": 20533762817,
+        "sha256": "c9fdc158e46d3b61ef75f21ae866ca2fe808bf4a53643120d1c1e87c19280a4e",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-Edit_ComfyUI/resolve/f68ace85e60b4a02a323e394253731947657b7d2/split_files/diffusion_models/qwen_image_edit_2511_fp8mixed.safetensors"
+      },
+      {
+        "label": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+        "filename": "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 9384670680,
+        "sha256": "cb5636d852a0ea6a9075ab1bef496c0db7aef13c02350571e388aea959c5c0b4",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/text_encoders/qwen_2.5_vl_7b_fp8_scaled.safetensors"
+      },
+      {
+        "label": "qwen_image_vae.safetensors",
+        "filename": "qwen_image_vae.safetensors",
+        "folder": "vae",
+        "size": 253806246,
+        "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/vae/qwen_image_vae.safetensors"
+      }
+    ]
+  }
+}

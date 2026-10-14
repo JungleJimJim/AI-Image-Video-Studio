@@ -1,0 +1,48 @@
+A.I. Image & Video Studio 1.2.1 - third-party notices
+
+The setup and application bundle Python, Tcl/Tk, PyInstaller's bootloader and
+the official 7zr.exe archive extractor. The extractor's license is supplied
+in 7zip-license.txt alongside this file. Source code and further notices:
+
+7-Zip / 7zr: https://7-zip.org/ (see 7zip-license.txt)
+7-Zip source: https://7-zip.org/download.html
+Python license and source: https://docs.python.org/3/license.html
+Tcl/Tk license and source: https://www.tcl-lang.org/software/tcltk/license.html
+PyInstaller: https://pyinstaller.org/en/stable/license.html
+
+ComfyUI and model weights are downloaded separately by the installer. Their
+license files and notices are provided by their respective upstream projects:
+
+ComfyUI v0.39.0 (GPL-3.0):
+https://github.com/Comfy-Org/ComfyUI/tree/v0.39.0
+
+Model checkpoint (repository metadata declares CreativeML Open RAIL-M):
+https://huggingface.co/NSFW-API/NSFW_Wan_1.3b
+
+Text encoder and VAE:
+https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged
+
+Exact upstream URLs, revisions, sizes and SHA-256 checksums are recorded in
+assets/manifest.json in the source archive.
+
+The native desktop host uses Microsoft WebView2 SDK 1.0.4258.31.
+See WebView2-LICENSE.txt and https://learn.microsoft.com/en-us/microsoft-edge/webview2/concepts/distribution .
+The signed Evergreen runtime bootstrapper is bundled and only run if the runtime is missing.
+
+Optional generators (downloaded separately; consult each upstream model license):
+Wan 2.2: https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged
+LTX-2: https://huggingface.co/Lightricks/LTX-2
+LTX-2 terms: https://github.com/Lightricks/LTX-2/blob/main/LICENSE
+Gemma encoder repack: https://huggingface.co/Comfy-Org/ltx-2
+Juggernaut XL v9: https://huggingface.co/RunDiffusion/Juggernaut-XL-v9
+DreamShaper XL Turbo: https://huggingface.co/Lykon/dreamshaper-xl-v2-turbo
+Optional model revisions, sizes and SHA-256 hashes are in assets/packs.json.
+
+Image and editing packs added in 1.3.0 (consult upstream licenses):
+Z-Image: https://huggingface.co/Comfy-Org/z_image_turbo
+FLUX.2 Klein: https://huggingface.co/black-forest-labs/FLUX.2-klein-4b-fp8
+FLUX.2 VAE: https://huggingface.co/Comfy-Org/flux2-dev
+Qwen-Image: https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI
+Qwen Image Edit: https://huggingface.co/Comfy-Org/Qwen-Image-Edit_ComfyUI
+Illustrious XL 2.0: https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0
+Workflow templates: https://github.com/Comfy-Org/workflow_templates

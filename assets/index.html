@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="studio-token" content="__API_TOKEN__"><title>A.I. Image &amp; Video Studio</title><link rel="stylesheet" href="/studio.css"><script src="/studio.js" defer></script></head>
+<body>
+<header class="top"><img class="brand" src="/studio-logo.png" alt="AI Image &amp; Video Studio"><nav aria-label="Studio tools" id="navigation"></nav><button id="fullscreen" title="Toggle fullscreen (F11)">⛶ <span>Fullscreen</span></button></header>
+<div class="resources" aria-label="Live computer resource usage"><span id="gpu-name">Checking hardware…</span><div id="meters"></div><button class="help" data-help="resources" aria-label="About resource usage">?</button></div>
+<main><div class="page-heading"><div><h1 id="page-title">Images</h1><p id="page-description"></p></div><span class="badge" id="version"></span></div><div id="pages"></div></main>
+<footer class="status"><div class="status-copy"><strong id="stage" role="status">Opening studio…</strong><span id="error" role="alert"></span><div class="track"><div id="progress"></div></div></div><button id="cancel" hidden>Cancel operation</button><button id="release">Release GPU</button><button id="log-toggle">Activity</button></footer>
+<dialog id="help-dialog"><div class="dialog-heading"><h2 id="help-title"></h2><button data-close aria-label="Close help">×</button></div><p id="help-copy"></p></dialog>
+<dialog id="library-dialog" class="wide"><div class="dialog-heading"><h2 id="picker-title">Choose an image</h2><button data-close aria-label="Close library">×</button></div><div id="picker-library" class="library-content"></div></dialog>
+<dialog id="media-dialog" class="wide"><div class="dialog-heading"><h2 id="media-title">Library item</h2><button data-close aria-label="Close preview">×</button></div><div id="media-body"></div></dialog>
+<dialog id="log-dialog" class="wide"><div class="dialog-heading"><h2>Activity</h2><button data-close aria-label="Close activity">×</button></div><pre id="activity"></pre></dialog>
+<input hidden id="import-file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Import image file">
+<div id="toast" role="status" hidden></div>
+</body></html>
