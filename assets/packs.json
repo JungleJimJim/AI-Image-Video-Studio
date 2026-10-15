@@ -257,5 +257,52 @@
         "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/vae/qwen_image_vae.safetensors"
       }
     ]
+  },
+  "qwen21": {
+    "name": "Qwen-Image 2.1 \u00b7 Detail Enhancer",
+    "kind": "enhancer",
+    "family": "qwen21",
+    "description": "Optional image enhancement with Elusarca\u2019s detail LoRA. Requires its own Qwen 2.1 base and encoder; originals are kept.",
+    "license": "Qwen Research License; see upstream terms",
+    "source": "https://civitai.com/models/2956730/elusarcas-qwen-21-detail-enhancer",
+    "defaults": {
+      "steps": 25,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "qwen_image_2.1_int8_convrot.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/diffusion_models/qwen_image_2.1_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "filename": "qwen_image_2.1_int8_convrot.safetensors",
+        "size": 7256783064,
+        "sha256": "cb74113cb03faecd79611b01fd7fd642f0aa60d6f0b95086abee214d75eaa57d"
+      },
+      {
+        "label": "qwen3vl_8b_int8_convrot.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/text_encoders/qwen3vl_8b_int8_convrot.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3vl_8b_int8_convrot.safetensors",
+        "size": 9350798360,
+        "sha256": "8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f"
+      },
+      {
+        "label": "qwen_image_2.1_vae_bf16.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors",
+        "folder": "vae",
+        "filename": "qwen_image_2.1_vae_bf16.safetensors",
+        "size": 675509688,
+        "sha256": "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9"
+      },
+      {
+        "label": "Elusarca Qwen 2.1 detail enhancer",
+        "url": "https://huggingface.co/reverentelusarca/elusarcas-qwen-2.1-detail-enhancer-lora/resolve/aedadc6b65a15e6b261c0ec61a4587c3e7119514/elusarcas-qwen2-1-detailer-v1.safetensors",
+        "folder": "loras/studio/qwen21",
+        "filename": "elusarcas-qwen2-1-detailer-v1.safetensors",
+        "size": 79744352,
+        "sha256": "c1298f51eb090473f924314475952710a2f0322f1df65c0290f3e14997244f96"
+      }
+    ],
+    "license_url": "https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE"
   }
 }

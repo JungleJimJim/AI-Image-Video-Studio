@@ -14,7 +14,7 @@ import time
 import urllib.parse
 import urllib.request
 
-from common import (APP_NAME, CREATE_NO_WINDOW, VERSION, app_root, atomic_json,
+from common import (APP_NAME, CREATE_NO_WINDOW, VERSION, app_root, atomic_json, runtime_ready,
                     gpu_info, install_ready, load_json, manifest, resource)
 from downloads import Cancelled, provision
 from engine import DEFAULTS, Engine, validate_options
@@ -26,6 +26,9 @@ from packs import inventory as pack_inventory, ready as pack_ready, install as i
 from workflows import IMAGE_DEFAULTS, validate_image_options, validate_edit_options
 from media import Thumbnails, catalog_page, crop_options, record as media_record, stage_mask
 from resources import ResourceMonitor
+from job_queue import JobQueue, ACTIVE
+import enhancements
+from model_removal import removal_plan, uninstall as uninstall_model
 
 
 class Studio:
@@ -57,6 +60,9 @@ class Studio:
         self.resources = ResourceMonitor()
         self.thumbnails = Thumbnails(self.root)
         self.revision = 0
+        self.queue = JobQueue(self.root)
+        self.closing = False
+        self.removing_model = None
 
     def report(self, message, progress):
         with self.lock:
@@ -71,16 +77,25 @@ class Studio:
         with self.lock:
             if not self.state["busy"] and self.state["stage"] == "Setup needed" and install_ready(self.root):
                 self.state["stage"] = "Ready"
+            base=manifest()['models']
+            from packs import model_path
+            base_info=dict(id='wan13',name='NSFW Wan 1.3B · E14',kind='video',family='wan13',
+                description='The original text-to-video model. Runtime software remains available if these weights are removed.',
+                ready=install_ready(self.root),size=sum(f['size'] for f in base),
+                remaining=sum(f['size'] for f in base if not model_path(self.root,f).is_file() or model_path(self.root,f).stat().st_size!=f['size']))
             return {**self.state, "ready": install_ready(self.root), "gpu": self.gpu,
+                    'base_model':base_info,
                     "settings": self.settings, "library": self.videos[-30:][::-1],
                     "loras": installed_loras(self.root),
                     'lora_models': list(lora_models().values()),
                     'packs': pack_inventory(self.root), 'images': self.images[-60:][::-1],
+                    'runtime_ready': runtime_ready(self.root), 'queue': self.queue.snapshot(),
+                    'enhancers': enhancements.inventory(self.root),
                     'resources': self.resources.snapshot(),
                     'library_revision': self.revision, 'library_count': len(self.images)+len(self.videos),
                     "log": self.events[-40:], "root": str(self.root), "version": VERSION}
 
-    def run_job(self, target):
+    def run_job(self, target, queue_id=None):
         with self.lock:
             if self.state["busy"]:
                 raise ValueError("Wait for the current operation to finish, or cancel it first.")
@@ -88,11 +103,14 @@ class Studio:
             self.engine.cancel.clear()
             self.state.update(busy=True, error="", result=None, progress=None, stage="Starting…")
         def work():
+            outcome='completed';detail=''
             try:
                 target()
             except Cancelled as error:
+                outcome='cancelled';detail=str(error)
                 self.report(str(error), 0)
             except Exception as error:
+                outcome='failed';detail=str(error)
                 self.report("Operation failed. See the error below.", 0)
                 with self.lock:
                     self.state["error"] = str(error)
@@ -101,14 +119,25 @@ class Studio:
                     log.write(time.strftime("%Y-%m-%d %H:%M:%S") + " " + str(error) + "\n")
             finally:
                 with self.lock:
+                    if queue_id:
+                        item=self.queue.get(queue_id)
+                        item.update(status=outcome,error=detail,finished=time.strftime('%Y-%m-%d %H:%M:%S'))
+                        if outcome=='failed':self.queue.paused=True
+                        if outcome=='completed' and self.state.get('latest_media'):
+                            item['result_id']=self.state['latest_media']['id']
+                        self.queue.save()
+                    self.removing_model=None
                     self.state["busy"] = False
+                    self._kick_queue()
         self.worker = threading.Thread(target=work, daemon=True)
         self.worker.start()
 
-    def generate(self, raw):
+    def generate(self, raw, prepare=False, output=None):
+        output=output or self.settings['output']
         options = validate_options(raw)
         options['loras'] = self.selected_loras(options['model'],raw)
-        if not install_ready(self.root):
+        options['upscale']=self.auto_enhancement(raw.get('upscale'), 'video')
+        if not (install_ready(self.root) or runtime_ready(self.root)) or (options['model']=='wan13' and not install_ready(self.root)):
             raise ValueError("Install the runtime and model in Settings first.")
         if options['model'] != 'wan13' and not pack_ready(self.root, options['model']):
             raise ValueError('Install the selected video model pack in Settings first.')
@@ -122,34 +151,42 @@ class Studio:
         def job():
             if source:
                 options['input_file'] = stage_image(self.root, source)
-            self.remember_loras(options['model'],options['loras'])
-            self.settings["options"] = {**options, "seed": raw.get("seed", "")}
-            atomic_json(self.root / "settings.json", self.settings)
-            file, workflow, seconds = self.engine.generate(options, self.settings["output"])
+            with self.lock:
+                self.remember_loras(options['model'],options['loras'])
+                self.settings["options"] = {**options, "seed": raw.get("seed", "")}
+                atomic_json(self.root / "settings.json", self.settings)
+            file, workflow, seconds = self.engine.generate(options, output)
             info = {"id": secrets.token_hex(12), "path": str(file), "name": file.name,
-                    "created": time.strftime("%Y-%m-%d %H:%M"), "options": options, "seconds": seconds}
+                    "created": time.strftime("%Y-%m-%d %H:%M"), "options": options, "seconds": seconds,
+                    'width':options['width'],'height':options['height']}
             atomic_json(file.with_suffix(".json"), {**info, "workflow": workflow})
             with self.lock:
                 self.videos.append(info)
                 self.revision += 1
                 atomic_json(self.root / "library.json", self.videos)
                 self.state["result"] = info
+                self.state['latest_media']={**info,'media_type':'video'}
             self.report(f"Video saved · {seconds:.0f} seconds to generate · seed {options['seed']}", 1)
+            if options['upscale']['enabled']:self.enhance_record(info,'video',options['upscale']['options'],output)
+        if prepare:return job,options
         self.run_job(job)
 
-    def generate_image(self, raw):
+    def generate_image(self, raw, prepare=False, output=None):
+        output=output or self.settings['output']
         options = validate_image_options(raw)
         options['loras'] = self.selected_loras(options['model'],raw)
+        options['upscale']=self.auto_enhancement(raw.get('upscale'),'image')
         from packs import catalog
         if catalog()[options['model']]['kind'] != 'image':
             raise ValueError('That model needs a starting image. Use the Image Editor.')
-        if not install_ready(self.root) or not pack_ready(self.root, options['model']):
+        if not (install_ready(self.root) or runtime_ready(self.root)) or not pack_ready(self.root, options['model']):
             raise ValueError('Install the base runtime and selected image model in Settings first.')
         def job():
-            self.remember_loras(options['model'],options['loras'])
-            self.settings['image_options'] = {**options, 'seed': raw.get('seed','')}
-            atomic_json(self.root / 'settings.json', self.settings)
-            folder = Path(self.settings['output']) / 'Images'
+            with self.lock:
+                self.remember_loras(options['model'],options['loras'])
+                self.settings['image_options'] = {**options, 'seed': raw.get('seed','')}
+                atomic_json(self.root / 'settings.json', self.settings)
+            folder = Path(output) / 'Images'
             file, workflow, seconds = self.engine.generate(options, folder, kind='image')
             info = dict(id=secrets.token_hex(12), path=str(file), name=file.name, kind='generated',
                         created=time.strftime('%Y-%m-%d %H:%M'), options=options, seconds=seconds,
@@ -162,6 +199,8 @@ class Studio:
                 self.state['image_result'] = info
                 self.state['latest_media'] = {**info, 'media_type':'image'}
             self.report(f'Image saved · {seconds:.0f} seconds · seed {options["seed"]}', 1)
+            if options['upscale']['enabled']:self.enhance_record(info,'image',options['upscale']['options'],output)
+        if prepare:return job,options
         self.run_job(job)
 
     def import_image(self, data):
@@ -193,10 +232,12 @@ class Studio:
             self.state['image_result']=info
             self.state['latest_media']={**info,'media_type':'image'}
 
-    def edit_image(self, raw):
+    def edit_image(self, raw, prepare=False, output=None):
+        output=output or self.settings['output']
         options=validate_edit_options(raw)
         options['loras'] = self.selected_loras(options['model'],raw)
-        if not install_ready(self.root) or not pack_ready(self.root,options['model']):
+        options['upscale']=self.auto_enhancement(raw.get('upscale'),'image')
+        if not (install_ready(self.root) or runtime_ready(self.root)) or not pack_ready(self.root,options['model']):
             raise ValueError('Install the runtime and selected editor model in Models first.')
         source=self.find_media(options['source_image'])
         refs=[self.find_media(x) for x in options['references']]
@@ -207,11 +248,12 @@ class Studio:
             try:
                 if mask:
                     options['mask_file']=stage_mask(self.root,mask,options['width'],options['height'])
-                self.remember_loras(options['model'],options['loras'])
-                self.settings['edit_options']={k:v for k,v in options.items() if k not in ('input_file','reference_files','mask_file')}
-                self.settings['edit_options']['seed']=raw.get('seed','')
-                atomic_json(self.root/'settings.json',self.settings)
-                file,workflow,seconds=self.engine.generate(options,Path(self.settings['output'])/'Images',kind='edit')
+                with self.lock:
+                    self.remember_loras(options['model'],options['loras'])
+                    self.settings['edit_options']={k:v for k,v in options.items() if k not in ('input_file','reference_files','mask_file')}
+                    self.settings['edit_options']['seed']=raw.get('seed','')
+                    atomic_json(self.root/'settings.json',self.settings)
+                file,workflow,seconds=self.engine.generate(options,Path(output)/'Images',kind='edit')
                 mask_path = None
                 if options.get('mask_file'):
                     import shutil
@@ -225,11 +267,153 @@ class Studio:
                     info['mask_path'] = str(mask_path)
                 self.add_image(info,workflow)
                 self.report('Edited image saved in the library.',1)
+                if options['upscale']['enabled']:self.enhance_record(info,'image',options['upscale']['options'],output)
             finally:
                 if options.get('mask_file'):
                     from common import comfy_root
                     (comfy_root(self.root)/'input'/options['mask_file']).unlink(missing_ok=True)
+        if prepare:return job,{**options,**({'mask':mask} if mask else {})}
         self.run_job(job)
+
+    def auto_enhancement(self,raw,kind):
+        if not raw or (isinstance(raw,dict) and not raw.get('enabled')):return dict(enabled=False)
+        if not isinstance(raw,dict) or raw.get('enabled') is not True:raise ValueError('Choose whether to enhance the result.')
+        if not (pack_ready(self.root,'qwen21') if kind=='image' else enhancements.vsr_ready(self.root)):
+            raise ValueError('Install '+('Qwen 2.1 Detail Enhancer' if kind=='image' else 'RTX video enhancement')+' in Models before enabling this option.')
+        options=enhancements.validate(raw.get('options',{}),kind)
+        if kind=='image':
+            options['loras']=self.selected_loras('qwen21',raw.get('options',{}))
+            if len([x for x in options['loras'] if x['name']!='studio/qwen21/elusarcas-qwen2-1-detailer-v1.safetensors'])>7:
+                raise ValueError('Use at most seven extra LoRAs with the built-in detail enhancer.')
+        return dict(enabled=True,options=options)
+
+    def enhance_record(self,source,kind,options,output):
+        if self.cancel.is_set():raise Cancelled('Enhancement cancelled. The original is preserved.')
+        if kind=='image':
+            w,h=enhancements.image_size(source['width'],source['height'],options['scale'])
+            o={**options,'model':'qwen21','width':w,'height':h,'input_file':stage_image(self.root,source)}
+            file,workflow,seconds=self.engine.generate(o,Path(output)/'Images',kind='enhance')
+            info=dict(id=secrets.token_hex(12),path=str(file),name=file.name,kind='enhanced',parent_id=source['id'],
+                      created=time.strftime('%Y-%m-%d %H:%M'),options=o,seconds=seconds,width=w,height=h)
+            self.add_image(info,workflow)
+        else:
+            self.engine.stop()
+            result=enhancements.run_video(self.root,source['path'],Path(output)/'Enhanced Videos',options,self.report,self.cancel)
+            file=Path(result['output']);w,h=map(int,result['resolution'].split('x'))
+            info=dict(id=secrets.token_hex(12),path=str(file),name=file.name,kind='enhanced',parent_id=source['id'],
+                      created=time.strftime('%Y-%m-%d %H:%M'),options=options,seconds=result['seconds'],width=w,height=h)
+            atomic_json(file.with_suffix('.json'),info)
+            with self.lock:
+                self.videos.append(info);self.revision+=1;atomic_json(self.root/'library.json',self.videos)
+                self.state['result']=info;self.state['latest_media']={**info,'media_type':'video'}
+        self.report('Enhanced copy saved. The original remains in the library.',1)
+
+    def upscale(self,raw,kind,prepare=False,output=None):
+        source=self.find_media(raw.get('source_id'),kind)
+        wrapper=self.auto_enhancement(dict(enabled=True,options=raw),kind)
+        options={**wrapper['options'],'source_id':source['id'],'model':'qwen21' if kind=='image' else 'rtx_vsr'}
+        def job():self.enhance_record(source,kind,wrapper['options'],output or self.settings['output'])
+        return (job,options) if prepare else self.run_job(job)
+
+    def prepare_queued(self,kind,raw,output=None):
+        if kind=='image':return self.generate_image(raw,prepare=True,output=output)
+        if kind=='video':return self.generate(raw,prepare=True,output=output)
+        if kind=='edit':return self.edit_image(raw,prepare=True,output=output)
+        if kind in ('enhance_image','enhance_video'):return self.upscale(raw,kind.split('_')[1],prepare=True,output=output)
+        raise ValueError('Choose a supported queue job.')
+
+    def queue_options(self,options):
+        options=dict(options)
+        mask=options.pop('mask','')
+        if mask:
+            if not isinstance(mask,str) or not mask.startswith('data:image/png;base64,') or len(mask)>35*1024**2:
+                raise ValueError('Choose a valid painted PNG mask.')
+            name=secrets.token_hex(12)+'.txt';folder=self.root/'queue-masks';folder.mkdir(exist_ok=True)
+            (folder/name).write_text(mask,encoding='utf-8');options['_mask']=name
+        return options
+
+    def hydrate_queued(self,item):
+        raw=dict(item['options']);name=raw.pop('_mask',None)
+        if name:
+            import re
+            if not isinstance(name,str) or not re.fullmatch(r'[0-9a-f]{24}\.txt',name):raise ValueError('Invalid saved queue mask.')
+            raw['mask']=(self.root/'queue-masks'/name).read_text(encoding='utf-8')
+        return raw
+
+    def enqueue(self,kind,raw,priority=5):
+        with self.lock:
+            _,options=self.prepare_queued(kind,raw)
+            if self.removing_model and (options.get('model')==self.removing_model or (self.removing_model=='qwen21' and options.get('upscale',{}).get('enabled'))):
+                raise ValueError('That model is being removed. Wait for removal to finish.')
+            item=self.queue.add(kind,self.queue_options(options),priority,self.settings['output'])
+            self._kick_queue()
+            return item['id']
+
+    def _kick_queue(self):
+        if self.state['busy'] or self.closing:return
+        item=self.queue.next()
+        if not item:return
+        try:
+            target,_=self.prepare_queued(item['kind'],self.hydrate_queued(item),item['output'])
+        except Exception as error:
+            item.update(status='failed',error=str(error));self.queue.paused=True;self.queue.save()
+            self.state.update(error=str(error),stage='Queue paused. Review the failed job.')
+            return
+        item.update(status='running',started=time.strftime('%Y-%m-%d %H:%M:%S'));self.queue.save()
+        self.run_job(target,queue_id=item['id'])
+
+    def queue_action(self,data):
+        with self.lock:
+            action=data.get('action');identifier=data.get('id')
+            if action in ('pause','resume'):
+                self.queue.paused=action=='pause';self.queue.save()
+            elif action=='clear_finished':
+                self.queue.jobs=[x for x in self.queue.jobs if x['status'] in ACTIVE];self.queue.save()
+            elif action=='cancel_all':
+                self.queue.paused=True
+                for item in self.queue.jobs:
+                    if item['status']=='queued':item['status']='cancelled'
+                    elif item['status']=='running':
+                        item['cancel_requested']=True;self.cancel.set();self.engine.cancel.set()
+                self.queue.save()
+            elif action=='cancel':
+                item=self.queue.get(identifier)
+                if item['status']=='running':
+                    item['cancel_requested']=True;self.cancel.set();self.engine.cancel.set()
+                elif item['status']=='queued':item['status']='cancelled'
+                else:raise ValueError('That job is already finished.')
+                self.queue.save()
+            elif action=='move':self.queue.move(identifier,data.get('direction'))
+            elif action=='update':
+                item=self.queue.get(identifier)
+                if item['status']!='queued':raise ValueError('Only waiting jobs can be edited.')
+                options=None
+                if 'options' in data:
+                    _,options=self.prepare_queued(item['kind'],data['options'],item['output'])
+                    options=self.queue_options(options)
+                self.queue.update(identifier,options,data.get('priority'))
+            elif action=='retry':
+                item=self.queue.get(identifier)
+                if item['status'] in ACTIVE:raise ValueError('Only finished jobs can be retried.')
+                _,options=self.prepare_queued(item['kind'],self.hydrate_queued(item),item['output'])
+                self.queue.add(item['kind'],self.queue_options(options),item['priority'],item['output'])
+            else:raise ValueError('Unknown queue action.')
+            self._kick_queue()
+
+    def model_references(self,key):
+        return [x for x in self.queue.jobs if x['status'] in ACTIVE and (x['options'].get('model')==key or
+                (key=='qwen21' and x['options'].get('upscale',{}).get('enabled') and x['kind'] in ('image','edit')))]
+
+    def remove_model(self,key,ticket):
+        with self.lock:
+            if self.model_references(key):raise ValueError('Cancel or finish the queued jobs using this model before uninstalling it.')
+            self.removing_model=key
+            try:
+                def job():
+                    self.engine.stop();uninstall_model(self.root,key,ticket,self.report,self.cancel)
+                self.run_job(job)
+            except Exception:
+                self.removing_model=None;raise
 
     def transform_media(self,raw,action):
         source=self.find_media(raw.get('id'), 'video' if action=='frame' else 'image')
@@ -259,7 +443,7 @@ class Studio:
 
     def update_loras(self, selected, model='wan13'):
         with self.lock:
-            if self.state["busy"]:
+            if self.state["busy"] and not any(x['status']=='running' for x in self.queue.jobs):
                 raise ValueError("Finish or cancel the running operation before changing LoRAs.")
             validate_model(model)
             adapters = validate_selection(self.root, selected, model)
@@ -382,6 +566,16 @@ def make_handler(studio, shutdown):
                         return self.send_json(catalog_page(studio.images,studio.videos,urllib.parse.parse_qs(url.query)))
                 except ValueError as error:
                     return self.send_json({'error':str(error)},400)
+            if url.path.startswith('/api/queue/'):
+                if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
+                try:
+                    with studio.lock:
+                        item=studio.queue.get(url.path.removeprefix('/api/queue/'))
+                        raw=studio.hydrate_queued(item)
+                        identifiers=[raw.get('source_image'),raw.get('source_id'),*raw.get('references',[])]
+                        sources=[x for x in studio.images+studio.videos if x['id'] in identifiers]
+                        return self.send_json({**item,'options':raw,'sources':sources})
+                except (ValueError,OSError) as error:return self.send_json({'error':str(error)},400)
             if url.path.startswith('/thumbnail/'):
                 query=urllib.parse.parse_qs(url.query)
                 if query.get('token',[''])[0] != studio.token:
@@ -411,6 +605,8 @@ def make_handler(studio, shutdown):
                 return self.send_file(Path(record['path']), 'image/png')
             if url.path == '/studio.js':
                 return self.send_file(resource('studio.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-tools.js':
+                return self.send_file(resource('studio-tools.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio.css':
                 return self.send_file(resource('studio.css'), 'text/css; charset=utf-8')
             if url.path == '/studio-logo.png':
@@ -471,20 +667,40 @@ def make_handler(studio, shutdown):
                 return self.send_json({"error": "Invalid origin"}, 403)
             try:
                 length = int(self.headers.get("Content-Length", "0"))
-                limit = 36 * 1024**2 if self.path in ('/api/images/import','/api/images/edit') else 100000
+                limit = 36 * 1024**2 if self.path in ('/api/images/import','/api/images/edit','/api/queue/add','/api/queue/action') else 100000
                 if not 0 <= length <= limit:
                     raise ValueError("Request is too large.")
                 data = json.loads(self.rfile.read(length) or b"{}")
                 if not isinstance(data, dict):
                     raise ValueError("Expected an object.")
                 if self.path == "/api/generate":
-                    studio.generate(data)
+                    return self.send_json({'ok':True,'id':studio.enqueue('video',data,data.get('priority',5))})
                 elif self.path == '/api/images/generate':
-                    studio.generate_image(data)
+                    return self.send_json({'ok':True,'id':studio.enqueue('image',data,data.get('priority',5))})
                 elif self.path == '/api/images/import':
                     studio.import_image(data)
                 elif self.path == '/api/images/edit':
-                    studio.edit_image(data)
+                    return self.send_json({'ok':True,'id':studio.enqueue('edit',data,data.get('priority',5))})
+                elif self.path == '/api/queue/add':
+                    raw=data.get('options',{})
+                    if not isinstance(raw,dict):raise ValueError('Expected queue options.')
+                    return self.send_json({'ok':True,'id':studio.enqueue(data.get('kind'),raw,data.get('priority',5))})
+                elif self.path == '/api/queue/action':
+                    studio.queue_action(data)
+                elif self.path == '/api/models/removal-plan':
+                    return self.send_json(removal_plan(studio.root,data.get('model')))
+                elif self.path == '/api/models/uninstall':
+                    studio.remove_model(data.get('model'),data.get('ticket'))
+                elif self.path == '/api/enhancers/install-video':
+                    def install_enhancer():
+                        studio.engine.stop();enhancements.install_video(studio.root,studio.report,studio.cancel)
+                    studio.run_job(install_enhancer)
+                elif self.path == '/api/enhancers/defaults':
+                    with studio.lock:
+                        if studio.state['busy']:raise ValueError('Save enhancement defaults after the current operation finishes.')
+                        studio.settings['enhancement_defaults']={kind:enhancements.validate(data.get(kind,{}),kind) for kind in ('image','video')}
+                        studio.settings['enhancement_defaults']['image']['seed']=str(data.get('image',{}).get('seed','')).strip()
+                        atomic_json(studio.root/'settings.json',studio.settings)
                 elif self.path == '/api/images/crop':
                     studio.transform_media(data,'crop')
                 elif self.path == '/api/videos/frame':
@@ -493,13 +709,14 @@ def make_handler(studio, shutdown):
                     keys, access = data.get('packs', []), str(data.get('token',''))
                     # Check the keys before accepting a background job.
                     from packs import catalog
-                    if not isinstance(keys,list) or not keys or any(not isinstance(k,str) or k not in catalog() for k in keys):
+                    if not isinstance(keys,list) or not keys or any(not isinstance(k,str) or (k not in catalog() and k!='wan13') for k in keys):
                         raise ValueError('Choose known model packs.')
                     def pack_job():
                         studio.engine.stop()
-                        if not install_ready(studio.root):
+                        if not runtime_ready(studio.root) or 'wan13' in keys:
                             provision(studio.root, studio.report, studio.cancel, access)
-                        install_packs(studio.root, keys, studio.report, studio.cancel, access)
+                        optional=[k for k in keys if k!='wan13']
+                        if optional:install_packs(studio.root, optional, studio.report, studio.cancel, access)
                     studio.run_job(pack_job)
                 elif self.path == "/api/loras/select":
                     studio.update_loras(data.get('loras', []),data.get('model','wan13'))
@@ -604,6 +821,8 @@ def main():
     studio.resources.start()
     server = None
     def shutdown():
+        with studio.lock:
+            studio.closing=True;studio.queue.save()
         studio.cancel.set()
         studio.engine.cancel.set()
         if studio.worker and studio.worker.is_alive():
@@ -642,6 +861,8 @@ def main():
             if host.returncode:
                 raise RuntimeError("The desktop interface could not start. Run Setup again to repair Microsoft WebView2.")
     finally:
+        with studio.lock:
+            studio.closing=True;studio.queue.save()
         studio.resources.stop.set()
         studio.thumbnails.stop.set()
         studio.cancel.set()

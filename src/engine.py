@@ -120,7 +120,7 @@ def engine_command(root, port, output, memory, model='wan13'):
     command = [str(runtime_python(root)), '-s', str(comfy_root(root) / 'main.py'),
                '--windows-standalone-build', '--listen', '127.0.0.1', '--port', str(port),
                '--disable-auto-launch', '--disable-all-custom-nodes', '--output-directory', str(output)]
-    if model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit'):
+    if model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21'):
         # Keep the native disk-backed loader. Legacy low-VRAM mode disables it
         # and maps entire checkpoints through safetensors on Windows. This also
         # triggered a native access violation while loading Wan 2.2 in low mode.
@@ -274,13 +274,16 @@ class Engine:
         output = Path(output).expanduser().resolve()
         output.mkdir(parents=True, exist_ok=True)
         self.start(options['memory'], output, options.get('model', 'wan13'))
-        prefix = ('Edit_' if kind == 'edit' else 'Image_' if kind == 'image' else 'Video_') + time.strftime("%Y%m%d_%H%M%S") + "_" + secrets.token_hex(3)
-        if kind in ('image', 'edit'):
+        prefix = ({'edit':'Edit_', 'image':'Image_', 'enhance':'Enhanced_'}.get(kind, 'Video_')) + time.strftime("%Y%m%d_%H%M%S") + "_" + secrets.token_hex(3)
+        if kind == 'enhance':
+            from enhancements import image_workflow
+            workflow = image_workflow(options, prefix)
+        elif kind in ('image', 'edit'):
             from workflows import image_workflow, edit_workflow
             workflow = edit_workflow(options, prefix) if kind == 'edit' else image_workflow(options, prefix)
         else:
             workflow = build_workflow(options, prefix)
-        extension = '.png' if kind in ('image', 'edit') else '.mp4'
+        extension = '.png' if kind in ('image', 'edit', 'enhance') else '.mp4'
         logfile = self.root / "logs" / "engine.log"
         log_start = logfile.stat().st_size
         try:

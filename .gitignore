@@ -33,3 +33,7 @@ loras.json
 .venv/
 venv/
 *.spec
+queue.json
+queue-masks/
+enhancement-jobs/
+extensions/

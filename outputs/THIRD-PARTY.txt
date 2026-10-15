@@ -1,4 +1,4 @@
-A.I. Image & Video Studio 1.2.1 - third-party notices
+A.I. Image & Video Studio 1.4.0 - third-party notices
 
 The setup and application bundle Python, Tcl/Tk, PyInstaller's bootloader and
 the official 7zr.exe archive extractor. The extractor's license is supplied
@@ -46,3 +46,27 @@ Qwen-Image: https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI
 Qwen Image Edit: https://huggingface.co/Comfy-Org/Qwen-Image-Edit_ComfyUI
 Illustrious XL 2.0: https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0
 Workflow templates: https://github.com/Comfy-Org/workflow_templates
+
+Optional enhancement components added in 1.4.0 (downloaded only when selected):
+RTX VSR upstream pipeline 0.1.11, Apache-2.0:
+https://github.com/tritant/ComfyUI_NVIDIA_RTX_VSR_Long_Video
+Pinned revision: b20565455379998d3a22c07eb959d0a235034bde
+The installer retains the upstream LICENSE and README alongside its source.
+NVIDIA VFX SDK 0.2.0.0, NVIDIA SDK terms:
+https://pypi.nvidia.com/nvidia-vfx/
+https://docs.nvidia.com/deeplearning/maxine/vfx-sdk-programming-guide/index.html
+imageio-ffmpeg 0.6.0 (BSD-2-Clause bindings; bundled FFmpeg retains its own terms):
+https://github.com/imageio/imageio-ffmpeg
+Exact source and wheel URLs, sizes and SHA-256 hashes: assets/enhancers.json.
+
+Qwen-Image 2.1 weights, Qwen Research License:
+https://huggingface.co/Comfy-Org/Qwen-Image-2.1
+https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE
+Elusarca's Qwen 2.1 Detail Enhancer LoRA and author's workflow:
+https://civitai.com/models/2956730/elusarcas-qwen-21-detail-enhancer
+https://huggingface.co/reverentelusarca/elusarcas-qwen-2.1-detail-enhancer-lora
+https://huggingface.co/reverentelusarca/qwen-image-2.1-workflows
+The author's adapter is downloaded separately from the hash-matched HF mirror.
+Consult the adapter author's usage terms and the base model license.
+Exact checkpoint/adapter revisions, sizes and hashes: assets/packs.json.
+The application's MIT license does not relicense these models or components.

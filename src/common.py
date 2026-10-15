@@ -9,7 +9,7 @@ import tempfile
 
 APP_NAME = "A.I. Image & Video Studio"
 APP_EXE = 'AIImageVideoStudio.exe'
-VERSION = "1.3.1"
+VERSION = "1.4.0"
 INSTALL_DIR_NAME = "AI Image & Video Studio"
 UNINSTALL_KEY = r'Software\Microsoft\Windows\CurrentVersion\Uninstall\WanVideoStudio'
 CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -171,3 +171,7 @@ def install_ready(root):
                 and (comfy_root(root) / "models" / f["folder"] / f["filename"]).stat().st_size == f["size"]
                 for f in m["models"])
     )
+
+
+def runtime_ready(root):
+    return bool(runtime_python(root).is_file() and (Path(root)/'runtime-ready.json').is_file())

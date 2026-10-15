@@ -1,0 +1,57 @@
+{
+  "rtx_vsr": {
+    "revision": "b20565455379998d3a22c07eb959d0a235034bde",
+    "version": "0.1.11",
+    "repository": "https://github.com/tritant/ComfyUI_NVIDIA_RTX_VSR_Long_Video",
+    "files": [
+      {
+        "label": "RTX VSR pipeline.py",
+        "filename": "pipeline.py",
+        "url": "https://raw.githubusercontent.com/tritant/ComfyUI_NVIDIA_RTX_VSR_Long_Video/b20565455379998d3a22c07eb959d0a235034bde/pipeline.py",
+        "size": 18930,
+        "sha256": "b36275d5522a21438fd042788336a3667ce744fe2c7924abfacfebb8bf89b7e6"
+      },
+      {
+        "label": "RTX VSR vfx.py",
+        "filename": "vfx.py",
+        "url": "https://raw.githubusercontent.com/tritant/ComfyUI_NVIDIA_RTX_VSR_Long_Video/b20565455379998d3a22c07eb959d0a235034bde/vfx.py",
+        "size": 2522,
+        "sha256": "4ccfe9388727d0f70f18a20c55405e46bd8bac04116a8d95b55ea0b5ab1d48a9"
+      },
+      {
+        "label": "RTX VSR LICENSE",
+        "filename": "LICENSE",
+        "url": "https://raw.githubusercontent.com/tritant/ComfyUI_NVIDIA_RTX_VSR_Long_Video/b20565455379998d3a22c07eb959d0a235034bde/LICENSE",
+        "size": 11357,
+        "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      {
+        "label": "RTX VSR README.md",
+        "filename": "README.md",
+        "url": "https://raw.githubusercontent.com/tritant/ComfyUI_NVIDIA_RTX_VSR_Long_Video/b20565455379998d3a22c07eb959d0a235034bde/README.md",
+        "size": 2847,
+        "sha256": "aca6266799f156a7134aa7391f861c9f874f15f89bc6841fb8231169a144c74f"
+      }
+    ],
+    "packages": [
+      "nvidia-vfx==0.2.0.0",
+      "imageio-ffmpeg==0.6.0"
+    ],
+    "wheels": [
+      {
+        "label": "NVIDIA VFX SDK 0.2.0.0",
+        "filename": "nvidia_vfx-0.2.0.0-cp312-abi3-win_amd64.whl",
+        "url": "https://pypi.nvidia.com/nvidia-vfx/nvidia_vfx-0.2.0.0-cp312-abi3-win_amd64.whl",
+        "size": 435807359,
+        "sha256": "cebaa12411f7e22b39293205c5c4d07b8073d14ca1e0e7727ee4375207a36445"
+      },
+      {
+        "label": "FFmpeg 0.6.0 bindings and executable",
+        "filename": "imageio_ffmpeg-0.6.0-py3-none-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/2c/c6/fa760e12a2483469e2bf5058c5faff664acf66cadb4df2ad6205b016a73d/imageio_ffmpeg-0.6.0-py3-none-win_amd64.whl",
+        "size": 31246824,
+        "sha256": "02fa47c83703c37df6bfe4896aab339013f62bf02c5ebf2dce6da56af04ffc0a"
+      }
+    ]
+  }
+}

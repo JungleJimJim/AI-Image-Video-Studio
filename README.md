@@ -1,4 +1,4 @@
-# A.I. Image & Video Studio 1.3.1
+# A.I. Image & Video Studio 1.4.0
 
 A local Windows desktop app for text-to-image, image editing, text-to-video and image-to-video. The interface uses your supplied logo, short page descriptions and inline **?** help. No taglines or store credits are included.
 
@@ -6,7 +6,7 @@ Download the Windows installer from [GitHub Releases](https://github.com/JungleJ
 
 ## Installation
 
-Run **outputs/release-1.3.1/AIImageVideoStudio-Setup-1.3.1.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
+Run **outputs/release-1.4.0/AIImageVideoStudio-Setup-1.4.0.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
 
 The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan 1.3B E14 base model. Optional packs can be selected in setup or installed later from **Models**. Downloads resume after cancellation and use pinned revisions and SHA-256 checks. Shared encoder/VAE files are downloaded only once. Model weights are not bundled into the small installer.
 
@@ -24,6 +24,7 @@ The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan
 | NSFW Wan 1.3B E14 | Text to Video | 30 steps, CFG 6 |
 | Wan 2.2 TI2V 5B | Text or Image to Video | 30 steps, CFG 6 |
 | LTX-2 19B distilled FP8 | Text or Image to Video with optional audio | Fixed 8-step recipe, CFG 1 |
+| Qwen-Image 2.1 + Elusarca Detail Enhancer | Optional image enhancement | 25 steps, CFG 1, detail strength 1 |
 
 The five requested image families are Z-Image, FLUX.2 Klein, Qwen-Image, Juggernaut XL and Illustrious XL. Qwen Image Edit is an additional dedicated editing model. Installing the new families and editor requires about **80 GB of unique downloads**, plus Juggernaut if missing. Models has per-pack installation state and storage estimates.
 
@@ -56,19 +57,37 @@ The desktop window supports maximize and **Fullscreen / F11**; Escape exits full
 
 **Settings** selects output storage and opens image/video/log folders in Explorer. MP4s use the chosen output folder; AI PNGs use its Images subfolder. Imports and CPU edits use the studio data folder. Changing the output folder does not move older media.
 
-**LoRAs** has its own tab, with all ten models as targets. Import local `.safetensors` files or download a Hugging Face file link, then enable adapters, set strengths and click **Save selection**. Images, Image Editor and Video have a **Manage LoRAs** shortcut and show how many saved adapters are enabled for their selected model. Each model remembers its own selection; switching the LoRA target also preserves unsaved drafts.
+**LoRAs** has its own tab, with all eleven model targets. Import local `.safetensors` files or download a Hugging Face file link, then enable adapters, set strengths and click **Save selection**. Images, Image Editor and Video have a **Manage LoRAs** shortcut and show how many saved adapters are enabled for their selected model. Each model remembers its own selection; switching the LoRA target also preserves unsaved drafts.
 
 The tab links to [CivitAI](https://civitai.com/models?types=LORA) and a model-specific [Hugging Face search](https://huggingface.co/models?other=lora). Links open in your regular browser from the native app. Download a matching file from CivitAI and import it locally; direct downloads in the app accept Hugging Face file links. Access or license requirements remain those of the source site and adapter author.
 
 Juggernaut, DreamShaper and Illustrious share an SDXL file library but retain separate enabled selections. Other model families use separate libraries; existing Wan 1.3B files and selections are preserved. SDXL and Wan 1.3B expose separate model and text encoder strengths. Other families apply model-only adapters. Up to eight adapters can be enabled per model, with strengths from -2 to 2.
 
-Choose an adapter matching the **exact base model** described in the tab: Wan 2.2 TI2V **5B**, FLUX.2 Klein **4B distilled**, Qwen-Image **2512**, Qwen Image Edit **2511**, and LTX-2 **19B distilled** are distinct targets. The app validates file format and library assignment, not the trained weights' semantic compatibility. Check the author's trigger words, version and sampling recipe; specialized control or acceleration adapters may need a different workflow. No LoRA weights are bundled or automatically downloaded.
+Choose an adapter matching the **exact base model** described in the tab: Wan 2.2 TI2V **5B**, FLUX.2 Klein **4B distilled**, Qwen-Image **2512**, Qwen Image Edit **2511**, Qwen-Image **2.1**, and LTX-2 **19B distilled** are distinct targets. The app validates file format and library assignment, not the trained weights' semantic compatibility. Check the author's trigger words, version and sampling recipe; specialized control or acceleration adapters may need a different workflow. No weights are bundled. Installing the optional Qwen 2.1 enhancer explicitly downloads its required detail LoRA; other adapters are installed by the user.
+
+## Queue and model removal
+
+Every AI generator now adds a job to **Queue**. Jobs run one at a time across images, edits, videos and enhancement passes. Add more while a job runs. Higher priorities (0–10) run first; arrows reorder jobs with equal priorities. A running job is never interrupted by priority changes.
+
+Pause lets the current job finish. Cancel stops a waiting job or requests interruption of the running job. **Edit** pauses the queue and opens a waiting job's full options in its tool; save changes and resume when ready. Seeds, source images, masks, LoRAs, enhancement options and output folders are captured per job. Retry makes a new copy. Errors pause the queue, and unfinished jobs reopen paused; interrupted jobs require review and retry. Clearing queue history keeps library media.
+
+**Models → Uninstall** previews the exact downloaded weights and disk space. Shared files needed by another installed model, runtime software, LoRAs, settings and library media are kept. Finish or cancel jobs referencing the model first. Removed weights can be downloaded again; uninstalling the original Wan model does not disable installed optional models.
+
+## Optional enhancement
+
+**Upscale** takes an existing library image or video and saves a separate enhanced entry. The library preview has an **Upscale / enhance** button. Alternatively, enable **Enhance after generation** in Images, Image Editor or Video. Configure its options on Upscale; each queued job captures a copy. A failed or cancelled enhancement leaves the original available.
+
+The requested [Elusarca Qwen 2.1 Detail Enhancer](https://civitai.com/models/2956730/elusarcas-qwen-21-detail-enhancer) is a LoRA for Qwen-Image 2.1. Install its pack in Models: approximately **17.4 GB** of separate downloads, including the author's hash-matched adapter from Hugging Face. It uses instruction-conditioned generative enhancement, so fine details may change. The result is capped at roughly four megapixels and 4096 pixels per axis. Qwen 2.1 has its own **Qwen Research License**; check the terms linked in Models. Its LoRA target is distinct from Qwen 2512 and Qwen Edit 2511. The built-in detail adapter plus up to seven additional compatible adapters can be used.
+
+[RTX video enhancement](https://github.com/tritant/ComfyUI_NVIDIA_RTX_VSR_Long_Video) uses the pinned upstream frame pipeline in an isolated worker. Install its optional component in Models (about **467 MB** of SDK/FFmpeg downloads). This preserves the existing PyTorch stack and leaves global ComfyUI custom nodes disabled. It requires an RTX GPU and a supported NVIDIA driver; NVIDIA's SDK lists Windows driver 570.65 or newer. Quality, 1–4× scale, denoise/deblur, segment size and encoder are configurable. Audio is retained where supported. It increases resolution, not duration or frame rate. H.264 NVENC outputs are limited to 4096 pixels per axis; HEVC/CPU encoder support depends on the FFmpeg build and output size. The NVIDIA SDK retains its vendor license.
+
+New enhancement workflows have been validated without loading weights. Actual Qwen 2.1/RTX VSR inference and quality have not been tested in this release.
 
 ## Validation and source
 
 See **outputs/VALIDATION.md** for exact checks and limitations. AI generation tests require explicit user permission. Source packages exclude downloaded weights, personal media, profiles and credentials.
 
-Build with Python plus **requirements-build.txt**, then run **python build.py** and **python package_source.py**. Exact file revisions/sizes/hashes are in **assets/manifest.json** and **assets/packs.json**. See **outputs/THIRD-PARTY.txt** for upstream terms. The Windows installer is unsigned.
+Build with Python plus **requirements-build.txt**, then run **python build.py** and **python package_source.py**. Exact file revisions/sizes/hashes are in **assets/manifest.json**, **assets/packs.json** and **assets/enhancers.json**. See **outputs/THIRD-PARTY.txt** for upstream terms. The Windows installer is unsigned.
 
 For a Windows source build:
 

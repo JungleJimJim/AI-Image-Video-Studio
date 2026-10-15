@@ -32,8 +32,8 @@ class AllModelLoRATests(unittest.TestCase):
         original=self.source.read_bytes()
         for model in model_catalog():
             self.imported(model)
-        self.assertEqual(len(model_catalog()),10)
-        self.assertEqual(len(installed_loras(self.root)),8)
+        self.assertEqual(len(model_catalog()),11)
+        self.assertEqual(len(installed_loras(self.root)),9)
         self.assertEqual(self.source.read_bytes(),original)
         sdxl=self.imported('juggernaut')
         for model in ('juggernaut','dreamshaper','illustrious'):
@@ -48,6 +48,7 @@ class AllModelLoRATests(unittest.TestCase):
     def test_all_model_workflows_apply_both_adapters_before_sampling(self):
         adapters=[{'name':'first.safetensors','strength':.7,'strength_clip':.25},{'name':'second.safetensors','strength':.4,'strength_clip':0}]
         for model in model_catalog():
+            if model=='qwen21':continue  # Dedicated enhancement graph is covered separately.
             opts=dict(model=model,prompt='A greenhouse',seed=42,loras=adapters,width=512,height=320,frames=33)
             if model in ('wan13','wan22','ltx2'):
                 graph=build_workflow(validate_options(opts),'test')
