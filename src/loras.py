@@ -238,6 +238,24 @@ def validate_selection(root, selection, model='wan13'):
     return result
 
 
+def resolve_engine_names(graph, object_info):
+    """Use the engine's exact combo values while keeping saved names portable."""
+    for node in graph.values():
+        kind = node['class_type']
+        if kind not in ('LoraLoader', 'LoraLoaderModelOnly'):
+            continue
+        schema = object_info[kind]['input']['required']['lora_name']
+        choices = schema[1].get('options', []) if schema[0] == 'COMBO' else schema[0]
+        name = node['inputs']['lora_name']
+        if name in choices:
+            continue
+        matches = [value for value in choices if value.replace('\\', '/') == name.replace('\\', '/')]
+        if len(matches) != 1:
+            raise ValueError(f'The engine cannot find the selected LoRA: {name}. Check its installation in LoRAs.')
+        node['inputs']['lora_name'] = matches[0]
+    return graph
+
+
 def apply_to_graph(graph, options, model, clip=None, start=1000):
     """Patch the loaded model before sampling; only SDXL/Wan legacy patch text too."""
     adapters = options.get('loras', [])

@@ -18,7 +18,7 @@ DEFAULTS = {
     "prompt": "", "negative": "blurry, low quality, artifacts, distorted, subtitles, watermark, static image",
     "preset": "balanced", "width": 832, "height": 480, "frames": 49,
     "fps": 16, "steps": 30, "cfg": 6.0, "shift": 8.0,
-    "seed": "", "sampler": "uni_pc", "scheduler": "simple", "memory": "auto", "loras": [],
+    "seed": "", "randomize_seed": True, "sampler": "uni_pc", "scheduler": "simple", "memory": "auto", "loras": [],
     "model": "wan13", "mode": "text", "source_image": "", "audio": True,
 }
 MAX_VIDEO_FRAMES = 481
@@ -37,6 +37,8 @@ def validate_options(raw):
         raise ValueError('Choose an image from the image library.')
     if options['mode'] == 'image' and not options['source_image']:
         raise ValueError('Choose or generate a starting image first.')
+    if not isinstance(options['randomize_seed'], bool):
+        raise ValueError('Choose whether to prepare a new seed for each job.')
     if not isinstance(options['audio'], bool):
         raise ValueError('Audio must be enabled or disabled.')
     for name, lo, hi in [("width", 144, 1024), ("height", 144, 1024), ("frames", 9, MAX_VIDEO_FRAMES),
@@ -286,6 +288,14 @@ class Engine:
             workflow = edit_workflow(options, prefix) if kind == 'edit' else image_workflow(options, prefix)
         else:
             workflow = build_workflow(options, prefix)
+        loaders = {node['class_type'] for node in workflow.values()
+                   if node['class_type'] in ('LoraLoader', 'LoraLoaderModelOnly')}
+        if loaders:
+            from loras import resolve_engine_names
+            schemas = {}
+            for loader in sorted(loaders):
+                schemas.update(self.request('/object_info/' + loader))
+            resolve_engine_names(workflow, schemas)
         extension = '.png' if kind in ('image', 'edit', 'enhance') else '.mp4'
         logfile = self.root / "logs" / "engine.log"
         log_start = logfile.stat().st_size

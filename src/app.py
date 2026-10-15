@@ -24,7 +24,7 @@ from loras import (download_lora, import_loras, installed_loras, lora_folder, va
 from images import import_image, stage_image
 from packs import inventory as pack_inventory, ready as pack_ready, install as install_packs
 from workflows import IMAGE_DEFAULTS, validate_image_options, validate_edit_options
-from media import Thumbnails, catalog_page, crop_options, record as media_record, stage_mask
+from media import Thumbnails, catalog_page, crop_options, details as media_details, record as media_record, stage_mask
 from resources import ResourceMonitor
 from job_queue import JobQueue, ACTIVE
 import enhancements
@@ -122,7 +122,7 @@ class Studio:
                     if queue_id:
                         item=self.queue.get(queue_id)
                         item.update(status=outcome,error=detail,finished=time.strftime('%Y-%m-%d %H:%M:%S'))
-                        if outcome=='failed':self.queue.paused=True
+                        if outcome=='failed' and not self.queue.continue_on_error:self.queue.paused=True
                         if outcome=='completed' and self.state.get('latest_media'):
                             item['result_id']=self.state['latest_media']['id']
                         self.queue.save()
@@ -351,22 +351,28 @@ class Studio:
 
     def _kick_queue(self):
         if self.state['busy'] or self.closing:return
-        item=self.queue.next()
-        if not item:return
-        try:
-            target,_=self.prepare_queued(item['kind'],self.hydrate_queued(item),item['output'])
-        except Exception as error:
-            item.update(status='failed',error=str(error));self.queue.paused=True;self.queue.save()
-            self.state.update(error=str(error),stage='Queue paused. Review the failed job.')
+        while (item:=self.queue.next()) is not None:
+            try:
+                target,_=self.prepare_queued(item['kind'],self.hydrate_queued(item),item['output'])
+            except Exception as error:
+                item.update(status='failed',error=str(error),finished=time.strftime('%Y-%m-%d %H:%M:%S'))
+                if not self.queue.continue_on_error:self.queue.paused=True
+                self.queue.save()
+                self.state.update(error=str(error),stage='Queue paused. Review the failed job.' if self.queue.paused else 'Skipped failed job. Continuing queue…')
+                continue
+            item.update(status='running',started=time.strftime('%Y-%m-%d %H:%M:%S'));self.queue.save()
+            self.run_job(target,queue_id=item['id'])
             return
-        item.update(status='running',started=time.strftime('%Y-%m-%d %H:%M:%S'));self.queue.save()
-        self.run_job(target,queue_id=item['id'])
 
     def queue_action(self,data):
         with self.lock:
             action=data.get('action');identifier=data.get('id')
             if action in ('pause','resume'):
                 self.queue.paused=action=='pause';self.queue.save()
+            elif action=='failure_policy':
+                value=data.get('continue_on_error')
+                if not isinstance(value,bool):raise ValueError('Choose whether to continue after a failed job.')
+                self.queue.continue_on_error=value;self.queue.save()
             elif action=='clear_finished':
                 self.queue.jobs=[x for x in self.queue.jobs if x['status'] in ACTIVE];self.queue.save()
             elif action=='cancel_all':
@@ -558,6 +564,12 @@ def make_handler(studio, shutdown):
                 if not self.authorized():
                     return self.send_json({"error": "Unauthorized"}, 403)
                 return self.send_json(studio.snapshot())
+            if url.path.startswith('/api/library/'):
+                if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
+                try:
+                    with studio.lock:
+                        return self.send_json(media_details(studio.images,studio.videos,url.path.removeprefix('/api/library/')))
+                except ValueError as error:return self.send_json({'error':str(error)},404)
             if url.path == '/api/library':
                 if not self.authorized():
                     return self.send_json({'error':'Unauthorized'},403)

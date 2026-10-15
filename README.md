@@ -1,4 +1,4 @@
-# A.I. Image & Video Studio 1.5.1
+# A.I. Image & Video Studio 1.5.2
 
 A Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS.
 Includes:
@@ -20,7 +20,7 @@ Download the Windows installer from [GitHub Releases](https://github.com/JungleJ
 
 ## Installation
 
-Run **outputs/release-1.5.1/AIImageVideoStudio-Setup-1.5.1.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
+Run **outputs/release-1.5.2/AIImageVideoStudio-Setup-1.5.2.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
 
 The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan 1.3B E14 base model. Optional packs can be selected in setup or installed later from **Models**. Downloads resume after cancellation and use pinned revisions and SHA-256 checks. Shared encoder/VAE files are downloaded only once. Model weights are not bundled into the small installer.
 
@@ -54,6 +54,12 @@ The fast distilled checkpoint uses Euler/simple sampling, 16 starting steps and 
 A pinned ComfyUI 0.41.0 engine is downloaded to its own folder only for this model. Its `comfy-aimdo` dependency is installed separately, with no global package upgrades. Other models retain the existing engine. FLUX 3's VAE is stored under a distinct filename because the upstream file differs from the existing FLUX.2 VAE. Its LoRA library is also separate; use adapters explicitly compatible with distilled FLUX 3 Image Klein 5.6B.
 
 The optional prompt upsampler and slower Base checkpoint are not installed by this pack. FLUX 3 weights retain the **FLUX Kommunity License**, separate from the application's MIT license. Actual model inference and memory fit on this machine have not been tested; the new engine's CPU probe and native graph checks do not load weights.
+
+## Seeds and library details
+
+**New seed for each job** is enabled by default in Images, Image Editor, Video and image enhancement. Adding a new job prepares a fresh seed for the next job, so queued variations have independent seeds. Disable it to keep a fixed seed for comparisons. Queued jobs, retries and saved results retain their exact seed. **Reuse settings** selects a fixed seed for reproduction.
+
+Opening a Library item shows its model, seed, prompts, dimensions, processing time, LoRAs and saved parameters. Enhanced or enlarged copies show their processing status and source history, including the original model and seed. Missing legacy metadata is marked as not recorded.
 
 ## Images and Image Editor
 
@@ -94,7 +100,7 @@ Choose an adapter matching the **exact base model** described in the tab: Wan 2.
 
 Every AI generator now adds a job to **Queue**. Jobs run one at a time across images, edits, videos and enhancement passes. Add more while a job runs. Higher priorities (0–10) run first; arrows reorder jobs with equal priorities. A running job is never interrupted by priority changes.
 
-Pause lets the current job finish. Cancel stops a waiting job or requests interruption of the running job. **Edit** pauses the queue and opens a waiting job's full options in its tool; save changes and resume when ready. Seeds, source images, masks, LoRAs, enhancement options and output folders are captured per job. Retry makes a new copy. Errors pause the queue, and unfinished jobs reopen paused; interrupted jobs require review and retry. Clearing queue history keeps library media.
+Pause lets the current job finish. Cancel stops a waiting job or requests interruption of the running job. **Edit** pauses the queue and opens a waiting job's full options in its tool; save changes and resume when ready. Seeds, source images, masks, LoRAs, enhancement options and output folders are captured per job. Retry makes a new copy. **Continue after failed jobs** is enabled by default, keeping errors in history while the remaining jobs run. Disable it to pause on failure. Unfinished jobs reopen paused; interrupted jobs require review and retry. Clearing queue history keeps library media.
 
 **Models → Uninstall** previews the exact downloaded weights and disk space. Shared files needed by another installed model, runtime software, LoRAs, settings and library media are kept. Finish or cancel jobs referencing the model first. Removed weights can be downloaded again; uninstalling the original Wan model does not disable installed optional models.
 

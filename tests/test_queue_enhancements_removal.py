@@ -83,6 +83,7 @@ class QueueTests(unittest.TestCase):
         self.assertEqual(self.studio.queue.get(b)['status'],'completed')
 
     def test_failed_enhancement_preserves_original_and_pauses_remaining_jobs(self):
+        self.studio.queue.continue_on_error=False
         self.studio.enhance_record=Mock(side_effect=RuntimeError('Enhancer unavailable'))
         a=self.add('Original',upscale=dict(enabled=True,options={}))
         b=self.add('Waiting')
@@ -91,12 +92,50 @@ class QueueTests(unittest.TestCase):
         self.assertEqual(self.studio.queue.get(a)['status'],'failed');self.assertEqual(self.studio.queue.get(b)['status'],'queued')
         self.assertTrue(self.studio.queue.paused)
 
+    def test_failure_continues_remaining_jobs_by_default_and_preserves_error(self):
+        def generate(options,*args,**kwargs):
+            if options['prompt']=='Broken':raise RuntimeError('LoRA menu validation failed')
+            return self.output,{},.1
+        self.studio.engine.generate=generate
+        a=self.add('Broken');b=self.add('Next')
+        self.studio.queue_action(dict(action='resume'));self.wait_idle()
+        self.assertEqual(self.studio.queue.get(a)['status'],'failed')
+        self.assertIn('LoRA menu validation failed',self.studio.queue.get(a)['error'])
+        self.assertEqual(self.studio.queue.get(b)['status'],'completed')
+        self.assertFalse(self.studio.queue.paused)
+
+    def test_preparation_failure_also_continues_other_jobs(self):
+        a=self.add('Broken');b=self.add('Next')
+        self.studio.queue.get(a)['options']['model']='unavailable-model'
+        self.studio.queue_action(dict(action='resume'));self.wait_idle()
+        self.assertEqual(self.studio.queue.get(a)['status'],'failed')
+        self.assertEqual(self.studio.queue.get(b)['status'],'completed')
+
+    def test_failure_policy_persists_without_resuming_a_paused_queue(self):
+        self.add('Waiting')
+        self.studio.queue_action(dict(action='failure_policy',continue_on_error=False))
+        reopened=JobQueue(self.root)
+        self.assertFalse(reopened.continue_on_error);self.assertTrue(reopened.paused)
+        self.studio.engine.generate.assert_not_called()
+        with self.assertRaises(ValueError):self.studio.queue_action(dict(action='failure_policy',continue_on_error='yes'))
+
     def test_output_and_options_are_frozen_when_added(self):
         old=self.studio.settings['output'];a=self.add('Original',seed=11)
         self.studio.save_settings(dict(output=str(self.root/'New output')))
         self.studio.queue_action(dict(action='resume'));self.wait_idle()
         self.assertEqual(str(self.studio.engine.generate.call_args.args[1]),str(Path(old)/'Images'))
         self.assertEqual(self.studio.queue.get(a)['options']['seed'],11)
+
+    def test_random_seed_preference_does_not_change_frozen_jobs_or_retries(self):
+        a=self.add('Variation',seed=123,randomize_seed=True)
+        b=self.add('Fixed',seed=456,randomize_seed=False)
+        self.studio.queue_action(dict(action='resume'));self.wait_idle()
+        self.assertEqual([c.args[0]['seed'] for c in self.studio.engine.generate.call_args_list],[123,456])
+        self.studio.queue_action(dict(action='pause'))
+        self.studio.queue_action(dict(action='retry',id=a))
+        self.assertEqual(self.studio.queue.pending()[0]['options']['seed'],123)
+        self.assertFalse(self.studio.settings['image_options']['randomize_seed'])
+        self.assertEqual(self.studio.images[0]['options']['seed'],123)
 
     def test_masks_are_stored_separately_and_survive_queue_reopening(self):
         source=self.root/'source.png';source.write_bytes(b'fixture')

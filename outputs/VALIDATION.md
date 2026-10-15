@@ -1,3 +1,16 @@
+# A.I. Image & Video Studio 1.5.2
+
+- All 106 Python regressions pass. LoRA tests reproduce the exact Windows filename-menu mismatch and verify submission with detail strength 1.7; saved portable names and adapter strengths are preserved. Both loader classes and supported combo schemas are covered. Existing serial scheduling, cancellation, media preservation and model removal checks pass.
+- Native CPU-only validation reproduces the Qwen 2.1 filename rejection, then accepts the corrected graph at strength 1.7. All 17 original-engine workflows pass with native Windows LoRA names, without weight loading or CUDA initialization. Evidence: workflow-validation-1.5.2.json and native-1.5.2-final.log.
+- Node UI regressions verify safe random seeds, fixed seeds, failed submissions, in-flight draft preservation, waiting-job editing, auto-enhancement seeds, seed zero, HTML escaping and source metadata. Browser checks in an isolated profile with inference blocked confirm Video / Upscale / Library order, checked seed and failure-continuation controls, a changed seed after queuing a paused fixture, and enhanced-copy details including its original FLUX 3 model and seed zero. The Library preview places image and metadata side by side on wide windows. No browser console errors were observed.
+- All four FLUX 3 native graphs also pass CPU-only validation with Windows LoRA menu entries, including ten-reference masked editing. CUDA stays uninitialized. Evidence: flux3-workflow-validation-1.5.2.json. The original Windows rejection and its successful corrected validation were both observed.
+- Queue failures now remain in history while subsequent jobs run by default. The persistent Continue after failed jobs option restores pause-on-failure when disabled. Regressions cover execution and preparation failures, disabled-policy pausing, preference persistence and keeping previously paused queues paused. Queued job seeds and retries remain frozen.
+- Library details include model, seed, prompts, dimensions, timing, LoRAs, enhancement parameters, all saved options and complete parent history beyond the current library page. Missing legacy metadata is identified rather than guessed. Source cycles are bounded.
+
+No AI image or video was generated for this update. CPU graph validation and mocked regressions establish compatibility and scheduling behavior; they do not establish image quality or GPU memory fit.
+
+## Previous validation
+
 # A.I. Image & Video Studio 1.5.1: token field guidance
 
 The FLUX 3 model card now says "Enter a read token in Settings." Its help text, download-access error and README point to the existing Optional Hugging Face token field in Settings. Model installation remains in Models. JavaScript syntax and focused wording/location checks passed. No model or media-generation test was started for this text-only update.

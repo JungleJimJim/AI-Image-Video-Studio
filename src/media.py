@@ -68,6 +68,23 @@ def stage_mask(root, value, width, height):
     return target.name
 
 
+def details(images, videos, identifier):
+    """Include full source history, even when it is outside the current page."""
+    records = {item['id']: {**item, 'media_type': kind}
+               for items, kind in ((images, 'image'), (videos, 'video')) for item in items}
+    if identifier not in records:
+        raise ValueError('That library item is unavailable.')
+    item = records[identifier]
+    ancestors, seen = [], {identifier}
+    parent = item.get('parent_id')
+    while parent and parent not in seen and parent in records:
+        seen.add(parent)
+        source = records[parent]
+        ancestors.append(source)
+        parent = source.get('parent_id')
+    return dict(item=item, ancestors=ancestors, source_unavailable=bool(parent and parent not in records))
+
+
 def catalog_page(images, videos, query):
     try:
         page = max(0,int(query.get('page',['0'])[0]))

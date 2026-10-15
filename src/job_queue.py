@@ -16,6 +16,7 @@ class JobQueue:
         data = load_json(self.path, {})
         self.jobs = data.get('jobs', []) if isinstance(data, dict) else []
         self.paused = bool(data.get('paused', False)) if isinstance(data, dict) else False
+        self.continue_on_error = bool(data.get('continue_on_error', True)) if isinstance(data, dict) else True
         for job in self.jobs:
             if job.get('status') == 'running':
                 job.update(status='interrupted', error='The app closed during this job. Review and retry it.')
@@ -28,7 +29,7 @@ class JobQueue:
         if len(finished)>100:
             keep={x['id'] for x in finished[-100:]}
             self.jobs=[x for x in self.jobs if x['status'] in ACTIVE or x['id'] in keep]
-        atomic_json(self.path, dict(paused=self.paused, jobs=self.jobs))
+        atomic_json(self.path, dict(paused=self.paused, continue_on_error=self.continue_on_error, jobs=self.jobs))
 
     @staticmethod
     def priority(value):
@@ -90,7 +91,7 @@ class JobQueue:
         running = [x for x in self.jobs if x['status']=='running']
         finished = [x for x in reversed(self.jobs) if x['status'] not in ACTIVE][:100]
         jobs = running + self.pending() + finished
-        return dict(paused=self.paused, waiting=len(self.pending()),
+        return dict(paused=self.paused, continue_on_error=self.continue_on_error, waiting=len(self.pending()),
                     jobs=[{k:deepcopy(v) for k,v in x.items() if k!='options'} |
                           dict(model=x['options'].get('model',''), prompt=x['options'].get('prompt',''),
                                width=x['options'].get('width'),height=x['options'].get('height')) for x in jobs])

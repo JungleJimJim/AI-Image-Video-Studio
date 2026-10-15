@@ -8,13 +8,32 @@ from unittest.mock import patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from app import Studio
 from common import atomic_json
-from media import catalog_page, crop_options, stage_mask
+from media import catalog_page, crop_options, details, stage_mask
 from workflows import validate_edit_options, validate_image_options, image_workflow, edit_workflow
 from packs import catalog, install
 import threading
 
 
 class LibraryEditorTests(unittest.TestCase):
+    def test_details_include_complete_enhancement_lineage_and_exact_zero_seed(self):
+        original=dict(id='original',kind='image',width=512,height=512,options=dict(model='flux3',seed=0,prompt='Robot'))
+        enhanced=dict(id='enhanced',kind='enhanced',parent_id='original',width=1024,height=1024,
+                      options=dict(model='qwen21',seed=123,detail_strength=1.7,scale=2))
+        crop=dict(id='crop',kind='crop',parent_id='enhanced',width=512,height=512,options={})
+        result=details([original,enhanced,crop],[], 'crop')
+        self.assertEqual([x['id'] for x in result['ancestors']],['enhanced','original'])
+        self.assertEqual(result['ancestors'][-1]['options']['seed'],0)
+        self.assertEqual(result['ancestors'][0]['options']['detail_strength'],1.7)
+        self.assertFalse(result['source_unavailable'])
+        self.assertNotIn('media_type',original)
+
+    def test_details_handle_legacy_missing_sources_and_cycles(self):
+        original=dict(id='a',parent_id='b',options={})
+        other=dict(id='b',parent_id='a',options={})
+        self.assertEqual(len(details([original,other],[],'a')['ancestors']),1)
+        self.assertTrue(details([original],[],'a')['source_unavailable'])
+        with self.assertRaises(ValueError):details([original],[],'unknown')
+
     def test_oldest_library_items_remain_accessible_and_searchable(self):
         images=[dict(id=str(i),name=f'Image {i}',created=f'2026-10-14 12:{i:03}',options={'prompt':'greenhouse' if i==0 else 'robot'}) for i in range(123)]
         result=catalog_page(images,[],{'page':['5']})

@@ -17,7 +17,7 @@ QUALITY = ('BICUBIC','LOW','MEDIUM','HIGH','ULTRA','HIGHBITRATE_LOW','HIGHBITRAT
            'DENOISE_LOW','DENOISE_MEDIUM','DENOISE_HIGH','DENOISE_ULTRA',
            'DEBLUR_LOW','DEBLUR_MEDIUM','DEBLUR_HIGH','DEBLUR_ULTRA')
 PREPROCESS = ('none',)+tuple(x for x in QUALITY if x.startswith(('DENOISE_','DEBLUR_')))
-IMAGE_DEFAULTS = dict(scale=2.0,detail_strength=1.0,steps=25,cfg=1.0,seed='',memory='auto',
+IMAGE_DEFAULTS = dict(scale=2.0,detail_strength=1.0,steps=25,cfg=1.0,seed='',randomize_seed=True,memory='auto',
     prompt='Enhance this image to high resolution with rich fine details. Improve clarity while preserving the original composition, lighting, atmosphere and visual style.',negative='')
 VIDEO_DEFAULTS = dict(scale=2.0,quality='HIGHBITRATE_HIGH',strength=1.0,preprocess='none',
                       preprocess_strength=1.0,frames_per_chunk=48,encoder='h264_nvenc')
@@ -53,6 +53,7 @@ def validate(raw,kind):
             o[key]=int(value) if key in ('steps','frames_per_chunk') else value
         except (TypeError,ValueError,OverflowError):raise ValueError(f'{key.replace("_"," ").capitalize()} must be between {lo} and {hi}.') from None
     if kind=='image':
+        if not isinstance(o['randomize_seed'],bool):raise ValueError('Choose whether to prepare a new seed for each job.')
         if o['memory'] not in ('auto','low'):raise ValueError('Choose a supported memory mode.')
         for field in ('prompt','negative'):
             if not isinstance(o[field],str) or len(o[field])>10000:raise ValueError('Enhancement prompts must be text under 10,000 characters.')

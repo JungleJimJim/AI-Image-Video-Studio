@@ -70,7 +70,7 @@ def ltx_workflow(o, prefix):
 
 
 IMAGE_DEFAULTS = dict(model='dreamshaper', prompt='', negative='blurry, low quality, artifacts, watermark, text',
-                      width=1024, height=1024, steps=8, cfg=2.0, seed='', memory='auto', loras=[])
+                      width=1024, height=1024, steps=8, cfg=2.0, seed='', randomize_seed=True, memory='auto', loras=[])
 
 
 def validate_image_options(raw):
@@ -106,6 +106,8 @@ def validate_image_options(raw):
         raise ValueError('Use CFG 1–15 and an empty seed or a whole number up to 9007199254740991.') from None
     if o['memory'] not in ('auto','low'):
         raise ValueError('Choose a supported memory mode.')
+    if not isinstance(o['randomize_seed'], bool):
+        raise ValueError('Choose whether to prepare a new seed for each job.')
     if o['model']=='flux3':o.update(cfg=1.0,negative='')
     return o
 
