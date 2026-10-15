@@ -1,6 +1,19 @@
 # A.I. Image & Video Studio 1.4.0
 
-A local Windows desktop app for text-to-image, image editing, text-to-video and image-to-video. The interface uses your supplied logo, short page descriptions and inline **?** help. No taglines or store credits are included.
+A Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS.
+Includes:
+Wan 2.2
+LTX-2
+Juggernaut XL v9
+Dreamshaper XL Turbo 2.1
+Z-Image-Turbo
+Flux.2 Klein 4B
+Qwen-Image-2512
+Illustrious XL 2.0
+Qwen Image Edit 2511
+Qwen-Image 2.1 Detail Enhancer
+
+Need more models? Or don't understand how to use LoRaS? You can download the source code of this program and feed it to Chatgpt or Claude and ask to include your github or huggingface link.
 
 Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest). The repository contains the application source and small setup assets; model weights download separately.
 
