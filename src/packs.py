@@ -45,7 +45,7 @@ def install(root, keys, report, cancel, token=''):
         pack=packs[key]
         if pack.get('gated') and not token.strip() and any(not model_path(root,f).is_file()
                 or model_path(root,f).stat().st_size!=f['size'] for f in pack['files']):
-            raise ValueError('FLUX 3 requires Hugging Face access. Open its model page in Models, accept the access conditions, and enter a read token for that account before installing.')
+            raise ValueError('FLUX 3 requires Hugging Face access. Open its model page in Models, accept the access conditions, and enter a read token for that account in Settings before installing.')
     if not runtime_python(root).is_file():
         raise ValueError('Install the base runtime in Settings first.')
     # Encoders and VAEs shared by packs are downloaded and counted only once.

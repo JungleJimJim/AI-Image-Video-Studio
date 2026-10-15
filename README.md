@@ -1,4 +1,4 @@
-# A.I. Image & Video Studio 1.5.0
+# A.I. Image & Video Studio 1.5.1
 
 A Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS.
 Includes:
@@ -20,7 +20,7 @@ Download the Windows installer from [GitHub Releases](https://github.com/JungleJ
 
 ## Installation
 
-Run **outputs/release-1.5.0/AIImageVideoStudio-Setup-1.5.0.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
+Run **outputs/release-1.5.1/AIImageVideoStudio-Setup-1.5.1.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
 
 The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan 1.3B E14 base model. Optional packs can be selected in setup or installed later from **Models**. Downloads resume after cancellation and use pinned revisions and SHA-256 checks. Shared encoder/VAE files are downloaded only once. Model weights are not bundled into the small installer.
 
@@ -47,7 +47,7 @@ Windows 10/11 x64, an NVIDIA RTX GPU and a compatible current NVIDIA driver are 
 
 ## FLUX 3 Image Klein
 
-FLUX 3 is a separate full image model, distinct from the existing FLUX.2 Klein. In **Models**, choose **FLUX 3 Image Klein · INT8**. Its official gated weights require signing in to [the Hugging Face model page](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy), reviewing the access conditions and obtaining access. Enter a read token for that account in Models, then install the selected pack. Tokens are used only for the current download and are not saved. The model pack is approximately **11.0 GB** (10.3 GiB); its separate engine adds about 14 MB of downloads.
+FLUX 3 is a separate full image model, distinct from the existing FLUX.2 Klein. In **Models**, choose **FLUX 3 Image Klein · INT8**. Its official gated weights require signing in to [the Hugging Face model page](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy), reviewing the access conditions and obtaining access. Enter a read token for that account in Settings, then return to Models to install the selected pack. Tokens are used only for the current download and are not saved. The model pack is approximately **11.0 GB** (10.3 GiB); its separate engine adds about 14 MB of downloads.
 
 The fast distilled checkpoint uses Euler/simple sampling, 16 starting steps and fixed CFG 1; negative prompts are ignored. It is available in Images and Image Editor, and works with the existing queue, library, video handoff and optional image enhancement. The editor accepts the starting image plus nine extra references. Refer to them as `<ref_image_0>` through `<ref_image_9>` and describe the complete desired edited result. Painted edits preserve the resized original outside the mask. Studio output dimensions remain 256–1536 pixels in multiples of 64; higher native model resolutions and a graphical bounding-box editor are not exposed by this integration.
 

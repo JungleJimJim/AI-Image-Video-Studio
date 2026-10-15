@@ -1,3 +1,9 @@
+# A.I. Image & Video Studio 1.5.1: token field guidance
+
+The FLUX 3 model card now says "Enter a read token in Settings." Its help text, download-access error and README point to the existing Optional Hugging Face token field in Settings. Model installation remains in Models. JavaScript syntax and focused wording/location checks passed. No model or media-generation test was started for this text-only update.
+
+## Previous 1.5.0 validation
+
 # A.I. Image & Video Studio 1.5.0: FLUX 3 Image Klein
 
 - All 97 automated regressions passed: `tests-1.5.0-final.log`. New coverage verifies the distinct distilled FLUX 3 recipe and VAE path, ten-reference edits with masks and adapter chains, FLUX.2/FLUX 3 LoRA separation, gated-download preflight, engine readiness/routing, archive traversal/cancellation, failed-install preservation and namespace-package readiness. Two native-close regressions confirm an intentional shutdown does not open a startup-error dialog and a genuine host failure still reports an error.
