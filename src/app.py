@@ -858,7 +858,9 @@ def main():
                 except subprocess.TimeoutExpired:
                     host.terminate()
                     host.wait(timeout=10)
-            if host.returncode:
+            # A deliberate backend exit may terminate the still-open host after its grace period.
+            # That is a normal close, not a startup failure requiring a blocking error dialog.
+            if host.returncode and not studio.closing:
                 raise RuntimeError("The desktop interface could not start. Run Setup again to repair Microsoft WebView2.")
     finally:
         with studio.lock:

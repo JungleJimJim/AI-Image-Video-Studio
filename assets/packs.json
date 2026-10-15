@@ -304,5 +304,48 @@
       }
     ],
     "license_url": "https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE"
+  },
+  "flux3": {
+    "name": "FLUX 3 Image Klein \u00b7 INT8",
+    "description": "Generate images and make instruction edits with up to ten reference images. Fast distilled model; includes a separate compatible engine.",
+    "family": "flux3",
+    "kind": "image",
+    "editing": true,
+    "max_references": 10,
+    "engine": "flux3",
+    "gated": true,
+    "source": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy",
+    "license": "FLUX Kommunity License; see upstream terms",
+    "license_url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/blob/main/LICENSE.md",
+    "defaults": {
+      "steps": 16,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "FLUX 3 flux3_image_klein_sd_int8_convrot.safetensors",
+        "filename": "flux3_image_klein_sd_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "size": 5827874779,
+        "sha256": "847d8933548afd93df4af2cac2498e70891bf28d9dae06d695f536992e168fe2",
+        "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/diffusion_models/flux3_image_klein_sd_int8_convrot.safetensors"
+      },
+      {
+        "label": "FLUX 3 qwen3vl_4b_int8_convrot.safetensors",
+        "filename": "qwen3vl_4b_int8_convrot.safetensors",
+        "folder": "text_encoders",
+        "size": 4858559240,
+        "sha256": "32de113cbf8282b02cbff0794b637b9d6676da09314a1db5a30bcea9bf4ee01c",
+        "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/text_encoders/qwen3vl_4b_int8_convrot.safetensors"
+      },
+      {
+        "label": "FLUX 3 flux2-vae.safetensors",
+        "filename": "flux3-vae.safetensors",
+        "folder": "vae",
+        "size": 336211292,
+        "sha256": "868fe7b343cc8f3a19dbcfcafbc3d5f888802be3f89bd81b65b3621a066ce8f3",
+        "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/vae/flux2-vae.safetensors"
+      }
+    ]
   }
 }

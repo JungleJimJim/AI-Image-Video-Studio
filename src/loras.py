@@ -22,12 +22,13 @@ def model_catalog():
         'sdxl': 'Use SDXL adapters. This library is shared by Juggernaut, DreamShaper and Illustrious; each model remembers its own enabled selection. SD 1.5 and FLUX adapters do not fit.',
         'zimage': 'Use Z-Image / Z-Image-Turbo adapters. Follow the author’s Turbo compatibility and step recommendations.',
         'fluxklein': 'Use FLUX.2 Klein 4B adapters compatible with the distilled model. FLUX.1, FLUX.2 Dev and Klein 9B adapters do not fit.',
+        'flux3': 'Use FLUX 3 Image Klein 5.6B adapters explicitly compatible with the distilled checkpoint. FLUX.1 and FLUX.2 adapters do not fit. Base-model training adapters need the author’s distilled-compatibility guidance.',
         'qwenimage': 'Use Qwen-Image adapters compatible with the 2512 image generator. Check the author’s base model and sampling recommendations.',
         'qwenedit': 'Use Qwen Image Edit adapters compatible with 2511. Control and acceleration adapters may require additional workflow changes.',
         'qwen21': 'Use Qwen-Image 2.1 adapters. The detail-enhancement pass includes Elusarca’s LoRA; extra selected adapters must also match Qwen 2.1. Qwen-Image-2512 and Edit-2511 adapters do not fit.',
     }
     search = {'wan13':'Wan 1.3B', 'wan22':'Wan 2.2 5B', 'ltx2':'LTX-2', 'sdxl':'SDXL',
-              'zimage':'Z-Image', 'fluxklein':'FLUX.2 Klein 4B', 'qwenimage':'Qwen-Image', 'qwenedit':'Qwen-Image-Edit-2511', 'qwen21':'Qwen-Image-2.1'}
+              'zimage':'Z-Image', 'fluxklein':'FLUX.2 Klein 4B', 'flux3':'FLUX 3 Image Klein', 'qwenimage':'Qwen-Image', 'qwenedit':'Qwen-Image-Edit-2511', 'qwen21':'Qwen-Image-2.1'}
     result = {}
     for key, pack in models.items():
         scope = 'sdxl' if pack.get('family') == 'sdxl' else key

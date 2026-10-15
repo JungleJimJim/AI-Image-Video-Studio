@@ -1,4 +1,4 @@
-# A.I. Image & Video Studio 1.4.0
+# A.I. Image & Video Studio 1.5.0
 
 A Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS.
 Includes:
@@ -8,6 +8,7 @@ Juggernaut XL v9
 Dreamshaper XL Turbo 2.1
 Z-Image-Turbo
 Flux.2 Klein 4B
+FLUX 3 Image Klein distilled INT8
 Qwen-Image-2512
 Illustrious XL 2.0
 Qwen Image Edit 2511
@@ -19,7 +20,7 @@ Download the Windows installer from [GitHub Releases](https://github.com/JungleJ
 
 ## Installation
 
-Run **outputs/release-1.4.0/AIImageVideoStudio-Setup-1.4.0.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
+Run **outputs/release-1.5.0/AIImageVideoStudio-Setup-1.5.0.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
 
 The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan 1.3B E14 base model. Optional packs can be selected in setup or installed later from **Models**. Downloads resume after cancellation and use pinned revisions and SHA-256 checks. Shared encoder/VAE files are downloaded only once. Model weights are not bundled into the small installer.
 
@@ -29,6 +30,7 @@ The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan
 | --- | --- | --- |
 | Z-Image-Turbo | Images | 8 steps, CFG 1 |
 | FLUX.2 Klein 4B distilled FP8 | Images, instruction editing, multiple references | 4 steps, CFG 1 |
+| FLUX 3 Image Klein distilled INT8 | Images, instruction editing, up to ten reference images | 16 steps, CFG 1 |
 | Qwen-Image-2512 FP8 | Images and typography | 40 steps, CFG 4 |
 | Juggernaut XL v9 | Realistic images, redraw, masked editing | 28 steps, CFG 6 |
 | Illustrious XL 2.0 | Illustration/anime, redraw, masked editing | 28 steps, CFG 5 |
@@ -43,13 +45,23 @@ The five requested image families are Z-Image, FLUX.2 Klein, Qwen-Image, Juggern
 
 Windows 10/11 x64, an NVIDIA RTX GPU and a compatible current NVIDIA driver are required for generation. Large Qwen/LTX models use disk-backed loading and RAM offloading on 16 GB cards; sufficient Windows committed memory is still required. Workflow validation does not establish performance or guarantee that every resolution/duration fits your hardware. The app does not change Windows paging settings.
 
+## FLUX 3 Image Klein
+
+FLUX 3 is a separate full image model, distinct from the existing FLUX.2 Klein. In **Models**, choose **FLUX 3 Image Klein · INT8**. Its official gated weights require signing in to [the Hugging Face model page](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy), reviewing the access conditions and obtaining access. Enter a read token for that account in Models, then install the selected pack. Tokens are used only for the current download and are not saved. The model pack is approximately **11.0 GB** (10.3 GiB); its separate engine adds about 14 MB of downloads.
+
+The fast distilled checkpoint uses Euler/simple sampling, 16 starting steps and fixed CFG 1; negative prompts are ignored. It is available in Images and Image Editor, and works with the existing queue, library, video handoff and optional image enhancement. The editor accepts the starting image plus nine extra references. Refer to them as `<ref_image_0>` through `<ref_image_9>` and describe the complete desired edited result. Painted edits preserve the resized original outside the mask. Studio output dimensions remain 256–1536 pixels in multiples of 64; higher native model resolutions and a graphical bounding-box editor are not exposed by this integration.
+
+A pinned ComfyUI 0.41.0 engine is downloaded to its own folder only for this model. Its `comfy-aimdo` dependency is installed separately, with no global package upgrades. Other models retain the existing engine. FLUX 3's VAE is stored under a distinct filename because the upstream file differs from the existing FLUX.2 VAE. Its LoRA library is also separate; use adapters explicitly compatible with distilled FLUX 3 Image Klein 5.6B.
+
+The optional prompt upsampler and slower Base checkpoint are not installed by this pack. FLUX 3 weights retain the **FLUX Kommunity License**, separate from the application's MIT license. Actual model inference and memory fit on this machine have not been tested; the new engine's CPU probe and native graph checks do not load weights.
+
 ## Images and Image Editor
 
 **Images** generates a PNG and saves its seed/options/workflow beside it. **Send to editor** or **Send to video** selects the image in that tool; it does not begin another render.
 
 **Image Editor** supports:
 
-- Instruction edits with FLUX.2 Klein and Qwen Image Edit. The starting image is image 1; add up to two extra reference images and mention image 2/image 3 in the instruction.
+- Instruction edits with FLUX.2 Klein, FLUX 3 Image Klein and Qwen Image Edit. The starting image is image 1; add up to two extra reference images and mention image 2/image 3 in the instruction.
 - SDXL redraw with Juggernaut, Illustrious or DreamShaper. Describe the full desired image and adjust redraw strength.
 - Painted masks, with brush size, paint/erase, undo and clear. SDXL uses inpaint denoising. Instruction models edit the full image and composite only the painted region onto the resized original. Saved edits preserve a mask copy beside the result.
 - Crop/resize using original pixel coordinates, center-square/full-image shortcuts and an aspect-ratio lock. CPU processing saves a separate PNG without loading an AI model.
@@ -70,13 +82,13 @@ The desktop window supports maximize and **Fullscreen / F11**; Escape exits full
 
 **Settings** selects output storage and opens image/video/log folders in Explorer. MP4s use the chosen output folder; AI PNGs use its Images subfolder. Imports and CPU edits use the studio data folder. Changing the output folder does not move older media.
 
-**LoRAs** has its own tab, with all eleven model targets. Import local `.safetensors` files or download a Hugging Face file link, then enable adapters, set strengths and click **Save selection**. Images, Image Editor and Video have a **Manage LoRAs** shortcut and show how many saved adapters are enabled for their selected model. Each model remembers its own selection; switching the LoRA target also preserves unsaved drafts.
+**LoRAs** has its own tab, with all twelve model targets. Import local `.safetensors` files or download a Hugging Face file link, then enable adapters, set strengths and click **Save selection**. Images, Image Editor and Video have a **Manage LoRAs** shortcut and show how many saved adapters are enabled for their selected model. Each model remembers its own selection; switching the LoRA target also preserves unsaved drafts.
 
 The tab links to [CivitAI](https://civitai.com/models?types=LORA) and a model-specific [Hugging Face search](https://huggingface.co/models?other=lora). Links open in your regular browser from the native app. Download a matching file from CivitAI and import it locally; direct downloads in the app accept Hugging Face file links. Access or license requirements remain those of the source site and adapter author.
 
 Juggernaut, DreamShaper and Illustrious share an SDXL file library but retain separate enabled selections. Other model families use separate libraries; existing Wan 1.3B files and selections are preserved. SDXL and Wan 1.3B expose separate model and text encoder strengths. Other families apply model-only adapters. Up to eight adapters can be enabled per model, with strengths from -2 to 2.
 
-Choose an adapter matching the **exact base model** described in the tab: Wan 2.2 TI2V **5B**, FLUX.2 Klein **4B distilled**, Qwen-Image **2512**, Qwen Image Edit **2511**, Qwen-Image **2.1**, and LTX-2 **19B distilled** are distinct targets. The app validates file format and library assignment, not the trained weights' semantic compatibility. Check the author's trigger words, version and sampling recipe; specialized control or acceleration adapters may need a different workflow. No weights are bundled. Installing the optional Qwen 2.1 enhancer explicitly downloads its required detail LoRA; other adapters are installed by the user.
+Choose an adapter matching the **exact base model** described in the tab: Wan 2.2 TI2V **5B**, FLUX.2 Klein **4B distilled**, Qwen-Image **2512**, Qwen Image Edit **2511**, Qwen-Image **2.1**, distilled **FLUX 3 Image Klein 5.6B**, and LTX-2 **19B distilled** are distinct targets. The app validates file format and library assignment, not the trained weights' semantic compatibility. Check the author's trigger words, version and sampling recipe; specialized control or acceleration adapters may need a different workflow. No weights are bundled. Installing the optional Qwen 2.1 enhancer explicitly downloads its required detail LoRA; other adapters are installed by the user.
 
 ## Queue and model removal
 
@@ -100,7 +112,7 @@ New enhancement workflows have been validated without loading weights. Actual Qw
 
 See **outputs/VALIDATION.md** for exact checks and limitations. AI generation tests require explicit user permission. Source packages exclude downloaded weights, personal media, profiles and credentials.
 
-Build with Python plus **requirements-build.txt**, then run **python build.py** and **python package_source.py**. Exact file revisions/sizes/hashes are in **assets/manifest.json**, **assets/packs.json** and **assets/enhancers.json**. See **outputs/THIRD-PARTY.txt** for upstream terms. The Windows installer is unsigned.
+Build with Python plus **requirements-build.txt**, then run **python build.py** and **python package_source.py**. Exact file revisions/sizes/hashes are in **assets/manifest.json**, **assets/packs.json**, **assets/enhancers.json** and **assets/engines.json**. See **outputs/THIRD-PARTY.txt** for upstream terms. The Windows installer is unsigned.
 
 For a Windows source build:
 

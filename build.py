@@ -61,6 +61,8 @@ build_desktop()
 common = [(ROOT / "assets" / "manifest.json", "assets"), (ROOT / "assets" / "7zr.exe", "assets"),
           (ROOT / 'assets' / 'packs.json', 'assets'),
           (ROOT / 'assets' / 'enhancers.json', 'assets'),
+          (ROOT / 'assets' / 'engines.json', 'assets'),
+          (ROOT / 'assets' / 'engine_worker.py', 'assets'),
           (ROOT / 'assets' / 'studio-logo.png', 'assets'),
           (ROOT / "build" / "desktop-host", "assets/desktop")]
 freeze("app.py", Path(APP_EXE).stem, common + [(ROOT / "assets" / "index.html", "assets"), (ROOT / 'assets/studio.js', 'assets'), (ROOT / 'assets/studio-tools.js', 'assets'), (ROOT / 'assets/studio.css', 'assets'), (ROOT / 'assets/media_worker.py', 'assets'), (ROOT / 'assets/upscale_worker.py', 'assets')])

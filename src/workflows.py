@@ -106,6 +106,7 @@ def validate_image_options(raw):
         raise ValueError('Use CFG 1–15 and an empty seed or a whole number up to 9007199254740991.') from None
     if o['memory'] not in ('auto','low'):
         raise ValueError('Choose a supported memory mode.')
+    if o['model']=='flux3':o.update(cfg=1.0,negative='')
     return o
 
 
@@ -134,12 +135,13 @@ def validate_edit_options(raw):
     refs = raw.get('references', [])
     if not isinstance(source, str) or not source:
         raise ValueError('Choose a starting image.')
-    if not isinstance(refs, list) or len(refs) > 2 or any(not isinstance(x, str) for x in refs):
-        raise ValueError('Use up to two extra reference images.')
+    maximum=catalog()[o['model']].get('max_references',3)-1
+    if not isinstance(refs, list) or len(refs) > maximum or any(not isinstance(x, str) for x in refs):
+        raise ValueError(f'Use up to {maximum} extra reference images with this model.')
     if len(set([source] + refs)) != len([source] + refs):
         raise ValueError('Choose different reference images.')
-    if refs and o['model'] not in ('fluxklein', 'qwenedit'):
-        raise ValueError('Multiple references require FLUX.2 Klein or Qwen Image Edit.')
+    if refs and o['model'] not in ('fluxklein', 'qwenedit', 'flux3'):
+        raise ValueError('Multiple references require FLUX Klein or Qwen Image Edit.')
     try:
         strength = float(raw.get('strength', .65))
         if not 0 < strength <= 1:
@@ -155,19 +157,22 @@ def native_image_workflow(o, prefix):
     diffusion, encoder, vae = [f['filename'] for f in pack['files']]
     g = {
         '1': node('UNETLoader', unet_name=diffusion, weight_dtype='default'),
-        '2': node('CLIPLoader', clip_name=encoder, type='flux2' if family=='flux2' else 'lumina2' if family=='zimage' else 'qwen_image', device='default'),
+        '2': node('CLIPLoader', clip_name=encoder, type=family if family in ('flux2','flux3') else 'lumina2' if family=='zimage' else 'qwen_image', device='default'),
         '3': node('VAELoader', vae_name=vae),
         '4': node('CLIPTextEncode', text=o['prompt'], clip=['2',0]),
         '5': node('CLIPTextEncode', text=o['negative'], clip=['2',0]),
-        '6': node('EmptyFlux2LatentImage' if family=='flux2' else 'EmptySD3LatentImage', width=o['width'], height=o['height'], batch_size=1),
+        '6': node('EmptyFlux2LatentImage' if family in ('flux2','flux3') else 'EmptySD3LatentImage', width=o['width'], height=o['height'], batch_size=1),
         '7': node('ModelSamplingAuraFlow', model=['1',0], shift=3.1 if family=='qwenedit' else 3.0),
         '8': node('KSampler', model=['7',0], positive=['4',0], negative=['5',0], latent_image=['6',0], seed=o['seed'], steps=o['steps'], cfg=o['cfg'], sampler_name='res_multistep' if family=='zimage' else 'euler', scheduler='simple', denoise=1.0),
         '9': decode(['8',0], ['3',0]),
         '10': node('SaveImage', images=['9',0], filename_prefix=prefix),
     }
-    if family in ('zimage', 'flux2'):
+    if family in ('zimage', 'flux2','flux3'):
         g['5'] = node('ConditioningZeroOut', conditioning=['4',0])
         g['8']['inputs']['cfg'] = 1.0
+    if family=='flux3':
+        # FLUX 3's native loader supplies its own timestep shift; the FLUX.2 scheduler is different.
+        del g['7'];g['8']['inputs']['model']=['1',0]
     if family == 'flux2':
         del g['7']
         g['8'] = node('SamplerCustomAdvanced', noise=['11',0], guider=['12',0], sampler=['13',0], sigmas=['14',0], latent_image=['6',0])
@@ -180,6 +185,7 @@ def native_image_workflow(o, prefix):
 
 def edit_workflow(o, prefix):
     family = catalog()[o['model']]['family']
+    if family=='flux3':return flux3_edit_workflow(o,prefix)
     g = image_workflow(o, prefix)
     g['20'] = node('LoadImage', image=o['input_file'])
     g['21'] = node('ImageScale', image=['20',0], upscale_method='lanczos', width=o['width'], height=o['height'], crop='disabled')
@@ -225,4 +231,25 @@ def edit_workflow(o, prefix):
         # Instruction models edit the full image; composite only the painted area.
         g['63'] = node('ImageCompositeMasked', destination=source, source=output, x=0, y=0, resize_source=False, mask=['62',0])
         g[save_key]['inputs']['images'] = ['63',0]
+    return g
+
+
+def flux3_edit_workflow(o,prefix):
+    g=image_workflow(o,prefix)
+    g['20']=node('LoadImage',image=o['input_file'])
+    g['21']=node('ImageScale',image=['20',0],upscale_method='lanczos',width=o['width'],height=o['height'],crop='disabled')
+    refs={'images.image0':['21',0]}
+    for index,filename in enumerate(o.get('reference_files',[])):
+        loaded,scaled=str(30+index),str(50+index)
+        g[loaded]=node('LoadImage',image=filename)
+        g[scaled]=node('ImageScaleToTotalPixels',image=[loaded,0],upscale_method='lanczos',megapixels=1.0,resolution_steps=1)
+        refs[f'images.image{index+1}']=[scaled,0]
+    g['22']=node('ReferenceMultiLatent',positive=['4',0],negative=['5',0],vae=['3',0],resolution='keep resolution',**refs)
+    g['8']['inputs'].update(positive=['22',0],negative=['22',1])
+    if o.get('mask_file'):
+        g['60']=node('LoadImage',image=o['mask_file'])
+        g['61']=node('ImageScale',image=['60',0],upscale_method='nearest-exact',width=o['width'],height=o['height'],crop='disabled')
+        g['62']=node('ImageToMask',image=['61',0],channel='red')
+        g['63']=node('ImageCompositeMasked',destination=['21',0],source=['9',0],x=0,y=0,resize_source=False,mask=['62',0])
+        g['10']['inputs']['images']=['63',0]
     return g

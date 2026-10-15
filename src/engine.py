@@ -117,10 +117,13 @@ def build_workflow(o, prefix):
 
 
 def engine_command(root, port, output, memory, model='wan13'):
-    command = [str(runtime_python(root)), '-s', str(comfy_root(root) / 'main.py'),
-               '--windows-standalone-build', '--listen', '127.0.0.1', '--port', str(port),
+    if model=='flux3':
+        from engine_support import command as optional_command
+        command=optional_command(root,'flux3')
+    else:command=[str(runtime_python(root)), '-s', str(comfy_root(root) / 'main.py')]
+    command += ['--windows-standalone-build', '--listen', '127.0.0.1', '--port', str(port),
                '--disable-auto-launch', '--disable-all-custom-nodes', '--output-directory', str(output)]
-    if model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21'):
+    if model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21', 'flux3'):
         # Keep the native disk-backed loader. Legacy low-VRAM mode disables it
         # and maps entire checkpoints through safetensors on Windows. This also
         # triggered a native access violation while loading Wan 2.2 in low mode.

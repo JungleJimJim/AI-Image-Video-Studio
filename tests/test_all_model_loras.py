@@ -32,8 +32,8 @@ class AllModelLoRATests(unittest.TestCase):
         original=self.source.read_bytes()
         for model in model_catalog():
             self.imported(model)
-        self.assertEqual(len(model_catalog()),11)
-        self.assertEqual(len(installed_loras(self.root)),9)
+        self.assertEqual(len(model_catalog()),12)
+        self.assertEqual(len(installed_loras(self.root)),10)
         self.assertEqual(self.source.read_bytes(),original)
         sdxl=self.imported('juggernaut')
         for model in ('juggernaut','dreamshaper','illustrious'):

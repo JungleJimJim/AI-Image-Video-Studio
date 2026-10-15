@@ -1,4 +1,4 @@
-A.I. Image & Video Studio 1.4.0 - third-party notices
+A.I. Image & Video Studio 1.5.0 - third-party notices
 
 The setup and application bundle Python, Tcl/Tk, PyInstaller's bootloader and
 the official 7zr.exe archive extractor. The extractor's license is supplied
@@ -70,3 +70,20 @@ The author's adapter is downloaded separately from the hash-matched HF mirror.
 Consult the adapter author's usage terms and the base model license.
 Exact checkpoint/adapter revisions, sizes and hashes: assets/packs.json.
 The application's MIT license does not relicense these models or components.
+
+FLUX 3 Image Klein integration added in 1.5.0 (optional gated downloads):
+https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy
+FLUX 3 image transformer: FLUX Kommunity License v1.0.
+https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/blob/main/LICENSE.md
+Qwen3-VL-4B-Instruct text encoder: Apache-2.0; consult upstream notices.
+https://github.com/black-forest-labs/flux-3-image-klein
+The model pack includes only the distilled INT8 transformer, INT8 encoder and VAE.
+It does not include the prompt upsampler or the Base checkpoint.
+
+Separate compatible ComfyUI 0.41.0 engine, GPL-3.0:
+https://github.com/Comfy-Org/ComfyUI/tree/29e28e2b488e7739c351c331d73da25aa435da5c
+The source archive, LICENSE and notices are retained in its managed engine folder.
+Separate comfy-aimdo 0.5.6 dependency (upstream license and notices retained):
+https://pypi.org/project/comfy-aimdo/0.5.6/
+Source archive and wheel are checksum pinned in assets/engines.json.
+The app's MIT license does not relicense these downloaded components or weights.

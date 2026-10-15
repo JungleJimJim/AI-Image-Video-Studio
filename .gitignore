@@ -37,3 +37,7 @@ queue.json
 queue-masks/
 enhancement-jobs/
 extensions/
+engines/
+engine-profiles/
+
+.flux3-*/

@@ -291,7 +291,7 @@ class Installer:
             row = ttk.Frame(frame)
             row.pack(fill='x', pady=(14,0))
             ttk.Checkbutton(row, text=f"{pack['name']} · {size:.1f} GB", variable=self.packs[key]).pack(side='left')
-            self.help(row, pack['description'] + ' Downloads are resumable and SHA-256 verified. You can also install this pack later in Settings.')
+            self.help(row, pack['description'] + (' Hugging Face access and a read token for the approved account are required. Model page: '+pack['source'] if pack.get('gated') else '') + ' Downloads are resumable and SHA-256 verified. You can also install this pack later in Settings.')
         def done():
             if any(v.get() for v in self.packs.values()):
                 self.full.set(True)
@@ -321,6 +321,8 @@ class Installer:
                 if not gpu["vram_gb"]:
                     raise ValueError("An NVIDIA GPU with an installed driver was not detected. This release needs NVIDIA CUDA. Install a current NVIDIA driver and retry, or uncheck the download option to install just the interface.")
             selected = (self.desktop.get(), self.menu.get(), self.full.get(), self.token.get().strip(), [k for k,v in self.packs.items() if v.get()])
+            if selected[2] and not selected[3] and any(pack_catalog()[k].get('gated') for k in selected[4]):
+                raise ValueError('FLUX 3 requires Hugging Face access and a read token. Open https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy to review access conditions, then enter your read token, or install this optional model later from Models.')
         except (OSError, ValueError) as error:
             return messagebox.showerror("Check your setup", str(error), parent=self.window)
         self.cancel.clear()

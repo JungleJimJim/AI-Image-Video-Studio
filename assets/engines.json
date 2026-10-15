@@ -1,0 +1,23 @@
+{
+  "flux3": {
+    "name": "FLUX 3 compatible ComfyUI",
+    "version": "0.41.0",
+    "revision": "29e28e2b488e7739c351c331d73da25aa435da5c",
+    "archive": {
+      "label": "Separate FLUX 3 engine",
+      "filename": "ComfyUI-flux3-29e28e2.zip",
+      "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/29e28e2b488e7739c351c331d73da25aa435da5c",
+      "size": 13417933,
+      "sha256": "9fa864aa6115f67a77966994b127fa7b2677550082dead9706e64f1119b70af9"
+    },
+    "wheels": [
+      {
+        "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "size": 280910,
+        "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03",
+        "label": "FLUX 3 isolated dynamic VRAM support"
+      }
+    ]
+  }
+}
