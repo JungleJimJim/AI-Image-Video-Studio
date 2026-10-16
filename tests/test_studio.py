@@ -161,6 +161,26 @@ class APITests(unittest.TestCase):
             urllib.request.urlopen(req)
         self.assertEqual(error.exception.code, 403)
 
+    def test_update_check_requires_token_and_can_run_while_generating(self):
+        req=urllib.request.Request(self.base+'/api/updates/check',data=b'{}')
+        with self.assertRaises(urllib.error.HTTPError) as error:urllib.request.urlopen(req)
+        self.assertEqual(error.exception.code,403)
+        self.studio.state['busy']=True
+        release=dict(tag_name='v99.0.0',draft=False,prerelease=False,body='Fixture',assets=[dict(
+            name='AIImageVideoStudio-Setup-99.0.0.exe',size=123,state='uploaded',digest='sha256:'+'a'*64,
+            browser_download_url='https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/download/v99.0.0/AIImageVideoStudio-Setup-99.0.0.exe')])
+        with patch('updates.latest_release',return_value=release),patch('updates.download') as download:
+            req=urllib.request.Request(self.base+'/api/updates/check',data=b'{}',headers={'X-Wan-Token':self.studio.token})
+            with urllib.request.urlopen(req) as response:info=json.load(response)
+        self.assertTrue(info['available']);download.assert_not_called();self.assertTrue(self.studio.state['busy'])
+
+    def test_busy_update_install_rejects_without_stopping_the_current_job(self):
+        self.studio.state['busy']=True
+        req=urllib.request.Request(self.base+'/api/updates/install',data=b'{"ticket":"fixture"}',headers={'X-Wan-Token':self.studio.token})
+        with patch.object(self.studio.updates,'prepare') as prepare,self.assertRaises(urllib.error.HTTPError) as error:
+            urllib.request.urlopen(req)
+        self.assertEqual(error.exception.code,400);prepare.assert_not_called();self.assertFalse(self.studio.cancel.is_set())
+
     def test_video_range_and_missing_video(self):
         file = Path(self.tmp.name) / "video.mp4"
         file.write_bytes(bytes(range(256)))

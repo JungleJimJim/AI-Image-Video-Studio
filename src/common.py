@@ -6,10 +6,11 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import time
 
 APP_NAME = "A.I. Image & Video Studio"
 APP_EXE = 'AIImageVideoStudio.exe'
-VERSION = "1.5.2"
+VERSION = "1.6.0"
 INSTALL_DIR_NAME = "AI Image & Video Studio"
 UNINSTALL_KEY = r'Software\Microsoft\Windows\CurrentVersion\Uninstall\WanVideoStudio'
 CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -50,7 +51,14 @@ def atomic_json(path, value):
     try:
         with os.fdopen(fd, "w", encoding="utf-8") as out:
             json.dump(value, out, indent=2, ensure_ascii=False)
-        os.replace(tmp, path)
+        for attempt in range(6):
+            try:
+                os.replace(tmp,path)
+                break
+            except PermissionError:
+                if os.name!='nt' or attempt==5:raise
+                # Windows scanners can briefly hold a just-written JSON file.
+                time.sleep(min(.025 * 2**attempt,.2))
     finally:
         if os.path.exists(tmp):
             os.unlink(tmp)

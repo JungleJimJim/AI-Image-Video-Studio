@@ -53,23 +53,37 @@ def register_uninstall(root, data_root):
 
 def copy_application(root):
     root = check_install_path(root)
-    root.mkdir(parents=True, exist_ok=True)
-    # Marker prevents setup from installing over or uninstalling an unrelated directory.
-    atomic_json(root / "studio-install.json", {"app": APP_NAME, "version": VERSION})
     app = resource(APP_EXE)
     if not app.is_file():
         raise RuntimeError("The bundled application is missing. Use the packaged Setup executable.")
-    temporary = root / (APP_EXE + '.new')
-    shutil.copy2(app, temporary)
+    root.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix='.studio-app-update-',dir=root))
+    modified, cleanup = [], True
     try:
-        os.replace(temporary, root / APP_EXE)
-    except PermissionError:
-        temporary.unlink(missing_ok=True)
-        raise RuntimeError("The studio is running. Click Exit app, then retry setup.") from None
-    if getattr(sys, "frozen", False):
-        target = root / "UninstallWanVideoStudio.exe"
-        if Path(sys.executable).resolve() != target.resolve():
-            shutil.copy2(sys.executable, target)
+        payload={APP_EXE:app}
+        if getattr(sys,'frozen',False) and Path(sys.executable).resolve()!=root/'UninstallWanVideoStudio.exe':
+            payload['UninstallWanVideoStudio.exe']=Path(sys.executable)
+        atomic_json(staging/'marker.json',{'app':APP_NAME,'version':VERSION})
+        payload['studio-install.json']=staging/'marker.json'
+        for name,source in payload.items():
+            shutil.copy2(source,staging/(name+'.new'))
+            if (root/name).exists():shutil.copy2(root/name,staging/(name+'.old'))
+        for name in payload:
+            os.replace(staging/(name+'.new'),root/name)
+            modified.append(name)
+    except Exception as error:
+        try:
+            for name in reversed(modified):
+                if (staging/(name+'.old')).exists():os.replace(staging/(name+'.old'),root/name)
+                else:(root/name).unlink(missing_ok=True)
+        except OSError as rollback:
+            cleanup=False
+            raise RuntimeError('Application update could not be restored. Its backup is kept at '+str(staging)) from rollback
+        if isinstance(error,PermissionError):
+            raise RuntimeError('The studio files are in use. Close the studio and retry the update.') from error
+        raise
+    finally:
+        if cleanup:shutil.rmtree(staging)
     return root
 
 
@@ -210,7 +224,10 @@ class Installer:
         branding = ttk.Frame(frame)
         branding.pack(fill='x', pady=(0, 6))
         self.logo_image = tk.PhotoImage(file=str(resource('installer-logo.png')))
-        tk.Label(branding, image=self.logo_image, bg='white', borderwidth=0).pack(side='left', padx=(0, 22))
+        logo_column=ttk.Frame(branding)
+        logo_column.pack(side='left',padx=(0,22))
+        tk.Label(logo_column, image=self.logo_image, bg='white', borderwidth=0).pack()
+        ttk.Label(logo_column,text='v'+VERSION,font=('Segoe UI',11,'bold')).pack(pady=(5,0))
         brand_text = ttk.Frame(branding)
         brand_text.pack(side='left', fill='both', expand=True)
         ttk.Label(brand_text, text="Install the studio", font=("Segoe UI", 22, "bold")).pack(anchor='w', pady=(16, 9))
@@ -458,6 +475,7 @@ def main():
     parser.add_argument('--elevated-app-install')
     parser.add_argument('--elevated-app-remove')
     parser.add_argument('--result-file')
+    parser.add_argument('--apply-update')
     args = parser.parse_args()
     privileged = args.elevated_app_install or args.elevated_app_remove
     if privileged:
@@ -475,6 +493,9 @@ def main():
         except Exception as error:
             atomic_json(args.result_file, {'ok': False, 'error': str(error)})
             raise SystemExit(1)
+    elif args.apply_update:
+        from updates import apply_update
+        apply_update(args.apply_update,copy_application,elevated_application_action)
     elif args.uninstall:
         uninstall(args.uninstall)
     elif args.headless_install:

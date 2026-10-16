@@ -1,3 +1,18 @@
+# A.I. Image & Video Studio 1.6.0
+
+- All 123 Python regressions pass in tests-1.6.0-final.log. New updater cases cover numeric version ordering, stable-release and asset/checksum validation, foreign URL rejection, read-only checks, session-token enforcement, busy guards, cancellation, exact process identities and PID reuse, queue pausing, failed and successful handoffs, new-session/changed-installation rejection, combined and separate data folders, and rollback of partially replaced application files.
+- A transient Windows file-sharing failure appeared in the first full regression run. Atomic JSON writes now use bounded retries for transient PermissionError on Windows. Focused tests verify recovery and preservation of the previous settings on permanent failure. The final full suite passes.
+- Node regressions pass for both existing studio controls and update UI confirmation, busy state, server-issued tickets, plain-text notes and retry behavior. JavaScript syntax checks pass for all three studio scripts.
+- An isolated browser preview with inference and actual installation blocked confirms the new tab order, version label below the logo, all five About links, Settings fit without panel overflow at 1280x720, update confirmation, Later without an installation request, and Install update sending the confirmed ticket. No console warnings/errors were observed. Evidence: update-confirmation-ui-1.6.0.json and ui-validation-1.6.0.json.
+- The packaged installer test caught a process exiting during identity inspection. The Windows helper now checks the process exit signal before and after inspection, including when a parent retains the exited process handle. A real exited-process regression passes.
+- The corrected packaged installer passes an isolated Windows handoff: it waits for the captured process, replaces the app, reopens the native desktop window, and preserves six settings/model/LoRA/media/queue files byte for byte. The real application registration is unchanged. Evidence: update-smoke-1.6.0-validation.json.
+- The user's two newer signed README commits were imported as ancestors. The original GitHub README bytes remain an exact prefix; only a v1.6.0 section is appended at the bottom. Evidence: readme-1.6.0-preservation.json.
+- The updater is initiated manually, fetches only the program's public stable release, requires the exact Windows installer asset URL and GitHub SHA-256 digest, and downloads no model weights. The independent installer waits for the captured app/host identities and refuses to replace files if a studio session is still open. Application copying is transactional; personal data is outside the replacement payload. Program Files elevation remains limited to the existing app-copy helper.
+
+No AI image or video was generated for this update. Inference was mocked or blocked throughout. Program Files administrator approval is covered by existing mocked installer tests; no administrator-owned installation was changed during validation.
+
+## Previous validation
+
 # A.I. Image & Video Studio 1.5.2
 
 - All 106 Python regressions pass. LoRA tests reproduce the exact Windows filename-menu mismatch and verify submission with detail strength 1.7; saved portable names and adapter strengths are preserved. Both loader classes and supported combo schemas are covered. Existing serial scheduling, cancellation, media preservation and model removal checks pass.

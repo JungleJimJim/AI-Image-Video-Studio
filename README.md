@@ -139,3 +139,14 @@ python package_source.py
 The build downloads the pinned Microsoft WebView2 SDK if it is absent and compiles the native host using the Windows .NET Framework compiler. The automated tests do not generate AI images or videos.
 
 The app's original source code uses the [MIT license](LICENSE). Third-party components and model weights retain their upstream licenses; see [third-party notices](outputs/THIRD-PARTY.txt).
+
+
+## Updates in v1.6.0
+
+
+Open **Settings → Check for updates** to check the public GitHub repository for a newer stable Windows release. If available, the app shows its version, download size and release notes and asks whether to install it. **Later** keeps the current app. **Install update** downloads and verifies GitHub's SHA-256 checksum before closing the studio, replacing application files and reopening its desktop window.
+
+Settings, downloaded models, LoRAs, library media and queued jobs remain in their existing data folder. Installation is blocked during active processing; checking is allowed. The queue pauses for installation and reopens paused until you choose Resume queue. Updates never start inference, reinstall models or change the selected data folder. Program Files installations can require a Windows administrator prompt. Temporary application-copy failures restore the previous binaries. A failed download can be retried from Settings; its partial file is resumable.
+
+The installed version appears directly below the logo. **About**, at the bottom right of Settings on wide windows, credits Codex in collaboration with Jungle Jim and links to the requested 3D models, Blender add-ons, software, VFX and source code. Models sits between Library and LoRAs.
+

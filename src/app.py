@@ -28,6 +28,7 @@ from media import Thumbnails, catalog_page, crop_options, details as media_detai
 from resources import ResourceMonitor
 from job_queue import JobQueue, ACTIVE
 import enhancements
+from updates import UpdateManager
 from model_removal import removal_plan, uninstall as uninstall_model
 
 
@@ -63,6 +64,7 @@ class Studio:
         self.queue = JobQueue(self.root)
         self.closing = False
         self.removing_model = None
+        self.updates = UpdateManager(self.root)
 
     def report(self, message, progress):
         with self.lock:
@@ -91,6 +93,7 @@ class Studio:
                     'packs': pack_inventory(self.root), 'images': self.images[-60:][::-1],
                     'runtime_ready': runtime_ready(self.root), 'queue': self.queue.snapshot(),
                     'enhancers': enhancements.inventory(self.root),
+                    'updates': self.updates.snapshot(),
                     'resources': self.resources.snapshot(),
                     'library_revision': self.revision, 'library_count': len(self.images)+len(self.videos),
                     "log": self.events[-40:], "root": str(self.root), "version": VERSION}
@@ -460,6 +463,27 @@ class Studio:
                     saved['loras'] = adapters
             atomic_json(self.root / "settings.json", self.settings)
 
+    def install_update(self, ticket, shutdown):
+        with self.lock:
+            if self.state['busy']:raise ValueError('Finish or cancel the current operation before installing an update.')
+            info=self.updates.snapshot()
+            if not info.get('can_install'):raise ValueError(info.get('install_reason'))
+            if not isinstance(ticket,str) or not info.get('ticket') or not secrets.compare_digest(ticket,info['ticket']):
+                raise ValueError('Check for updates again before installing.')
+            self.queue.paused=True;self.queue.save()
+            def job():
+                try:
+                    installer, request=self.updates.prepare(ticket,self.report,self.cancel)
+                    if self.cancel.is_set():raise Cancelled('Update cancelled. The current app is unchanged.')
+                    self.updates.launch(installer,request)
+                    with self.lock:self.closing=True
+                    self.report('Installing the update. The studio will close and reopen automatically.',1)
+                    threading.Thread(target=shutdown,daemon=True).start()
+                except Exception as error:
+                    with self.updates.lock:self.updates.info.update(status='error',error=str(error))
+                    raise
+            self.run_job(job)
+
     def save_settings(self, data):
         with self.lock:
             if self.state["busy"]:
@@ -619,6 +643,8 @@ def make_handler(studio, shutdown):
                 return self.send_file(resource('studio.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-tools.js':
                 return self.send_file(resource('studio-tools.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-updates.js':
+                return self.send_file(resource('studio-updates.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio.css':
                 return self.send_file(resource('studio.css'), 'text/css; charset=utf-8')
             if url.path == '/studio-logo.png':
@@ -685,7 +711,11 @@ def make_handler(studio, shutdown):
                 data = json.loads(self.rfile.read(length) or b"{}")
                 if not isinstance(data, dict):
                     raise ValueError("Expected an object.")
-                if self.path == "/api/generate":
+                if self.path == '/api/updates/check':
+                    return self.send_json(studio.updates.check())
+                elif self.path == '/api/updates/install':
+                    studio.install_update(data.get('ticket'),shutdown)
+                elif self.path == "/api/generate":
                     return self.send_json({'ok':True,'id':studio.enqueue('video',data,data.get('priority',5))})
                 elif self.path == '/api/images/generate':
                     return self.send_json({'ok':True,'id':studio.enqueue('image',data,data.get('priority',5))})
