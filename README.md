@@ -2,19 +2,22 @@
 
 a Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS. Some models can produce NSFW images.
 Includes:
-Wan 2.2
-LTX-2
-Juggernaut XL v9
-Dreamshaper XL Turbo 2.1
-Z-Image-Turbo
-Flux.2 Klein 4B
-FLUX 3 Image Klein distilled INT8
-Qwen-Image-2512
-Illustrious XL 2.0
-Qwen Image Edit 2511
-Qwen-Image 2.1 Detail Enhancer
+| Model | Tools | Recommended starting settings |
+| --- | --- | --- |
+| Z-Image-Turbo | Images | 8 steps, CFG 1 |
+| FLUX.2 Klein 4B distilled FP8 | Images, instruction editing, multiple references | 4 steps, CFG 1 |
+| FLUX 3 Image Klein distilled INT8 | Images, instruction editing, up to ten reference images | 16 steps, CFG 1 |
+| Qwen-Image-2512 FP8 | Images and typography | 40 steps, CFG 4 |
+| Juggernaut XL v9 | Realistic images, redraw, masked editing | 28 steps, CFG 6 |
+| Illustrious XL 2.0 | Illustration/anime, redraw, masked editing | 28 steps, CFG 5 |
+| DreamShaper XL Turbo 2.1 | Fast images, redraw, masked editing | 8 steps, CFG 2 |
+| Qwen Image Edit 2511 FP8 mixed | Instruction editing, multiple references | 40 steps, CFG 3 |
+| NSFW Wan 1.3B E14 | Text to Video | 30 steps, CFG 6 |
+| Wan 2.2 TI2V 5B | Text or Image to Video | 30 steps, CFG 6 |
+| LTX-2 19B distilled FP8 | Text or Image to Video with optional audio | Fixed 8-step recipe, CFG 1 |
+| Qwen-Image 2.1 + Elusarca Detail Enhancer | Optional image enhancement | 25 steps, CFG 1, detail strength 1 |
 
-Need more models? Or don't understand how to use LoRaS? You can download the source code of this program or copy the link and feed it to Chatgpt or Claude and ask to include the github or huggingface link.
+Need more models? Or don't understand how to use LoRaS? You can download the source code of this program or copy the link and feed it to Chatgpt or Claude and ask to include your github or huggingface link.
 
 Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest). The repository contains the application source and small setup assets; model weights download separately.
 
