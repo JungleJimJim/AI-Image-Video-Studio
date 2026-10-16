@@ -1,6 +1,6 @@
 # A.I. Image & Video Studio 1.5.2
 
-A Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS.
+a Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS. Some models can produce NSFW images.
 Includes:
 Wan 2.2
 LTX-2
@@ -14,11 +14,13 @@ Illustrious XL 2.0
 Qwen Image Edit 2511
 Qwen-Image 2.1 Detail Enhancer
 
-Need more models? Or don't understand how to use LoRaS? You can download the source code of this program and feed it to Chatgpt or Claude and ask to include your github or huggingface link.
+Need more models? Or don't understand how to use LoRaS? You can download the source code of this program or copy the link and feed it to Chatgpt or Claude and ask to include the github or huggingface link.
 
 Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest). The repository contains the application source and small setup assets; model weights download separately.
 
 ## Installation
+
+Easiest way: Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest).
 
 Run **outputs/release-1.5.2/AIImageVideoStudio-Setup-1.5.2.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
 
