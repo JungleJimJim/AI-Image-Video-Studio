@@ -1,4 +1,4 @@
-# A.I. Image & Video Studio 1.5.2
+# A.I. Image & Video Studio
 
 a Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS. Some models can produce NSFW images.
 Includes:
