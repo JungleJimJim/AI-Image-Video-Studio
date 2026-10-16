@@ -25,7 +25,7 @@ Download the Windows installer from [GitHub Releases](https://github.com/JungleJ
 
 Easiest way: Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest).
 
-Run **outputs/release-1.5.2/AIImageVideoStudio-Setup-1.5.2.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
+Run **AIImageVideoStudio-Setup.exe**. The default application location is **C:\Program Files\AI Image & Video Studio**. Setup lets you choose another location, a separate writable folder for models/data, and desktop and Start menu shortcuts. Existing studio folders can be upgraded while preserving settings and media. Finish or cancel any current render before upgrading.
 
 The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan 1.3B E14 base model. Optional packs can be selected in setup or installed later from **Models**. Downloads resume after cancellation and use pinned revisions and SHA-256 checks. Shared encoder/VAE files are downloaded only once. Model weights are not bundled into the small installer.
 
