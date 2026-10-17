@@ -1,3 +1,5 @@
+![A.I. Image & Video Studio Talking Avatar interface](docs/images/talking-avatar.png)
+
 # A.I. Image & Video Studio
 
 a Windows desktop app for n00bs that uses the most popular A.I. models to bring you:
