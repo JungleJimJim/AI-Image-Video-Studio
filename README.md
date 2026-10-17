@@ -1,7 +1,15 @@
 # A.I. Image & Video Studio
 
-a Windows desktop app for n00bs with local text-to-image, image editing, text-to-video and image-to-video generation. One-click downloading and installation of the top models and easy installation and managing of LoRaS. Some models can produce NSFW images.
-Includes:
+a Windows desktop app for n00bs that uses the most popular A.I. models to bring you:
+| Local text-to-image generation
+| Local image editing generation
+| Local Text-to-video generation
+| Local Image-to-video generation. 
+| Local Talking avatar generation
+| One-click downloading and installation of the top models and easy installation and managing of LoRaS. 
+| Some models can produce NSFW images or videos.
+
+Includes these models:
 | Model | Tools | Recommended starting settings |
 | --- | --- | --- |
 | Z-Image-Turbo | Images | 8 steps, CFG 1 |
