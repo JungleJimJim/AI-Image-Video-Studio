@@ -1,6 +1,7 @@
 # A.I. Image & Video Studio
 
 a Windows desktop app for n00bs that uses the most popular A.I. models to bring you:
+| --- |
 | Local text-to-image generation
 | Local image editing generation
 | Local Text-to-video generation
