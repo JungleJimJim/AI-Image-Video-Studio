@@ -3,9 +3,9 @@
 a Windows desktop app for n00bs that uses the most popular A.I. models to bring you:
 | --- |
 | Local text-to-image generation
-| Local image editing generation
+| Local image editing
 | Local Text-to-video generation
-| Local Image-to-video generation. 
+| Local Image-to-video generation
 | Local Talking avatar & Lipsync generation
 | One-click downloading and installation of the top models and easy installation and managing of LoRaS. 
 | Some models can produce NSFW images or videos.
