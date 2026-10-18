@@ -10,7 +10,7 @@ root = Path(__file__).resolve().parent
 output = root / "outputs" / ("AIImageVideoStudio-Source-" + VERSION + ".zip")
 files = [root / name for name in ("README.md", "build.py", "package_source.py", "requirements-build.txt", ".gitignore")]
 files.extend(root / name for name in ('.gitattributes', 'LICENSE') if (root / name).is_file())
-for folder in ("src", "tests", "assets"):
+for folder in ("src", "tests", "assets", "docs"):
     files.extend(path for path in (root / folder).rglob("*")
                  if path.is_file() and "__pycache__" not in path.parts and path.suffix not in (".pyc",)
                  and path.name not in ("WanVideoStudio.exe", 'AIImageVideoStudio.exe'))

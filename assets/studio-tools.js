@@ -40,7 +40,7 @@ function enhancementPreset(kind){const p=kind==='image'?'ui-':'uv-',keys=Object.
 function fillEnhancement(kind,options){if(!options)return;const p=kind==='image'?'ui-':'uv-';for(const [k,v] of Object.entries(options)){const input=$(p+k);if(input){if(input.type==='checkbox')input.checked=v;else input.value=v;}}}
 function generationOptions(p){const o=values(p),kind=p==='v'?'video':'image';o.priority=Number($(p+'priority').value);o.upscale={enabled:$(p+'enhance').checked};if(o.upscale.enabled)o.upscale.options=enhancementPreset(kind);if(editingQueue&&editingQueue.kind===({i:'image',e:'edit',v:'video'}[p])){if(o.model===editingQueue.model)o.loras=editingQueue.loras;if(o.upscale.enabled&&kind==='image'&&editingQueue.upscaleLoras)o.upscale.options.loras=editingQueue.upscaleLoras;}return o;}
 async function refreshTools(){state=await api('/api/state');renderTools();}
-async function submitQueue(kind,options,priority){if(editingQueue){if(editingQueue.kind!==kind){notify('Finish or cancel the current queue edit first.');return;}await action('/api/queue/action',{action:'update',id:editingQueue.id,options,priority});exitQueueEdit();notify('Queue job updated. Resume the queue when ready.');}else{await action('/api/queue/add',{kind,options,priority});const p={image:'i',edit:'e',video:'v',enhance_image:'ui-'}[kind];if(p)advanceSeed(p,options.seed);if(options.upscale?.enabled&&kind!=='video')advanceSeed('ui-',options.upscale.options?.seed);notify('Added to queue.');}await refreshTools();}
+async function submitQueue(kind,options,priority){if(editingQueue){if(editingQueue.kind!==kind){notify('Finish or cancel the current queue edit first.');return;}await action('/api/queue/action',{action:'update',id:editingQueue.id,options,priority});exitQueueEdit();notify('Queue job updated. Resume the queue when ready.');}else{await action('/api/queue/add',{kind,options,priority});const p={image:'i',edit:'e',video:'v',enhance_image:'ui-',faceswap:'f'}[kind];if(p)advanceSeed(p,options.seed);if(options.upscale?.enabled&&kind!=='video')advanceSeed('ui-',options.upscale.options?.seed);notify('Added to queue.');}await refreshTools();}
 $('image-form').onsubmit=async e=>{e.preventDefault();const o=generationOptions('i');await submitQueue('image',o,o.priority).catch(()=>{});};
 $('video-form').onsubmit=async e=>{e.preventDefault();const o={...generationOptions('v'),mode:$('vmode').value,source_image:videoSource?.id||'',frames:$('vframes').value==='custom'?$('vframecount').value:$('vframes').value,fps:$('vfps').value,shift:$('vshift').value,sampler:$('vsampler').value,scheduler:$('vscheduler').value,audio:$('vaudio').checked};await submitQueue('video',o,o.priority).catch(()=>{});};
 $('edit-form').onsubmit=async e=>{e.preventDefault();if(!editorSource){notify('Choose a starting image first.');return;}if($('etool').value==='crop'){const o={id:editorSource.id};for(const [key,id] of [['x','crop-x'],['y','crop-y'],['crop_width','crop-w'],['crop_height','crop-h'],['width','resize-w'],['height','resize-h']])o[key]=$(id).value;await action('/api/images/crop',o).catch(()=>{});return;}const o={...generationOptions('e'),source_image:editorSource.id,references:references.map(x=>x.id),strength:$('estrength').value};if($('etool').value==='mask')o.mask=maskCanvas.toDataURL('image/png');await submitQueue('edit',o,o.priority).catch(()=>{});};
@@ -57,7 +57,7 @@ async function editQueueItem(id){await action('/api/queue/action',{action:'pause
 }
 function renderQueue(){const queue=state.queue;if(!queue)return;const signature=JSON.stringify(queue);$('queue-continue-errors').checked=queue.continue_on_error!==false;$('queue-count').textContent=queue.waiting?'('+queue.waiting+')':'';$('queue-toggle').textContent=queue.paused?'Resume queue':'Pause queue';$('queue-status').textContent=`${queue.paused?'Paused':'Automatic'} · ${queue.waiting} waiting`;
  if(signature===queueSignature)return;queueSignature=signature;
- $('queue-list').innerHTML=queue.jobs.length?queue.jobs.map(job=>{const waiting=job.status==='queued',running=job.status==='running';return `<article class="queue-card ${running?'running':''}"><div class="queue-job-copy"><div class="row"><strong>${esc(({image:'Image',video:'Video',edit:'Image edit',enhance_image:'Image enhancement',enhance_video:'Video enhancement'})[job.kind])}</strong><span class="badge">${esc(job.status)}</span><small>${esc(loraInfo(job.model)?.name||job.model)}</small></div><p>${esc(job.prompt||'Enhance a library source')}</p><small>${job.width?`${job.width} × ${job.height} · `:''}${esc(job.created)}${job.error?' · '+esc(job.error):''}</small></div><div class="queue-job-actions">${waiting?`${f('qp-'+job.id,'Priority',num('qp-'+job.id,job.priority,0,10),'priority')}<button data-queue-action="move" data-id="${job.id}" data-direction="up" aria-label="Move job up">↑</button><button data-queue-action="move" data-id="${job.id}" data-direction="down" aria-label="Move job down">↓</button><button data-queue-edit="${job.id}">Edit</button>`:`<span class="muted">Priority ${job.priority}</span>`}${waiting||running?`<button class="danger" data-queue-action="cancel" data-id="${job.id}">${job.cancel_requested?'Cancelling…':'Cancel'}</button>`:`<button data-queue-action="retry" data-id="${job.id}">Retry / copy</button>`}</div></article>`;}).join(''):'<div class="notice">No jobs yet. Add an image, edit, video or enhancement from its tool.</div>';
+ $('queue-list').innerHTML=queue.jobs.length?queue.jobs.map(job=>{const waiting=job.status==='queued',running=job.status==='running';return `<article class="queue-card ${running?'running':''}"><div class="queue-job-copy"><div class="row"><strong>${esc(({image:'Image',video:'Video',edit:'Image edit',enhance_image:'Image enhancement',enhance_video:'Video enhancement',avatar:'Talking Avatar',faceswap:'Faceswap',voice:'Voice'})[job.kind])}</strong><span class="badge">${esc(job.status)}</span><small>${esc(loraInfo(job.model)?.name||job.model)}</small></div><p>${esc(job.prompt||'Enhance a library source')}</p><small>${job.width?`${job.width} × ${job.height} · `:''}${esc(job.created)}${job.error?' · '+esc(job.error):''}</small></div><div class="queue-job-actions">${waiting?`${f('qp-'+job.id,'Priority',num('qp-'+job.id,job.priority,0,10),'priority')}<button data-queue-action="move" data-id="${job.id}" data-direction="up" aria-label="Move job up">↑</button><button data-queue-action="move" data-id="${job.id}" data-direction="down" aria-label="Move job down">↓</button><button data-queue-edit="${job.id}">Edit</button>`:`<span class="muted">Priority ${job.priority}</span>`}${waiting||running?`<button class="danger" data-queue-action="cancel" data-id="${job.id}">${job.cancel_requested?'Cancelling…':'Cancel'}</button>`:`<button data-queue-action="retry" data-id="${job.id}">Retry / copy</button>`}</div></article>`;}).join(''):'<div class="notice">No jobs yet. Add an image, edit, video or enhancement from its tool.</div>';
  for(const job of queue.jobs.filter(x=>x.status==='queued'))$('qp-'+job.id).onchange=async e=>{await action('/api/queue/action',{action:'update',id:job.id,priority:e.target.value}).catch(()=>{});await refreshTools();};
 }
 function setEnhancementSource(item,kind){enhanceSource={...item,media_type:kind};$('enhance-kind').value=kind;enhanceSourceSignature='';updateEnhancementSource();showPage('upscale');}
@@ -74,7 +74,100 @@ $('queue-continue-errors').onchange=async e=>{await action('/api/queue/action',{
 $('queue-toggle').onclick=async()=>{await action('/api/queue/action',{action:state.queue.paused?'resume':'pause'}).catch(()=>{});await refreshTools();};$('queue-clear').onclick=async()=>{await action('/api/queue/action',{action:'clear_finished'}).catch(()=>{});await refreshTools();};$('queue-cancel-all').onclick=async()=>{await action('/api/queue/action',{action:'cancel_all'}).catch(()=>{});await refreshTools();};
 document.addEventListener('click',async e=>{const b=e.target.closest('button');if(!b)return;try{if(b.dataset.queueAction){await action('/api/queue/action',{action:b.dataset.queueAction,id:b.dataset.id,direction:b.dataset.direction});await refreshTools();}if(b.dataset.queueEdit)await editQueueItem(b.dataset.queueEdit);if(b.hasAttribute('data-exit-queue-edit'))exitQueueEdit();if(b.dataset.enhanceSettings){$('enhance-kind').value=b.dataset.enhanceSettings;enhanceSourceSignature='';updateEnhancementSource();showPage('upscale');}if(b.dataset.uninstall){removalPreview=await action('/api/models/removal-plan',{model:b.dataset.uninstall});$('uninstall-summary').innerHTML=`<p><strong>${esc(removalPreview.name)}</strong></p><p>${(removalPreview.bytes/1024**3).toFixed(2)} GB in ${removalPreview.files.length} files will be removed.</p><ul>${removalPreview.files.map(x=>`<li>${esc(x.filename)}</li>`).join('')}</ul><p>Shared files kept:</p><ul>${removalPreview.shared.map(x=>`<li>${esc(x.filename)} · ${esc(x.used_by.join(', '))}</li>`).join('')||'<li>None required by another installed model.</li>'}</ul><p class="notice">Runtime software, LoRAs, settings, images and videos stay in place. Removed model weights can be downloaded again.</p>`;$('uninstall-confirm').disabled=state.busy||!removalPreview.files.length;$('uninstall-dialog').showModal();}}catch(error){notify(error.message);}});
 $('uninstall-confirm').onclick=async()=>{if(!removalPreview)return;try{await action('/api/models/uninstall',{model:removalPreview.model,ticket:removalPreview.ticket});$('uninstall-dialog').close();}catch{}};
-const originalOpenMedia=openMedia;openMedia=function(item){originalOpenMedia(item);if(item.kind==='enhanced')$('reuse-settings')?.remove();const button=document.createElement('button');button.textContent='Upscale / enhance';button.onclick=()=>{$('media-dialog').close();setEnhancementSource(item,item.media_type==='video'?'video':'image');};$('media-body').querySelector('.media-preview-column').append(button);};
+const imageViewer=$('image-viewer'),imageSpace=$('image-viewer-space'),viewerPicture=$('image-viewer-picture');
+const imageView={scale:1,x:0,y:0,fit:1,drag:null,enteredFullscreen:false};
+function renderImageView(){
+ const w=imageSpace.clientWidth,h=imageSpace.clientHeight;
+ const iw=viewerPicture.naturalWidth*imageView.scale,ih=viewerPicture.naturalHeight*imageView.scale;
+ imageView.x=iw<=w?(w-iw)/2:Math.max(w-iw,Math.min(0,imageView.x));
+ imageView.y=ih<=h?(h-ih)/2:Math.max(h-ih,Math.min(0,imageView.y));
+ viewerPicture.style.transform=`translate(${imageView.x}px,${imageView.y}px) scale(${imageView.scale})`;
+ $('image-zoom-level').textContent=`${Math.round(imageView.scale*100)}%`;
+}
+function fitImageView(){
+ if(!imageViewer.open||!viewerPicture.naturalWidth)return;
+ imageView.fit=Math.min(imageSpace.clientWidth/viewerPicture.naturalWidth,imageSpace.clientHeight/viewerPicture.naturalHeight);
+ imageView.scale=imageView.fit;imageView.x=0;imageView.y=0;renderImageView();
+}
+function zoomImageView(scale,px=imageSpace.clientWidth/2,py=imageSpace.clientHeight/2){
+ if(!viewerPicture.naturalWidth)return;
+ const next=Math.max(Math.min(imageView.fit,1)/8,Math.min(Math.max(16,imageView.fit),scale));
+ const ratio=next/imageView.scale;
+ imageView.x=px-(px-imageView.x)*ratio;imageView.y=py-(py-imageView.y)*ratio;
+ imageView.scale=next;renderImageView();
+}
+function openLibraryImage(item){
+ imageView.drag=null;imageView.enteredFullscreen=false;
+ $('image-viewer-name').textContent=item.name;
+ viewerPicture.style.visibility='hidden';
+ viewerPicture.onload=()=>{if(imageViewer.open){fitImageView();viewerPicture.style.visibility='visible';}};
+ viewerPicture.onerror=()=>{notify('This image could not be loaded. Check that its library file still exists.');imageViewer.close();};
+ imageViewer.showModal();
+ if(window.chrome?.webview)window.chrome.webview.postMessage('open-image-viewer');
+ else if(!document.fullscreenElement&&document.documentElement.requestFullscreen){
+  imageView.enteredFullscreen=true;
+  document.documentElement.requestFullscreen().then(()=>{if(!imageViewer.open)document.exitFullscreen().catch(()=>{});}).catch(()=>{imageView.enteredFullscreen=false;});
+ }
+ viewerPicture.src=mediaURL(item);
+}
+imageSpace.addEventListener('wheel',e=>{
+ e.preventDefault();const rect=imageSpace.getBoundingClientRect();
+ const delta=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?imageSpace.clientHeight:1);
+ zoomImageView(imageView.scale*Math.exp(-Math.max(-1000,Math.min(1000,delta))*.0015),e.clientX-rect.left,e.clientY-rect.top);
+},{passive:false});
+imageSpace.onpointerdown=e=>{if(e.button!==0||!viewerPicture.naturalWidth)return;e.preventDefault();imageView.drag={id:e.pointerId,x:e.clientX,y:e.clientY,ox:imageView.x,oy:imageView.y};imageSpace.setPointerCapture(e.pointerId);imageSpace.classList.add('panning');};
+imageSpace.onpointermove=e=>{const d=imageView.drag;if(!d||d.id!==e.pointerId)return;imageView.x=d.ox+e.clientX-d.x;imageView.y=d.oy+e.clientY-d.y;renderImageView();};
+imageSpace.onpointerup=imageSpace.onpointercancel=imageSpace.onlostpointercapture=()=>{imageView.drag=null;imageSpace.classList.remove('panning');};
+$('image-zoom-in').onclick=()=>zoomImageView(imageView.scale*1.25);
+$('image-zoom-out').onclick=()=>zoomImageView(imageView.scale/1.25);
+$('image-zoom-fit').onclick=fitImageView;
+$('image-zoom-actual').onclick=()=>zoomImageView(1);
+$('image-viewer-close').onclick=()=>imageViewer.close();
+imageViewer.oncancel=e=>{e.preventDefault();imageViewer.close();};
+imageViewer.onclose=()=>{
+ imageView.drag=null;imageSpace.classList.remove('panning');viewerPicture.removeAttribute('src');
+ if(window.chrome?.webview)window.chrome.webview.postMessage('close-image-viewer');
+ else if(imageView.enteredFullscreen&&document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+ imageView.enteredFullscreen=false;
+};
+document.addEventListener('keydown',e=>{
+ if(!imageViewer.open)return;
+ if(e.key==='Escape'){
+  e.stopImmediatePropagation();
+  if(!$('help-dialog').open){e.preventDefault();imageViewer.close();}
+ }else if(!$('help-dialog').open&&['+','=','-','0','1'].includes(e.key)){
+  e.preventDefault();e.stopImmediatePropagation();
+  if(e.key==='0')fitImageView();else if(e.key==='1')zoomImageView(1);else zoomImageView(imageView.scale*(e.key==='-'?.8:1.25));
+ }
+},true);
+new ResizeObserver(fitImageView).observe(imageSpace);
+document.addEventListener('fullscreenchange',()=>{if(imageViewer.open&&imageView.enteredFullscreen&&!document.fullscreenElement)imageViewer.close();});
+const originalOpenMedia=openMedia;
+openMedia=function(item){
+ originalOpenMedia(item);
+ if(item.kind==='enhanced')$('reuse-settings')?.remove();
+ const preview=$('media-body').querySelector('.media-preview-column');
+ if(item.media_type!=='video'){
+  const picture=preview.querySelector('img.modal-media');
+  picture.classList.add('zoomable');picture.tabIndex=0;picture.setAttribute('role','button');
+  picture.setAttribute('aria-label','Open fullscreen image viewer');picture.title='Click to view fullscreen · Scroll to zoom';
+  picture.onclick=()=>openLibraryImage(item);
+  picture.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openLibraryImage(item);}};
+ }
+ const folderActions=document.createElement('div');
+ folderActions.className='row';
+ folderActions.innerHTML=`<button type="button" id="library-open-folder">Open containing folder</button>${q('libraryFolder')}`;
+ const folderButton=folderActions.querySelector('#library-open-folder');
+ folderButton.onclick=async()=>{
+  folderButton.disabled=true;
+  try{await action('/api/library/open-folder',{id:item.id});}catch{}finally{folderButton.disabled=false;}
+ };
+ preview.append(folderActions);
+ const button=document.createElement('button');
+ button.textContent='Upscale / enhance';
+ button.onclick=()=>{$('media-dialog').close();setEnhancementSource(item,item.media_type==='video'?'video':'image');};
+ preview.append(button);
+};
 $('upscale-form').insertAdjacentHTML('afterbegin','<div id="upscale-queue-edit" class="queue-edit-banner" hidden>Editing a waiting job <button type="button" data-exit-queue-edit>Cancel editing</button></div>');
 const originalToolsLoraSave=$('save-loras').onclick;$('save-loras').onclick=async()=>{const model=$('lora-target').value;await originalToolsLoraSave();if(editingQueue){if(model===editingQueue.model)editingQueue.loras=savedLoras(model);if(model==='qwen21')editingQueue.upscaleLoras=savedLoras(model);}};
 const originalToolsOpenLoras=openLoras;openLoras=function(model){originalToolsOpenLoras(model);if(editingQueue){const selected=model===editingQueue.model?editingQueue.loras:model==='qwen21'?editingQueue.upscaleLoras:null;if(selected){loraDrafts[model]=JSON.parse(JSON.stringify(selected));renderLoras(true);}}};

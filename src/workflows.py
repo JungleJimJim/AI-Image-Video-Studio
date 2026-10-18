@@ -109,10 +109,15 @@ def validate_image_options(raw):
     if not isinstance(o['randomize_seed'], bool):
         raise ValueError('Choose whether to prepare a new seed for each job.')
     if o['model']=='flux3':o.update(cfg=1.0,negative='')
+    if o['model'] in ('viggle','bfs'):o.update(cfg=1.0,negative='')
+    if o['model']=='viggle':o['steps']=6
     return o
 
 
 def image_workflow(o, prefix):
+    if o['model'] in ('viggle','bfs'):
+        from qwen21 import workflow
+        return workflow(o,prefix)
     if catalog()[o['model']]['family'] != 'sdxl':
         return native_image_workflow(o, prefix)
     filename = catalog()[o['model']]['files'][0]['filename']
@@ -142,8 +147,9 @@ def validate_edit_options(raw):
         raise ValueError(f'Use up to {maximum} extra reference images with this model.')
     if len(set([source] + refs)) != len([source] + refs):
         raise ValueError('Choose different reference images.')
-    if refs and o['model'] not in ('fluxklein', 'qwenedit', 'flux3'):
+    if refs and o['model'] not in ('fluxklein', 'qwenedit', 'flux3','viggle','bfs'):
         raise ValueError('Multiple references require FLUX Klein or Qwen Image Edit.')
+    if o['model']=='bfs' and len(refs)!=1:raise ValueError('Faceswap needs one target image and one different reference face.')
     try:
         strength = float(raw.get('strength', .65))
         if not 0 < strength <= 1:
@@ -186,6 +192,9 @@ def native_image_workflow(o, prefix):
 
 
 def edit_workflow(o, prefix):
+    if o['model'] in ('viggle','bfs'):
+        from qwen21 import workflow
+        return workflow(o,prefix)
     family = catalog()[o['model']]['family']
     if family=='flux3':return flux3_edit_workflow(o,prefix)
     g = image_workflow(o, prefix)

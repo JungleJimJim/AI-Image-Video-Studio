@@ -181,6 +181,64 @@ class APITests(unittest.TestCase):
             urllib.request.urlopen(req)
         self.assertEqual(error.exception.code,400);prepare.assert_not_called();self.assertFalse(self.studio.cancel.is_set())
 
+    def test_library_folder_uses_saved_image_and_video_locations_while_busy(self):
+        # Old output folders and names with spaces must work independently of Settings.
+        self.studio.settings['output'] = str(Path(self.tmp.name) / 'new output')
+        self.studio.state['busy'] = True
+        for media_type, suffix in (('images', '.png'), ('videos', '.mp4')):
+            file = Path(self.tmp.name) / 'older output & imports' / ('café image' + suffix)
+            file.parent.mkdir(exist_ok=True)
+            file.write_bytes(b'fixture')
+            getattr(self.studio, media_type).append({'id': media_type, 'path': str(file)})
+            req = urllib.request.Request(self.base + '/api/library/open-folder',
+                data=json.dumps({'id': media_type, 'path': 'C:/untrusted.exe'}).encode(),
+                headers={'X-Wan-Token': self.studio.token})
+            with patch('app.subprocess.Popen') as launch:
+                with urllib.request.urlopen(req) as response:
+                    self.assertTrue(json.load(response)['ok'])
+            self.assertEqual(launch.call_args.args, (f'explorer.exe /select,"{file.resolve()}"',))
+            self.assertTrue(self.studio.state['busy'])
+        self.assertFalse(Path(self.studio.settings['output']).exists())
+
+    def test_library_folder_rejects_missing_files_and_untrusted_requests(self):
+        self.studio.images.append({'id': 'missing', 'path': str(Path(self.tmp.name) / 'gone.png')})
+        cases = [({'id': 'missing'}, {}, 400), ({'id': 'unknown'}, {}, 400),
+                 ({'path': 'C:/Windows'}, {}, 400),
+                 ({'id': 'missing'}, {'X-Wan-Token': 'wrong'}, 403),
+                 ({'id': 'missing'}, {'Origin': 'https://example.com'}, 403)]
+        with patch('app.subprocess.Popen') as launch:
+            for data, extra_headers, expected in cases:
+                with self.subTest(data=data, headers=extra_headers):
+                    req = urllib.request.Request(self.base + '/api/library/open-folder',
+                        data=json.dumps(data).encode(),
+                        headers={'X-Wan-Token': self.studio.token, **extra_headers})
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        urllib.request.urlopen(req)
+                    self.assertEqual(error.exception.code, expected)
+                    error.exception.close()
+            launch.assert_not_called()
+
+    def test_recording_playback_requires_token_and_supports_seeking(self):
+        file=Path(self.tmp.name)/'voice.wav';file.write_bytes(bytes(range(256)))
+        self.studio.recordings.append({'id':'voice','path':str(file)})
+        with self.assertRaises(urllib.error.HTTPError) as error:
+            urllib.request.urlopen(self.base+'/audio/voice?token=wrong')
+        self.assertEqual(error.exception.code,403);error.exception.close()
+        req=urllib.request.Request(self.base+'/audio/voice?token='+self.studio.token,headers={'Range':'bytes=20-39'})
+        with urllib.request.urlopen(req) as response:
+            self.assertEqual(response.status,206);self.assertEqual(response.read(),bytes(range(20,40)))
+
+    def test_avatar_audio_import_enforces_auth_origin_and_size_before_reading(self):
+        cases=[({'X-Wan-Token':'wrong'},403),({'Origin':'https://example.com'},403),
+               ({'Content-Length':str(85*1024**2)},400)]
+        with patch.object(self.studio,'import_recording') as decoder:
+            for extra,status in cases:
+                req=urllib.request.Request(self.base+'/api/avatars/audio/import',data=b'{}',
+                    headers={'X-Wan-Token':self.studio.token,**extra})
+                with self.assertRaises(urllib.error.HTTPError) as error:urllib.request.urlopen(req)
+                self.assertEqual(error.exception.code,status);error.exception.close()
+            decoder.assert_not_called()
+
     def test_video_range_and_missing_video(self):
         file = Path(self.tmp.name) / "video.mp4"
         file.write_bytes(bytes(range(256)))

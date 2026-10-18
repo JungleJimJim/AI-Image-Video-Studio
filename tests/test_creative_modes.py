@@ -65,7 +65,10 @@ class CreativeModesTests(unittest.TestCase):
             for f in p['files']:
                 self.assertEqual(len(f['sha256']),64)
                 self.assertNotIn('/resolve/main/',f['url'])
-                self.assertGreater(f['size'],1000000)
+                # Avatar packs also pin small architecture and tokenizer configs.
+                self.assertGreater(f['size'],0)
+                if f['filename'].endswith(('.safetensors','.gguf','.onnx','.pth','.pt','.bin')):
+                    self.assertGreater(f['size'],1000000)
 
     def test_wan_lora_settings_are_preserved_while_another_model_is_selected(self):
         with tempfile.TemporaryDirectory() as tmp, patch('app.gpu_info',return_value={}), patch('app.validate_selection',return_value=[{'name':'wan.safetensors','strength':0.7}]):

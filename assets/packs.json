@@ -347,5 +347,732 @@
         "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/vae/flux2-vae.safetensors"
       }
     ]
+  },
+  "avatar_echo": {
+    "name": "EchoMimicV3-Flash",
+    "kind": "avatar",
+    "family": "avatar_echo",
+    "description": "Talking portraits from an image and your recording. Recommended starting point for a 16 GB GPU; uses eight sampling steps.",
+    "source": "https://github.com/antgroup/echomimic_v3",
+    "license": "Apache 2.0",
+    "license_url": "https://github.com/antgroup/echomimic_v3",
+    "engine": "avatar",
+    "avatar_runtime": true,
+    "files": [
+      {
+        "label": "UMT5 text encoder (memory-saving FP8)",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "filename": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 6735906897,
+        "sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
+      },
+      {
+        "label": "Wan_2.1_ComfyUI_repackaged \u00b7 clip_vision_h.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/clip_vision/clip_vision_h.safetensors",
+        "filename": "clip_vision_h.safetensors",
+        "folder": "clip_vision",
+        "size": 1264219396,
+        "sha256": "64a7ef761bfccbadbaa3da77366aac4185a6c58fa5de5f589b42a65bcc21f161"
+      },
+      {
+        "label": "Wan2.1-Fun-V1.1-1.3B-InP \u00b7 Wan2.1_VAE.pth",
+        "url": "https://huggingface.co/alibaba-pai/Wan2.1-Fun-V1.1-1.3B-InP/resolve/fc913c34361f4ec879e2f9c78b4f11ae50a937d1/Wan2.1_VAE.pth",
+        "filename": "Wan2.1_VAE.pth",
+        "folder": "vae",
+        "size": 507609880,
+        "sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981"
+      },
+      {
+        "label": "Wan2.1-Fun-V1.1-1.3B-InP \u00b7 diffusion_pytorch_model.safetensors",
+        "url": "https://huggingface.co/alibaba-pai/Wan2.1-Fun-V1.1-1.3B-InP/resolve/fc913c34361f4ec879e2f9c78b4f11ae50a937d1/diffusion_pytorch_model.safetensors",
+        "filename": "diffusion_pytorch_model.safetensors",
+        "folder": "echo_mimic/transformer",
+        "size": 3128957992,
+        "sha256": "4ec199076538b946935ebcb3ba808d3c427e638f29519a3c3c98d31d821e5eed"
+      },
+      {
+        "label": "Wan2.1-Fun-V1.1-1.3B-InP \u00b7 config.json",
+        "url": "https://huggingface.co/alibaba-pai/Wan2.1-Fun-V1.1-1.3B-InP/resolve/fc913c34361f4ec879e2f9c78b4f11ae50a937d1/config.json",
+        "filename": "config.json",
+        "folder": "echo_mimic/transformer",
+        "size": 249,
+        "sha256": "5c987c9e1824d23e6ba53db32194099bc00072fb495d442e26ef9a3d85f9fd22"
+      },
+      {
+        "label": "EchoMimicV3 \u00b7 diffusion_pytorch_model.safetensors",
+        "url": "https://huggingface.co/BadToBest/EchoMimicV3/resolve/311e176905a8c4c24b240b530488fe636ce4d249/echomimicv3-flash-pro/diffusion_pytorch_model.safetensors",
+        "filename": "diffusion_pytorch_model.safetensors",
+        "folder": "echo_mimic/echomimicv3-flash-pro",
+        "size": 3727671120,
+        "sha256": "5ebdbb2fc709108bf2a1728fd92eb2874804e4bc0324e92a2cd55425968c85a4"
+      },
+      {
+        "label": "EchoMimicV3 \u00b7 config.json",
+        "url": "https://huggingface.co/BadToBest/EchoMimicV3/resolve/311e176905a8c4c24b240b530488fe636ce4d249/echomimicv3-flash-pro/config.json",
+        "filename": "config.json",
+        "folder": "echo_mimic/echomimicv3-flash-pro",
+        "size": 577,
+        "sha256": "abe85b8379e2591902f53f698f7ebd711bd6ba4811c796116b3d3c559d2d59ea"
+      },
+      {
+        "label": "Wan2.1-Fun-V1.1-1.3B-InP \u00b7 special_tokens_map.json",
+        "url": "https://huggingface.co/alibaba-pai/Wan2.1-Fun-V1.1-1.3B-InP/resolve/fc913c34361f4ec879e2f9c78b4f11ae50a937d1/google/umt5-xxl/special_tokens_map.json",
+        "filename": "special_tokens_map.json",
+        "folder": "avatars/echo/Wan2.1-Fun-V1.1-1.3B-InP/google/umt5-xxl/.",
+        "size": 6623,
+        "sha256": "7b8a9f5040adb67b5805abdfd42c1f8d0f3d0e711f10726580eb3789cd0ad61d"
+      },
+      {
+        "label": "Wan2.1-Fun-V1.1-1.3B-InP \u00b7 spiece.model",
+        "url": "https://huggingface.co/alibaba-pai/Wan2.1-Fun-V1.1-1.3B-InP/resolve/fc913c34361f4ec879e2f9c78b4f11ae50a937d1/google/umt5-xxl/spiece.model",
+        "filename": "spiece.model",
+        "folder": "avatars/echo/Wan2.1-Fun-V1.1-1.3B-InP/google/umt5-xxl/.",
+        "size": 4548313,
+        "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"
+      },
+      {
+        "label": "Wan2.1-Fun-V1.1-1.3B-InP \u00b7 tokenizer.json",
+        "url": "https://huggingface.co/alibaba-pai/Wan2.1-Fun-V1.1-1.3B-InP/resolve/fc913c34361f4ec879e2f9c78b4f11ae50a937d1/google/umt5-xxl/tokenizer.json",
+        "filename": "tokenizer.json",
+        "folder": "avatars/echo/Wan2.1-Fun-V1.1-1.3B-InP/google/umt5-xxl/.",
+        "size": 16837417,
+        "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b"
+      },
+      {
+        "label": "Wan2.1-Fun-V1.1-1.3B-InP \u00b7 tokenizer_config.json",
+        "url": "https://huggingface.co/alibaba-pai/Wan2.1-Fun-V1.1-1.3B-InP/resolve/fc913c34361f4ec879e2f9c78b4f11ae50a937d1/google/umt5-xxl/tokenizer_config.json",
+        "filename": "tokenizer_config.json",
+        "folder": "avatars/echo/Wan2.1-Fun-V1.1-1.3B-InP/google/umt5-xxl/.",
+        "size": 61728,
+        "sha256": "ed9a3a8b0faa71a70a32847e0435fe036e6e112d4df4edb7bb48a921e344dc05"
+      },
+      {
+        "label": "chinese-wav2vec2-base \u00b7 config.json",
+        "url": "https://huggingface.co/TencentGameMate/chinese-wav2vec2-base/resolve/3991242c806928916fff4a8c0e4f76acf661b743/config.json",
+        "filename": "config.json",
+        "folder": "echo_mimic/chinese-wav2vec2-base/.",
+        "size": 1951,
+        "sha256": "dc2cd2f989104b9510ce9e43a343a6f1fe55aa60baa1fcfca0c5908e6590b8b6"
+      },
+      {
+        "label": "chinese-wav2vec2-base \u00b7 preprocessor_config.json",
+        "url": "https://huggingface.co/TencentGameMate/chinese-wav2vec2-base/resolve/3991242c806928916fff4a8c0e4f76acf661b743/preprocessor_config.json",
+        "filename": "preprocessor_config.json",
+        "folder": "echo_mimic/chinese-wav2vec2-base/.",
+        "size": 160,
+        "sha256": "c1707926644954affc391ab09ccfaf470ccd80af218d11350991090711441c09"
+      },
+      {
+        "label": "chinese-wav2vec2-base \u00b7 pytorch_model.bin",
+        "url": "https://huggingface.co/TencentGameMate/chinese-wav2vec2-base/resolve/3991242c806928916fff4a8c0e4f76acf661b743/pytorch_model.bin",
+        "filename": "pytorch_model.bin",
+        "folder": "echo_mimic/chinese-wav2vec2-base/.",
+        "size": 380261837,
+        "sha256": "be2da40c9e7ae26bfc904a3ed79ebb9e8f060bec6dba85d6a6ae86114bc38901"
+      }
+    ],
+    "input_types": [
+      "image"
+    ]
+  },
+  "avatar_soulx": {
+    "name": "SoulX-FlashHead \u00b7 Lite & Pro",
+    "kind": "avatar",
+    "family": "avatar_soulx",
+    "description": "Image and recording to a talking head. Lite favors speed; Pro favors detail. Both variants are included; no microphone or voice service is required.",
+    "source": "https://github.com/Soul-AILab/SoulX-FlashHead",
+    "license": "Apache 2.0; Lite VAE: Open-RAIL-M",
+    "license_url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B#component-licenses",
+    "engine": "avatar",
+    "avatar_runtime": true,
+    "files": [
+      {
+        "label": "SoulX-FlashHead-1_3B \u00b7 config.json",
+        "url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B/resolve/5fbd2e44ba08ab2deb28bd55cff2c15523e51ba5/Model_Lite/config.json",
+        "filename": "config.json",
+        "folder": "Soul-AILab/SoulX-FlashHead-1_3B/Model_Lite/.",
+        "size": 357,
+        "sha256": "2ac56ba975a80da49f8ef1b27bfe740be473a1b250fced52f8f1df9ac101bc2c"
+      },
+      {
+        "label": "SoulX-FlashHead-1_3B \u00b7 diffusion_pytorch_model.safetensors",
+        "url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B/resolve/5fbd2e44ba08ab2deb28bd55cff2c15523e51ba5/Model_Lite/diffusion_pytorch_model.safetensors",
+        "filename": "diffusion_pytorch_model.safetensors",
+        "folder": "Soul-AILab/SoulX-FlashHead-1_3B/Model_Lite/.",
+        "size": 6107542048,
+        "sha256": "aaf1cde6e80ca23f740aae236c47954249f65b151db133cc0f77d3a138ccdf6e"
+      },
+      {
+        "label": "SoulX-FlashHead-1_3B \u00b7 config.json",
+        "url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B/resolve/5fbd2e44ba08ab2deb28bd55cff2c15523e51ba5/Model_Pro/config.json",
+        "filename": "config.json",
+        "folder": "Soul-AILab/SoulX-FlashHead-1_3B/Model_Pro/.",
+        "size": 353,
+        "sha256": "94b480d3af70e73989371ed0c106656c2c887201286b1210e835cd09e71e32b1"
+      },
+      {
+        "label": "SoulX-FlashHead-1_3B \u00b7 diffusion_pytorch_model.safetensors",
+        "url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B/resolve/5fbd2e44ba08ab2deb28bd55cff2c15523e51ba5/Model_Pro/diffusion_pytorch_model.safetensors",
+        "filename": "diffusion_pytorch_model.safetensors",
+        "folder": "Soul-AILab/SoulX-FlashHead-1_3B/Model_Pro/.",
+        "size": 6030864656,
+        "sha256": "e47e61b9023ea1aac60c0c0fff077289bc6cca443c71907e5a76a411480af250"
+      },
+      {
+        "label": "SoulX-FlashHead-1_3B \u00b7 config.json",
+        "url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B/resolve/5fbd2e44ba08ab2deb28bd55cff2c15523e51ba5/VAE_LTX/config.json",
+        "filename": "config.json",
+        "folder": "Soul-AILab/SoulX-FlashHead-1_3B/VAE_LTX/.",
+        "size": 501,
+        "sha256": "e8f12ad5305b1508f6e456797d48ab8e9fdd091c686ccf814a293ee96ce89dbb"
+      },
+      {
+        "label": "SoulX-FlashHead-1_3B \u00b7 diffusion_pytorch_model.safetensors",
+        "url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B/resolve/5fbd2e44ba08ab2deb28bd55cff2c15523e51ba5/VAE_LTX/diffusion_pytorch_model.safetensors",
+        "filename": "diffusion_pytorch_model.safetensors",
+        "folder": "Soul-AILab/SoulX-FlashHead-1_3B/VAE_LTX/.",
+        "size": 1676798532,
+        "sha256": "265ca87cb5dff5e37f924286e957324e282fe7710a952a7dafc0df43883e2010"
+      },
+      {
+        "label": "SoulX-FlashHead-1_3B \u00b7 Wan2.1_VAE.pth",
+        "url": "https://huggingface.co/Soul-AILab/SoulX-FlashHead-1_3B/resolve/5fbd2e44ba08ab2deb28bd55cff2c15523e51ba5/VAE_Wan/Wan2.1_VAE.pth",
+        "filename": "Wan2.1_VAE.pth",
+        "folder": "Soul-AILab/SoulX-FlashHead-1_3B/VAE_Wan/.",
+        "size": 507609880,
+        "sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981"
+      },
+      {
+        "label": "wav2vec2-base-960h \u00b7 config.json",
+        "url": "https://huggingface.co/facebook/wav2vec2-base-960h/resolve/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/config.json",
+        "filename": "config.json",
+        "folder": "wav2vec/facebook/wav2vec2-base-960h/.",
+        "size": 1596,
+        "sha256": "d3ec255c063d9f95057b553b19c20135b259875834a4fe9deb218a6be25b4cf3"
+      },
+      {
+        "label": "wav2vec2-base-960h \u00b7 feature_extractor_config.json",
+        "url": "https://huggingface.co/facebook/wav2vec2-base-960h/resolve/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/feature_extractor_config.json",
+        "filename": "feature_extractor_config.json",
+        "folder": "wav2vec/facebook/wav2vec2-base-960h/.",
+        "size": 158,
+        "sha256": "d3de0c797bf9b65f90bc65c30cb7b303ebeda341f6fc80af33628c4b26b95632"
+      },
+      {
+        "label": "wav2vec2-base-960h \u00b7 model.safetensors",
+        "url": "https://huggingface.co/facebook/wav2vec2-base-960h/resolve/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/model.safetensors",
+        "filename": "model.safetensors",
+        "folder": "wav2vec/facebook/wav2vec2-base-960h/.",
+        "size": 377607901,
+        "sha256": "8aa76ab2243c81747a1f832954586bc566090c83a0ac167df6f31f0fa917d74a"
+      },
+      {
+        "label": "wav2vec2-base-960h \u00b7 preprocessor_config.json",
+        "url": "https://huggingface.co/facebook/wav2vec2-base-960h/resolve/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/preprocessor_config.json",
+        "filename": "preprocessor_config.json",
+        "folder": "wav2vec/facebook/wav2vec2-base-960h/.",
+        "size": 159,
+        "sha256": "b225d617c025463b9e157e06afea8b90dc7078fc70b013c533328423e0486b4a"
+      },
+      {
+        "label": "wav2vec2-base-960h \u00b7 special_tokens_map.json",
+        "url": "https://huggingface.co/facebook/wav2vec2-base-960h/resolve/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/special_tokens_map.json",
+        "filename": "special_tokens_map.json",
+        "folder": "wav2vec/facebook/wav2vec2-base-960h/.",
+        "size": 85,
+        "sha256": "bb7068de1150661a10b55f9e4b12a0e77af8bf91f5e45e1b58afaf1d0e17f675"
+      },
+      {
+        "label": "wav2vec2-base-960h \u00b7 tokenizer_config.json",
+        "url": "https://huggingface.co/facebook/wav2vec2-base-960h/resolve/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/tokenizer_config.json",
+        "filename": "tokenizer_config.json",
+        "folder": "wav2vec/facebook/wav2vec2-base-960h/.",
+        "size": 163,
+        "sha256": "dc790594f5bc351a4311c6624f40acd95850d4aaf2a5cb3c656c9b610720b608"
+      },
+      {
+        "label": "wav2vec2-base-960h \u00b7 vocab.json",
+        "url": "https://huggingface.co/facebook/wav2vec2-base-960h/resolve/22aad52d435eb6dbaf354bdad9b0da84ce7d6156/vocab.json",
+        "filename": "vocab.json",
+        "folder": "wav2vec/facebook/wav2vec2-base-960h/.",
+        "size": 291,
+        "sha256": "19727f8944fe6459fc3f240ae2c198395b740f6a029bd23e06656266b83bcf64"
+      }
+    ],
+    "input_types": [
+      "image"
+    ]
+  },
+  "avatar_longcat": {
+    "name": "LongCat-Video-Avatar 1.5 \u00b7 Q4",
+    "kind": "avatar",
+    "family": "avatar_longcat",
+    "description": "Expressive image-to-avatar generation with your recording. Uses a memory-saving community GGUF conversion and the matching eight-step distillation adapter; slower and more demanding than the small models.",
+    "source": "https://github.com/meituan-longcat/LongCat-Video",
+    "license": "MIT; community Q4 checkpoint conversion",
+    "license_url": "https://github.com/meituan-longcat/LongCat-Video",
+    "engine": "avatar",
+    "avatar_runtime": true,
+    "files": [
+      {
+        "label": "UMT5 text encoder (memory-saving FP8)",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "filename": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 6735906897,
+        "sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
+      },
+      {
+        "label": "Wan 2.1 VAE video decoder",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/vae/wan_2.1_vae.safetensors",
+        "filename": "wan_2.1_vae.safetensors",
+        "folder": "vae",
+        "size": 253815318,
+        "sha256": "2fc39d31359a4b0a64f55876d8ff7fa8d780956ae2cb13463b0223e15148976b"
+      },
+      {
+        "label": "LongCat-Video-Avatar-1.5-GGUF-ComfyUI \u00b7 LongCat-Avatar-15_comfy-Q4_K_M.gguf",
+        "url": "https://huggingface.co/vantagewithai/LongCat-Video-Avatar-1.5-GGUF-ComfyUI/resolve/352f5b9a71ca81f6d5e5ffbf1d8bc9b8e9c34f3b/LongCat-Avatar-15_comfy-Q4_K_M.gguf",
+        "filename": "LongCat-Avatar-15_comfy-Q4_K_M.gguf",
+        "folder": "diffusion_models/avatars/longcat",
+        "size": 12072723456,
+        "sha256": "5ab57be398a038bf04098a45e37652bbeeb1710881b52e90e2ee7703e140322b"
+      },
+      {
+        "label": "WanVideo_comfy \u00b7 LongCat-Avatar-15_dmd_distill_lora_rank128_bf16.safetensors",
+        "url": "https://huggingface.co/Kijai/WanVideo_comfy/resolve/8260d429d19fd7a72304cad059160b95d843913f/LongCat/LongCat-Avatar-15_dmd_distill_lora_rank128_bf16.safetensors",
+        "filename": "LongCat-Avatar-15_dmd_distill_lora_rank128_bf16.safetensors",
+        "folder": "avatars/longcat",
+        "size": 1261613536,
+        "sha256": "fe8f66e2c9e7dffb910311c71a5e5927678439a23e83fd291b49870d1bca6157"
+      },
+      {
+        "label": "whisper-large-v3 \u00b7 model.safetensors",
+        "url": "https://huggingface.co/openai/whisper-large-v3/resolve/06f233fe06e710322aca913c1bc4249a0d71fce1/model.safetensors",
+        "filename": "avatar-whisper-large-v3.safetensors",
+        "folder": "audio_encoders",
+        "size": 3087130976,
+        "sha256": "a8e94b85976e5864ba3e9525c7e6c83b2a1eca42d4b797a0c7c24d778e40fd95"
+      }
+    ],
+    "input_types": [
+      "image"
+    ],
+    "checkpoint_source": "https://huggingface.co/vantagewithai/LongCat-Video-Avatar-1.5-GGUF-ComfyUI"
+  },
+  "avatar_infinite": {
+    "name": "InfiniteTalk \u00b7 Q4",
+    "kind": "avatar",
+    "family": "avatar_infinite",
+    "description": "Animate an image or dub a Library video using your recording. Uses single-speaker weights and a memory-saving Wan 14B GGUF base; multi-speaker conversations are not included in this workflow.",
+    "source": "https://github.com/MeiGen-AI/InfiniteTalk",
+    "license": "Apache 2.0",
+    "license_url": "https://github.com/MeiGen-AI/InfiniteTalk",
+    "engine": "avatar",
+    "avatar_runtime": true,
+    "files": [
+      {
+        "label": "UMT5 text encoder (memory-saving FP8)",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "filename": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 6735906897,
+        "sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
+      },
+      {
+        "label": "Wan 2.1 VAE video decoder",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/vae/wan_2.1_vae.safetensors",
+        "filename": "wan_2.1_vae.safetensors",
+        "folder": "vae",
+        "size": 253815318,
+        "sha256": "2fc39d31359a4b0a64f55876d8ff7fa8d780956ae2cb13463b0223e15148976b"
+      },
+      {
+        "label": "Wan_2.1_ComfyUI_repackaged \u00b7 clip_vision_h.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/clip_vision/clip_vision_h.safetensors",
+        "filename": "clip_vision_h.safetensors",
+        "folder": "clip_vision",
+        "size": 1264219396,
+        "sha256": "64a7ef761bfccbadbaa3da77366aac4185a6c58fa5de5f589b42a65bcc21f161"
+      },
+      {
+        "label": "Wan2.1-I2V-14B-480P-gguf \u00b7 wan2.1-i2v-14b-480p-Q4_K_M.gguf",
+        "url": "https://huggingface.co/city96/Wan2.1-I2V-14B-480P-gguf/resolve/b4b6b3b3f0f64975fb33b1d5d1a46ca24e065f03/wan2.1-i2v-14b-480p-Q4_K_M.gguf",
+        "filename": "wan2.1-i2v-14b-480p-Q4_K_M.gguf",
+        "folder": "diffusion_models/avatars/infinitetalk",
+        "size": 11341184384,
+        "sha256": "d91f7139acadb42ea05cdf97b311e5099f714f11fbe4d90916500e2f53cbba82"
+      },
+      {
+        "label": "WanVideo_comfy \u00b7 Wan2_1-InfiniTetalk-Single_fp16.safetensors",
+        "url": "https://huggingface.co/Kijai/WanVideo_comfy/resolve/8260d429d19fd7a72304cad059160b95d843913f/InfiniteTalk/Wan2_1-InfiniTetalk-Single_fp16.safetensors",
+        "filename": "Wan2_1-InfiniTetalk-Single_fp16.safetensors",
+        "folder": "diffusion_models/avatars/infinitetalk",
+        "size": 5125258232,
+        "sha256": "bf212c5c647eaf1c019b2158d2edf4a360d97e38b746c4bac994fee485e09fc3"
+      },
+      {
+        "label": "wav2vec2_safetensors \u00b7 wav2vec2-chinese-base_fp16.safetensors",
+        "url": "https://huggingface.co/Kijai/wav2vec2_safetensors/resolve/87847d3bc53702afda44078249e7c33e867827c4/wav2vec2-chinese-base_fp16.safetensors",
+        "filename": "wav2vec2-chinese-base_fp16.safetensors",
+        "folder": "wav2vec2",
+        "size": 190115368,
+        "sha256": "000813e441020f18cff844c969d2d5d4adc2a5ce46b2db1f23950b05d88805b4"
+      }
+    ],
+    "input_types": [
+      "image",
+      "video"
+    ]
+  },
+  "avatar_musetalk": {
+    "name": "MuseTalk 1.5",
+    "kind": "avatar",
+    "family": "avatar_musetalk",
+    "description": "Fast lip synchronization for a portrait or Library video, driven by your recording. Uses portable ONNX face landmarks; preserves the source background and saves a new video.",
+    "source": "https://github.com/TMElyralab/MuseTalk",
+    "license": "MIT code; commercially usable model weights; third-party component licenses apply",
+    "license_url": "https://github.com/TMElyralab/MuseTalk",
+    "engine": "avatar",
+    "avatar_runtime": true,
+    "files": [
+      {
+        "label": "MuseTalk \u00b7 unet.pth",
+        "url": "https://huggingface.co/TMElyralab/MuseTalk/resolve/2bcb936e2fddb4d86db4c62fd45b387d0c061571/musetalkV15/unet.pth",
+        "filename": "unet.pth",
+        "folder": "avatars/musetalk/models/musetalkV15",
+        "size": 3400074924,
+        "sha256": "7ebf6c98c181e20838e4c0054e96e944ac60d5d692cc01db42839fe11b787007"
+      },
+      {
+        "label": "MuseTalk \u00b7 musetalk.json",
+        "url": "https://huggingface.co/TMElyralab/MuseTalk/resolve/2bcb936e2fddb4d86db4c62fd45b387d0c061571/musetalkV15/musetalk.json",
+        "filename": "musetalk.json",
+        "folder": "avatars/musetalk/models/musetalkV15",
+        "size": 748,
+        "sha256": "5b6923aee04d71692e0e9846c471e0a4ea07a4f686d39545e472bd4ba17e1b47"
+      },
+      {
+        "label": "sd-vae-ft-mse \u00b7 config.json",
+        "url": "https://huggingface.co/stabilityai/sd-vae-ft-mse/resolve/31f26fdeee1355a5c34592e401dd41e45d25a493/config.json",
+        "filename": "config.json",
+        "folder": "avatars/musetalk/models/sd-vae/.",
+        "size": 547,
+        "sha256": "92d3dfb746fca211a2c9e019e285f8597412211728dce3c5bcf4eda0f2d62e7e"
+      },
+      {
+        "label": "sd-vae-ft-mse \u00b7 diffusion_pytorch_model.safetensors",
+        "url": "https://huggingface.co/stabilityai/sd-vae-ft-mse/resolve/31f26fdeee1355a5c34592e401dd41e45d25a493/diffusion_pytorch_model.safetensors",
+        "filename": "diffusion_pytorch_model.safetensors",
+        "folder": "avatars/musetalk/models/sd-vae/.",
+        "size": 334643276,
+        "sha256": "a1d993488569e928462932c8c38a0760b874d166399b14414135bd9c42df5815"
+      },
+      {
+        "label": "whisper-tiny \u00b7 config.json",
+        "url": "https://huggingface.co/openai/whisper-tiny/resolve/169d4a4341b33bc18d8881c4b69c2e104e1cc0af/config.json",
+        "filename": "config.json",
+        "folder": "avatars/musetalk/models/whisper/.",
+        "size": 1983,
+        "sha256": "ffdccec4f3211f4c63310f2b7098f309fe70f3952cedc5e4d11e43f5b2379b98"
+      },
+      {
+        "label": "whisper-tiny \u00b7 model.safetensors",
+        "url": "https://huggingface.co/openai/whisper-tiny/resolve/169d4a4341b33bc18d8881c4b69c2e104e1cc0af/model.safetensors",
+        "filename": "model.safetensors",
+        "folder": "avatars/musetalk/models/whisper/.",
+        "size": 151061672,
+        "sha256": "7ebd0e69e78190ffe1438491fa05cc1f5c1aa3a4c4db3bc1723adbb551ea2395"
+      },
+      {
+        "label": "whisper-tiny \u00b7 preprocessor_config.json",
+        "url": "https://huggingface.co/openai/whisper-tiny/resolve/169d4a4341b33bc18d8881c4b69c2e104e1cc0af/preprocessor_config.json",
+        "filename": "preprocessor_config.json",
+        "folder": "avatars/musetalk/models/whisper/.",
+        "size": 184990,
+        "sha256": "9b5cd03a36fbb8a627c64d98a5b5b126ead95a77720723944487311f0110b666"
+      },
+      {
+        "label": "MuseTalk \u00b7 79999_iter.pth",
+        "url": "https://huggingface.co/camenduru/MuseTalk/resolve/5cfe77e50e1dc10ac599e5340d610d69a5086af2/face-parse-bisent/79999_iter.pth",
+        "filename": "79999_iter.pth",
+        "folder": "avatars/musetalk/models/face-parse-bisent",
+        "size": 53289463,
+        "sha256": "468e13ca13a9b43cc0881a9f99083a430e9c0a38abd935431d1c28ee94b26567"
+      },
+      {
+        "label": "MuseTalk \u00b7 resnet18-5c106cde.pth",
+        "url": "https://huggingface.co/camenduru/MuseTalk/resolve/5cfe77e50e1dc10ac599e5340d610d69a5086af2/face-parse-bisent/resnet18-5c106cde.pth",
+        "filename": "resnet18-5c106cde.pth",
+        "folder": "avatars/musetalk/models/face-parse-bisent",
+        "size": 46827520,
+        "sha256": "5c106cde386e87d4033832f2996f5493238eda96ccf559d1d62760c4de0613f8"
+      },
+      {
+        "label": "MuseTalk \u00b7 dw-ll_ucoco_384.onnx",
+        "url": "https://huggingface.co/camenduru/MuseTalk/resolve/5cfe77e50e1dc10ac599e5340d610d69a5086af2/dwpose/dw-ll_ucoco_384.onnx",
+        "filename": "dw-ll_ucoco_384.onnx",
+        "folder": "avatars/musetalk/models/dwpose",
+        "size": 134399116,
+        "sha256": "724f4ff2439ed61afb86fb8a1951ec39c6220682803b4a8bd4f598cd913b1843"
+      },
+      {
+        "label": "MuseTalk \u00b7 yolox_l.onnx",
+        "url": "https://huggingface.co/camenduru/MuseTalk/resolve/5cfe77e50e1dc10ac599e5340d610d69a5086af2/dwpose/yolox_l.onnx",
+        "filename": "yolox_l.onnx",
+        "folder": "avatars/musetalk/models/dwpose",
+        "size": 216746733,
+        "sha256": "7860ae79de6c89a3c1eb72ae9a2756c0ccfbe04b7791bb5880afabd97855a411"
+      }
+    ],
+    "input_types": [
+      "image",
+      "video"
+    ]
+  },
+  "ref2va": {
+    "name": "MiniMax H3 \u00b7 Ref2VA VSA",
+    "kind": "video",
+    "family": "minimax_h3",
+    "engine": "ref2va",
+    "description": "Reference-image to video with optional generated audio, four-step Turbo LoRA and experimental VSA acceleration. Author requirements: 24 GB NVIDIA GPU; smaller cards are unverified. Large download and substantial system RAM required.",
+    "source": "https://github.com/Kablex/ComfyUI-Ref2VA-VSA",
+    "license": "MiniMax H3 Community License; plugin Apache-2.0; Turbo LoRA Apache-2.0",
+    "license_url": "https://huggingface.co/Comfy-Org/MiniMax-H3",
+    "recommended_vram_gb": 24,
+    "experimental": true,
+    "defaults": {
+      "width": 768,
+      "height": 512,
+      "frames": 124,
+      "fps": 24,
+      "steps": 4,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "filename": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "size": 20970379616,
+        "sha256": "9255f52b6677845ad238f20dfaafa94727053694127ab7f255c048f0f9365779"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "filename": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "folder": "text_encoders",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "size": 15687142551,
+        "sha256": "35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_video_vae_fp16.safetensors",
+        "filename": "minimax_h3_video_vae_fp16.safetensors",
+        "folder": "vae",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/vae/minimax_h3_video_vae_fp16.safetensors",
+        "size": 5207808496,
+        "sha256": "7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_audio_vae_fp32.safetensors",
+        "filename": "minimax_h3_audio_vae_fp32.safetensors",
+        "folder": "vae",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/vae/minimax_h3_audio_vae_fp32.safetensors",
+        "size": 605254808,
+        "sha256": "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 fasth3_vsa_gate.safetensors",
+        "filename": "fasth3_vsa_gate.safetensors",
+        "folder": "loras/studio/_ref2va_runtime",
+        "url": "https://huggingface.co/barelymining/ComfyUI-MiniMax-H3-FastVideo/resolve/aa554050fe27ec3c62e20e57519beb46741c9000/fasth3_vsa_gate.safetensors",
+        "size": 3853522616,
+        "sha256": "bf95408e335c4b0d6a1a44946a428a3e12849e6eab2de9566ecedae4a0043420"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "filename": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "folder": "loras/studio/_ref2va_runtime",
+        "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/a29e57d195f80ead07c89f89e55ecf2911e893c5/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "size": 1956193000,
+        "sha256": "5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c"
+      }
+    ]
+  },
+  "minimax_h3": {
+    "name": "MiniMax H3 \u00b7 Turbo (Pepe104)",
+    "kind": "video",
+    "family": "minimax_h3",
+    "engine": "minimax_h3",
+    "description": "Local text / first-and-last-image to video with generated audio. Uses the Space\u2019s Larry v1 Turbo LoRA, with the newer v4 adapter also available. Quantized local checkpoint; experimental on 16 GB GPUs. Substantial RAM/paging capacity required.",
+    "source": "https://huggingface.co/spaces/Pepe104/MiniMax-H3-Turbo-Lora-UNCENSORED",
+    "license": "MiniMax H3 Community License; Turbo LoRAs and extension Apache-2.0",
+    "license_url": "https://huggingface.co/Comfy-Org/MiniMax-H3",
+    "recommended_vram_gb": 24,
+    "experimental": true,
+    "defaults": {
+      "width": 960,
+      "height": 544,
+      "frames": 124,
+      "fps": 24,
+      "steps": 6,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "filename": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "size": 20970379616,
+        "sha256": "e889202c41dafb67b10d67b97f0d8541508036a6090af23425a5c2615d03c47a"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "filename": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "folder": "text_encoders",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "size": 15687142551,
+        "sha256": "35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_video_vae_fp16.safetensors",
+        "filename": "minimax_h3_video_vae_fp16.safetensors",
+        "folder": "vae",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/vae/minimax_h3_video_vae_fp16.safetensors",
+        "size": 5207808496,
+        "sha256": "7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_audio_vae_fp32.safetensors",
+        "filename": "minimax_h3_audio_vae_fp32.safetensors",
+        "folder": "vae",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/vae/minimax_h3_audio_vae_fp32.safetensors",
+        "size": 605254808,
+        "sha256": "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_turbo_4step_ema_ckpt850.safetensors",
+        "filename": "minimax_h3_turbo_4step_ema_ckpt850.safetensors",
+        "folder": "loras/studio/_minimax_h3_runtime",
+        "url": "https://huggingface.co/larryvrh/MiniMax-H3-Turbo-Lora/resolve/43a74557ac3f6539db8e0f2a959d03feb7a81480/minimax_h3_turbo_4step_ema_ckpt850.safetensors",
+        "size": 779849816,
+        "sha256": "5a6eeba171cf183020a4ad48774bb2968f29f8168afd6ec17a04987f3528b4ea"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_turbo_v4_step600_ema.safetensors",
+        "filename": "minimax_h3_turbo_v4_step600_ema.safetensors",
+        "folder": "loras/studio/_minimax_h3_runtime",
+        "url": "https://huggingface.co/larryvrh/MiniMax-H3-Turbo-Lora/resolve/43a74557ac3f6539db8e0f2a959d03feb7a81480/minimax_h3_turbo_v4_step600_ema.safetensors",
+        "size": 779849816,
+        "sha256": "5f3a626cd72c93a8b9318d6760c510bc5092d2ab13aaba1f932c5bab07a416d3"
+      }
+    ]
+  },
+  "viggle": {
+    "name": "Qwen Image 2.1 \u00b7 Viggle Turbo v0.3",
+    "kind": "image",
+    "family": "qwen21",
+    "engine": "qwen_turbo",
+    "editing": true,
+    "max_references": 3,
+    "faceswap": false,
+    "source": "https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo",
+    "license": "Qwen Research License (base; non-commercial); Viggle derivative: Qwen Research License",
+    "license_url": "https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo/blob/main/LICENSE",
+    "recommended_vram_gb": 16,
+    "description": "Six-step image generation and edits with up to three images. Shares the Qwen 2.1 base, encoder and VAE with the Detail Enhancer. Research/non-commercial license; substantial RAM required.",
+    "defaults": {
+      "steps": 6,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "qwen_image_2.1_int8_convrot.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/diffusion_models/qwen_image_2.1_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "filename": "qwen_image_2.1_int8_convrot.safetensors",
+        "size": 7256783064,
+        "sha256": "cb74113cb03faecd79611b01fd7fd642f0aa60d6f0b95086abee214d75eaa57d"
+      },
+      {
+        "label": "qwen3vl_8b_int8_convrot.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/text_encoders/qwen3vl_8b_int8_convrot.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3vl_8b_int8_convrot.safetensors",
+        "size": 9350798360,
+        "sha256": "8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f"
+      },
+      {
+        "label": "qwen_image_2.1_vae_bf16.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors",
+        "folder": "vae",
+        "filename": "qwen_image_2.1_vae_bf16.safetensors",
+        "size": 675509688,
+        "sha256": "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9"
+      },
+      {
+        "label": "Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r128.safetensors",
+        "filename": "Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r128.safetensors",
+        "folder": "loras/studio/_qwen21_runtime",
+        "url": "https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo/resolve/009a44a895ef85f7e643c80fdca9543795248867/Qwen-Image-2.1-viggle-turbo-v0.3-6step-lora-r128.safetensors",
+        "size": 679604800,
+        "sha256": "0c98591700346f9777051d4e6fa29aa94519abec0d85b1f1f672a2a3db8c94b3"
+      }
+    ]
+  },
+  "bfs": {
+    "name": "BFS \u00b7 Qwen 2.1 Head Swap v1.1",
+    "kind": "editor",
+    "family": "qwen21",
+    "engine": "qwen_turbo",
+    "editing": true,
+    "max_references": 2,
+    "faceswap": true,
+    "source": "https://huggingface.co/Alissonerdx/BFS-Best-Face-Swap",
+    "license": "Qwen Research License (base; non-commercial); BFS adapter: MIT",
+    "license_url": "https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo/blob/main/LICENSE",
+    "recommended_vram_gb": 16,
+    "description": "Face/head replacement using a target image and a reference identity. Uses the recommended v1.1 adapter and unaccelerated Qwen 2.1 sampling. Base model has a research/non-commercial license.",
+    "defaults": {
+      "steps": 40,
+      "cfg": 1
+    },
+    "files": [
+      {
+        "label": "qwen_image_2.1_int8_convrot.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/diffusion_models/qwen_image_2.1_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "filename": "qwen_image_2.1_int8_convrot.safetensors",
+        "size": 7256783064,
+        "sha256": "cb74113cb03faecd79611b01fd7fd642f0aa60d6f0b95086abee214d75eaa57d"
+      },
+      {
+        "label": "qwen3vl_8b_int8_convrot.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/text_encoders/qwen3vl_8b_int8_convrot.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3vl_8b_int8_convrot.safetensors",
+        "size": 9350798360,
+        "sha256": "8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f"
+      },
+      {
+        "label": "qwen_image_2.1_vae_bf16.safetensors",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image-2.1/resolve/a8342359c61979b06a8dafb1a47991fe1f30e994/vae/qwen_image_2.1_vae_bf16.safetensors",
+        "folder": "vae",
+        "filename": "qwen_image_2.1_vae_bf16.safetensors",
+        "size": 675509688,
+        "sha256": "bb21f7473051e1ac368515dd3f2e15cd44d7a11748ee8823e1ddca3e4876b7c9"
+      },
+      {
+        "label": "bfs_head_v1.1_qwen_2.1.safetensors",
+        "filename": "bfs_head_v1.1_qwen_2.1.safetensors",
+        "folder": "loras/studio/_qwen21_runtime",
+        "url": "https://huggingface.co/Alissonerdx/BFS-Best-Face-Swap/resolve/0ca3913ade4b4ada458d60c232354e8586c4c181/bfs_head_v1.1_qwen_2.1.safetensors",
+        "size": 260096144,
+        "sha256": "d1d748d5601077f3b6d05766f6823510e901970d916afa404a97e85dc92fa88e"
+      }
+    ]
   }
 }

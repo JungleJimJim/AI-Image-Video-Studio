@@ -7,6 +7,7 @@ import shutil
 import subprocess
 
 from common import CREATE_NO_WINDOW, comfy_root, runtime_python
+from media_storage import media_folder
 
 
 def import_image(root, data, report):
@@ -22,7 +23,7 @@ def import_image(root, data, report):
         raise ValueError('Choose an image no larger than 25 MB.')
     if not runtime_python(root).is_file():
         raise ValueError('Install the base runtime in Settings before importing an image.')
-    folder = Path(root) / 'Imported Images'
+    folder = media_folder(root, 'image')
     folder.mkdir(parents=True, exist_ok=True)
     identifier = secrets.token_hex(12)
     incoming = folder / (identifier + '.upload')

@@ -7,7 +7,7 @@ import time
 from common import atomic_json, load_json
 
 ACTIVE = ('queued', 'running')
-KINDS = ('image', 'video', 'edit', 'enhance_image', 'enhance_video')
+KINDS = ('image', 'video', 'edit', 'enhance_image', 'enhance_video', 'avatar','faceswap','voice')
 
 
 class JobQueue:
@@ -93,5 +93,5 @@ class JobQueue:
         jobs = running + self.pending() + finished
         return dict(paused=self.paused, continue_on_error=self.continue_on_error, waiting=len(self.pending()),
                     jobs=[{k:deepcopy(v) for k,v in x.items() if k!='options'} |
-                          dict(model=x['options'].get('model',''), prompt=x['options'].get('prompt',''),
+                          dict(model=x['options'].get('model',''), prompt=x['options'].get('prompt',x['options'].get('text','')),
                                width=x['options'].get('width'),height=x['options'].get('height')) for x in jobs])

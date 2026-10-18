@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="studio-token" content="__API_TOKEN__"><title>A.I. Image &amp; Video Studio</title><link rel="stylesheet" href="/studio.css"><script src="/studio.js" defer></script><script src="/studio-tools.js" defer></script><script src="/studio-updates.js" defer></script></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="studio-token" content="__API_TOKEN__"><title>A.I. Image &amp; Video Studio</title><link rel="stylesheet" href="/studio.css"><script src="/studio.js" defer></script><script src="/studio-tools.js" defer></script><script src="/studio-updates.js" defer></script><script src="/studio-avatars.js" defer></script><script src="/studio-ref2va.js" defer></script><script src="/studio-minimax.js" defer></script><script src="/studio-qwen.js" defer></script><script src="/studio-voice.js" defer></script></head>
 <body>
 <header class="top"><div class="brand-lockup"><img class="brand" src="/studio-logo.png" alt="AI Image &amp; Video Studio"><span id="brand-version" aria-label="Application version"></span></div><nav aria-label="Studio tools" id="navigation"></nav><button id="fullscreen" title="Toggle fullscreen (F11)">⛶ <span>Fullscreen</span></button></header>
 <div class="resources" aria-label="Live computer resource usage"><span id="gpu-name">Checking hardware…</span><div id="meters"></div><button class="help" data-help="resources" aria-label="About resource usage">?</button></div>
@@ -8,6 +8,14 @@
 <dialog id="help-dialog"><div class="dialog-heading"><h2 id="help-title"></h2><button data-close aria-label="Close help">×</button></div><p id="help-copy"></p></dialog>
 <dialog id="library-dialog" class="wide"><div class="dialog-heading"><h2 id="picker-title">Choose an image</h2><button data-close aria-label="Close library">×</button></div><div id="picker-library" class="library-content"></div></dialog>
 <dialog id="media-dialog" class="wide"><div class="dialog-heading"><h2 id="media-title">Library item</h2><button data-close aria-label="Close preview">×</button></div><div id="media-body"></div></dialog>
+<dialog id="image-viewer" aria-label="Fullscreen image viewer">
+ <div class="image-viewer-toolbar"><strong id="image-viewer-name"></strong><div class="row">
+  <button type="button" id="image-zoom-out" aria-label="Zoom out">−</button><output id="image-zoom-level" aria-label="Image zoom">100%</output><button type="button" id="image-zoom-in" aria-label="Zoom in">+</button>
+  <button type="button" id="image-zoom-fit">Fit</button><button type="button" id="image-zoom-actual">100%</button><button type="button" class="help" data-help="imageZoom" aria-label="Explain image zoom">?</button>
+  <button type="button" id="image-viewer-close" aria-label="Close fullscreen image">×</button>
+ </div></div>
+ <div id="image-viewer-space"><img id="image-viewer-picture" alt="Fullscreen library image" draggable="false"></div>
+</dialog>
 <dialog id="log-dialog" class="wide"><div class="dialog-heading"><h2>Activity</h2><button data-close aria-label="Close activity">×</button></div><pre id="activity"></pre></dialog>
 <input hidden id="import-file" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Import image file">
 <div id="toast" role="status" hidden></div>

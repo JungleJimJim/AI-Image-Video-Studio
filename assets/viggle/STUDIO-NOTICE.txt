@@ -1,0 +1,5 @@
+Unmodified Viggle ComfyUI nodes, revision 009a44a895ef85f7e643c80fdca9543795248867.
+Source: https://huggingface.co/Viggle/Qwen-Image-2.1-viggle-turbo
+Built with Qwen. See included LICENSE and NOTICE; research/non-commercial license applies to these third-party nodes and weights, separately from the MIT-licensed Studio source.
+Only the six-step workflow is exposed; the nine-step two-stage recipe is not implemented.
+BFS uses Alissonerdx/BFS-Best-Face-Swap, revision 0ca3913ade4b4ada458d60c232354e8586c4c181, v1.1 Qwen 2.1 adapter. Base weights retain their Qwen license.

@@ -1,0 +1,427 @@
+{
+  "sha256": "a61bce9475a736e0d2c3be2206ce368749f04d48b7b7de4f11a014b494ad3b08",
+  "size": 5397638,
+  "sources": {
+    "echo": {
+      "repository": "https://github.com/smthemex/ComfyUI_EchoMimic",
+      "revision": "3a36b00f405e0578db1f2c048b3ad0e41ff091bd"
+    },
+    "soulx": {
+      "repository": "https://github.com/HM-RunningHub/ComfyUI_RH_FlashHead",
+      "revision": "111bf7d997467decd763d6168bcaa2a71941cf2b"
+    },
+    "wan": {
+      "repository": "https://github.com/kijai/ComfyUI-WanVideoWrapper",
+      "revision": "088128b224242e110d3906c6750e9a3a348a659b"
+    },
+    "musetalk": {
+      "repository": "https://github.com/TMElyralab/MuseTalk",
+      "revision": "0a89dec45a0192b824e3cf4daf96c239440c5ed8"
+    },
+    "dwpose": {
+      "repository": "https://github.com/IDEA-Research/DWPose",
+      "revision": "3dca5db79d9f9ffdd378753ddf6ec66535aace88"
+    }
+  },
+  "dependencies": [
+    {
+      "label": "Avatar dependency \u00b7 numpy==2.2.6",
+      "filename": "numpy-2.2.6-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/cb/3b/d58c12eafcb298d4e6d0d40216866ab15f59e55d148a5658bb3132311fcf/numpy-2.2.6-cp313-cp313-win_amd64.whl",
+      "size": 12610885,
+      "sha256": "b0544343a702fa80c95ad5d3d608ea3599dd54d4632df855e4c8d24eb6ecfa1c"
+    },
+    {
+      "label": "Avatar dependency \u00b7 scipy==1.15.3",
+      "filename": "scipy-1.15.3-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/87/2e/892ad2862ba54f084ffe8cc4a22667eaf9c2bcec6d2bff1d15713c6c0703/scipy-1.15.3-cp313-cp313-win_amd64.whl",
+      "size": 40988851,
+      "sha256": "b90ab29d0c37ec9bf55424c064312930ca5f4bde15ee8619ee44e69319aab163"
+    },
+    {
+      "label": "Avatar dependency \u00b7 pillow==11.3.0",
+      "filename": "pillow-11.3.0-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/23/85/397c73524e0cd212067e0c969aa245b01d50183439550d24d9f55781b776/pillow-11.3.0-cp313-cp313-win_amd64.whl",
+      "size": 6978450,
+      "sha256": "0bce5c4fd0921f99d2e858dc4d4d64193407e1b99478bc5cacecba2311abde51"
+    },
+    {
+      "label": "Avatar dependency \u00b7 diffusers==0.35.1",
+      "filename": "diffusers-0.35.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/06/a7/c53f294f34d9e1584388721b3d7aa024ea1ac46e86d0c302fc3db40ed960/diffusers-0.35.1-py3-none-any.whl",
+      "size": 4121424,
+      "sha256": "fe29ff10200970c7c5934c6488c213e2a77a03dad5e6fa00bbd8e1d04234cb0e"
+    },
+    {
+      "label": "Avatar dependency \u00b7 transformers==4.57.3",
+      "filename": "transformers-4.57.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/6a/6b/2f416568b3c4c91c96e5a365d164f8a4a4a88030aa8ab4644181fdadce97/transformers-4.57.3-py3-none-any.whl",
+      "size": 11993463,
+      "sha256": "c77d353a4851b1880191603d36acb313411d3577f6e2897814f333841f7003f4"
+    },
+    {
+      "label": "Avatar dependency \u00b7 tokenizers==0.22.1",
+      "filename": "tokenizers-0.22.1-cp39-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/b3/46/e33a8c93907b631a99377ef4c5f817ab453d0b34f93529421f42ff559671/tokenizers-0.22.1-cp39-abi3-win_amd64.whl",
+      "size": 2674684,
+      "sha256": "65fd6e3fb11ca1e78a6a93602490f134d1fdeb13bcef99389d5102ea318ed138"
+    },
+    {
+      "label": "Avatar dependency \u00b7 huggingface_hub==0.36.0",
+      "filename": "huggingface_hub-0.36.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/cb/bd/1a875e0d592d447cbc02805fd3fe0f497714d6a2583f59d14fa9ebad96eb/huggingface_hub-0.36.0-py3-none-any.whl",
+      "size": 566094,
+      "sha256": "7bcc9ad17d5b3f07b57c78e79d527102d08313caa278a641993acddcb894548d"
+    },
+    {
+      "label": "Avatar dependency \u00b7 accelerate==1.10.1",
+      "filename": "accelerate-1.10.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5f/a0/d9ef19f780f319c21ee90ecfef4431cbeeca95bec7f14071785c17b6029b/accelerate-1.10.1-py3-none-any.whl",
+      "size": 374909,
+      "sha256": "3621cff60b9a27ce798857ece05e2b9f56fcc71631cfb31ccf71f0359c311f11"
+    },
+    {
+      "label": "Avatar dependency \u00b7 peft==0.17.1",
+      "filename": "peft-0.17.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/49/fe/a2da1627aa9cb6310b6034598363bd26ac301c4a99d21f415b1b2855891e/peft-0.17.1-py3-none-any.whl",
+      "size": 504896,
+      "sha256": "3d129d64def3d74779c32a080d2567e5f7b674e77d546e3585138216d903f99e"
+    },
+    {
+      "label": "Avatar dependency \u00b7 optimum-quanto==0.2.7",
+      "filename": "optimum_quanto-0.2.7-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/8d/33/4ad914b0ae7e46296fe00d76d084be351fef69816b3498ed32a178471c8a/optimum_quanto-0.2.7-py3-none-any.whl",
+      "size": 165285,
+      "sha256": "1369b1d9a4a197f88c0d1c67e8d950694e5b86ce4c9f3878e178d5be35339f61"
+    },
+    {
+      "label": "Avatar dependency \u00b7 librosa==0.11.0",
+      "filename": "librosa-0.11.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/b5/ba/c63c5786dfee4c3417094c4b00966e61e4a63efecee22cb7b4c0387dda83/librosa-0.11.0-py3-none-any.whl",
+      "size": 260749,
+      "sha256": "0b6415c4fd68bff4c29288abe67c6d80b587e0e1e2cfb0aad23e4559504a7fa1"
+    },
+    {
+      "label": "Avatar dependency \u00b7 soundfile==0.13.1",
+      "filename": "soundfile-0.13.1-py2.py3-none-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/14/e9/6b761de83277f2f02ded7e7ea6f07828ec78e4b229b80e4ca55dd205b9dc/soundfile-0.13.1-py2.py3-none-win_amd64.whl",
+      "size": 1019162,
+      "sha256": "1e70a05a0626524a69e9f0f4dd2ec174b4e9567f4d8b6c11d38b5c289be36ee9"
+    },
+    {
+      "label": "Avatar dependency \u00b7 soxr==0.5.0.post1",
+      "filename": "soxr-0.5.0.post1-cp312-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/bc/10/440f1ba3d4955e0dc740bbe4ce8968c254a3d644d013eb75eea729becdb8/soxr-0.5.0.post1-cp312-abi3-win_amd64.whl",
+      "size": 164937,
+      "sha256": "b1be9fee90afb38546bdbd7bde714d1d9a8c5a45137f97478a83b65e7f3146f6"
+    },
+    {
+      "label": "Avatar dependency \u00b7 numba==0.61.2",
+      "filename": "numba-0.61.2-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/af/a4/6d3a0f2d3989e62a18749e1e9913d5fa4910bbb3e3311a035baea6caf26d/numba-0.61.2-cp313-cp313-win_amd64.whl",
+      "size": 2831846,
+      "sha256": "59321215e2e0ac5fa928a8020ab00b8e57cda8a97384963ac0dfa4d4e6aa54e7"
+    },
+    {
+      "label": "Avatar dependency \u00b7 llvmlite==0.44.0",
+      "filename": "llvmlite-0.44.0-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/d0/81/e66fc86539293282fd9cb7c9417438e897f369e79ffb62e1ae5e5154d4dd/llvmlite-0.44.0-cp313-cp313-win_amd64.whl",
+      "size": 30331193,
+      "sha256": "2fb7c4f2fb86cbae6dca3db9ab203eeea0e22d73b99bc2341cdf9de93612e930"
+    },
+    {
+      "label": "Avatar dependency \u00b7 lazy-loader==0.4",
+      "filename": "lazy_loader-0.4-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/83/60/d497a310bde3f01cb805196ac61b7ad6dc5dcf8dce66634dc34364b20b4f/lazy_loader-0.4-py3-none-any.whl",
+      "size": 12097,
+      "sha256": "342aa8e14d543a154047afb4ba8ef17f5563baad3fc610d7b15b213b0f119efc"
+    },
+    {
+      "label": "Avatar dependency \u00b7 pooch==1.8.2",
+      "filename": "pooch-1.8.2-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/a8/87/77cc11c7a9ea9fd05503def69e3d18605852cd0d4b0d3b8f15bbeb3ef1d1/pooch-1.8.2-py3-none-any.whl",
+      "size": 64574,
+      "sha256": "3529a57096f7198778a5ceefd5ac3ef0e4d06a6ddaf9fc2d609b806f25302c47"
+    },
+    {
+      "label": "Avatar dependency \u00b7 audioread==3.0.1",
+      "filename": "audioread-3.0.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/57/8d/30aa32745af16af0a9a650115fbe81bde7c610ed5c21b381fca0196f3a7f/audioread-3.0.1-py3-none-any.whl",
+      "size": 23492,
+      "sha256": "4cdce70b8adc0da0a3c9e0d85fb10b3ace30fbdf8d1670fd443929b61d117c33"
+    },
+    {
+      "label": "Avatar dependency \u00b7 scikit-learn==1.6.1",
+      "filename": "scikit_learn-1.6.1-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/34/b0/ca92b90859070a1487827dbc672f998da95ce83edce1270fc23f96f1f61a/scikit_learn-1.6.1-cp313-cp313-win_amd64.whl",
+      "size": 11071865,
+      "sha256": "7a1c43c8ec9fde528d664d947dc4c0789be4077a3647f232869f41d9bf50e0fb"
+    },
+    {
+      "label": "Avatar dependency \u00b7 threadpoolctl==3.6.0",
+      "filename": "threadpoolctl-3.6.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/32/d5/f9a850d79b0851d1d4ef6456097579a9005b31fea68726a4ae5f2d82ddd9/threadpoolctl-3.6.0-py3-none-any.whl",
+      "size": 18638,
+      "sha256": "43a0b8fd5a2928500110039e43a5eed8480b918967083ea48dc3ab9f13c4a7fb"
+    },
+    {
+      "label": "Avatar dependency \u00b7 joblib==1.5.1",
+      "filename": "joblib-1.5.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/7d/4f/1195bbac8e0c2acc5f740661631d8d750dc38d4a32b23ee5df3cde6f4e0d/joblib-1.5.1-py3-none-any.whl",
+      "size": 307746,
+      "sha256": "4719a31f054c7d766948dcd83e9613686b27114f190f717cec7eaa2084f8a74a"
+    },
+    {
+      "label": "Avatar dependency \u00b7 omegaconf==2.3.0",
+      "filename": "omegaconf-2.3.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/e3/94/1843518e420fa3ed6919835845df698c7e27e183cb997394e4a670973a65/omegaconf-2.3.0-py3-none-any.whl",
+      "size": 79500,
+      "sha256": "7b4df175cdb08ba400f45cae3bdcae7ba8365db4d165fc65fd04b050ab63b46b"
+    },
+    {
+      "label": "Avatar dependency \u00b7 antlr4-python3-runtime==4.9.3",
+      "filename": "antlr4-python3-runtime-4.9.3.tar.gz",
+      "url": "https://files.pythonhosted.org/packages/3e/38/7859ff46355f76f8d19459005ca000b6e7012f2f1ca597746cbcd1fbfe5e/antlr4-python3-runtime-4.9.3.tar.gz",
+      "size": 117034,
+      "sha256": "f224469b4168294902bb1efa80a8bf7855f24c99aef99cbefc1bcd3cce77881b"
+    },
+    {
+      "label": "Avatar dependency \u00b7 easydict==1.13",
+      "filename": "easydict-1.13-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/05/ec/fa6963f1198172c2b75c9ab6ecefb3045991f92f75f5eb41b6621b198123/easydict-1.13-py3-none-any.whl",
+      "size": 6804,
+      "sha256": "6b787daf4dcaf6377b4ad9403a5cee5a86adbc0ca9a5bcf5410e9902002aeac2"
+    },
+    {
+      "label": "Avatar dependency \u00b7 pyloudnorm==0.1.1",
+      "filename": "pyloudnorm-0.1.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/58/f5/6724805521ab4e723a12182f92374031032aff28a8a89dc8505c52b79032/pyloudnorm-0.1.1-py3-none-any.whl",
+      "size": 9636,
+      "sha256": "d7f12ebdd097a464d87ce2878fc4d942f15f8233e26cc03f33fefa226f869a14"
+    },
+    {
+      "label": "Avatar dependency \u00b7 gguf==0.17.1",
+      "filename": "gguf-0.17.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/fc/31/6a93a887617ee7deeaa602ca3d02d1c12a6cb8a742a695de5d128f5fa46a/gguf-0.17.1-py3-none-any.whl",
+      "size": 96224,
+      "sha256": "7bc5aa7eeb1931f7d39b48fdc5b38fda6b294b9dca75cf607ac69557840a3943"
+    },
+    {
+      "label": "Avatar dependency \u00b7 loguru==0.7.3",
+      "filename": "loguru-0.7.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/0c/29/0348de65b8cc732daa3e33e67806420b2ae89bdce2b04af740289c5c6c8c/loguru-0.7.3-py3-none-any.whl",
+      "size": 61595,
+      "sha256": "31a33c10c8e1e10422bfd431aeb5d351c7cf7fa671e3c4df004162264b28220c"
+    },
+    {
+      "label": "Avatar dependency \u00b7 ftfy==6.3.1",
+      "filename": "ftfy-6.3.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/ab/6e/81d47999aebc1b155f81eca4477a616a70f238a2549848c38983f3c22a82/ftfy-6.3.1-py3-none-any.whl",
+      "size": 44821,
+      "sha256": "7c70eb532015cd2f9adb53f101fb6c7945988d023a085d127d1573dc49dd0083"
+    },
+    {
+      "label": "Avatar dependency \u00b7 imageio==2.37.0",
+      "filename": "imageio-2.37.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/cb/bd/b394387b598ed84d8d0fa90611a90bee0adc2021820ad5729f7ced74a8e2/imageio-2.37.0-py3-none-any.whl",
+      "size": 315796,
+      "sha256": "11efa15b87bc7871b61590326b2d635439acc321cf7f8ce996f812543ce10eed"
+    },
+    {
+      "label": "Avatar dependency \u00b7 imageio-ffmpeg==0.6.0",
+      "filename": "imageio_ffmpeg-0.6.0-py3-none-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/2c/c6/fa760e12a2483469e2bf5058c5faff664acf66cadb4df2ad6205b016a73d/imageio_ffmpeg-0.6.0-py3-none-win_amd64.whl",
+      "size": 31246824,
+      "sha256": "02fa47c83703c37df6bfe4896aab339013f62bf02c5ebf2dce6da56af04ffc0a"
+    },
+    {
+      "label": "Avatar dependency \u00b7 moviepy==2.2.1",
+      "filename": "moviepy-2.2.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/9a/73/7d3b2010baa0b5eb1e4dfa9e4385e89b6716be76f2fa21a6c0fe34b68e5a/moviepy-2.2.1-py3-none-any.whl",
+      "size": 129871,
+      "sha256": "6b56803fec2ac54b557404126ac1160e65448e03798fa282bd23e8fab3795060"
+    },
+    {
+      "label": "Avatar dependency \u00b7 decorator==5.2.1",
+      "filename": "decorator-5.2.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/4e/8c/f3147f5c4b73e7550fe5f9352eaa956ae838d5c51eb58e7a25b9f3e2643b/decorator-5.2.1-py3-none-any.whl",
+      "size": 9190,
+      "sha256": "d316bb415a2d9e2d2b3abcc4084c6502fc09240e292cd76a76afc106a1c8e04a"
+    },
+    {
+      "label": "Avatar dependency \u00b7 proglog==0.1.12",
+      "filename": "proglog-0.1.12-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/c1/1b/f7ea6cde25621cd9236541c66ff018f4268012a534ec31032bcb187dc5e7/proglog-0.1.12-py3-none-any.whl",
+      "size": 6337,
+      "sha256": "ccaafce51e80a81c65dc907a460c07ccb8ec1f78dc660cfd8f9ec3a22f01b84c"
+    },
+    {
+      "label": "Avatar dependency \u00b7 python-dotenv==1.1.1",
+      "filename": "python_dotenv-1.1.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5f/ed/539768cf28c661b5b068d66d96a2f155c4971a5d55684a514c1a0e0dec2f/python_dotenv-1.1.1-py3-none-any.whl",
+      "size": 20556,
+      "sha256": "31f23644fe2602f88ff55e1f5c79ba497e01224ee7737937930c448e4d0e24dc"
+    },
+    {
+      "label": "Avatar dependency \u00b7 onnxruntime==1.22.1",
+      "filename": "onnxruntime-1.22.1-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/4c/06/9c765e66ad32a7e709ce4cb6b95d7eaa9cb4d92a6e11ea97c20ffecaf765/onnxruntime-1.22.1-cp313-cp313-win_amd64.whl",
+      "size": 12690841,
+      "sha256": "70980d729145a36a05f74b573435531f55ef9503bcda81fc6c3d6b9306199982"
+    },
+    {
+      "label": "Avatar dependency \u00b7 coloredlogs==15.0.1",
+      "filename": "coloredlogs-15.0.1-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/a7/06/3d6badcf13db419e25b07041d9c7b4a2c331d3f4e7134445ec5df57714cd/coloredlogs-15.0.1-py2.py3-none-any.whl",
+      "size": 46018,
+      "sha256": "612ee75c546f53e92e70049c9dbfcc18c935a2b9a53b66085ce9ef6a6e5c0934"
+    },
+    {
+      "label": "Avatar dependency \u00b7 humanfriendly==10.0",
+      "filename": "humanfriendly-10.0-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/f0/0f/310fb31e39e2d734ccaa2c0fb981ee41f7bd5056ce9bc29b2248bd569169/humanfriendly-10.0-py2.py3-none-any.whl",
+      "size": 86794,
+      "sha256": "1697e1a8a8f550fd43c2865cd84542fc175a61dcb779b6fee18cf6b6ccba1477"
+    },
+    {
+      "label": "Avatar dependency \u00b7 flatbuffers==25.2.10",
+      "filename": "flatbuffers-25.2.10-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/b8/25/155f9f080d5e4bc0082edfda032ea2bc2b8fab3f4d25d46c1e9dd22a1a89/flatbuffers-25.2.10-py2.py3-none-any.whl",
+      "size": 30953,
+      "sha256": "ebba5f4d5ea615af3f7fd70fc310636fbb2bbd1f566ac0a23d98dd412de50051"
+    },
+    {
+      "label": "Avatar dependency \u00b7 einops==0.8.1",
+      "filename": "einops-0.8.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/87/62/9773de14fe6c45c23649e98b83231fffd7b9892b6cf863251dc2afa73643/einops-0.8.1-py3-none-any.whl",
+      "size": 64359,
+      "sha256": "919387eb55330f5757c6bea9165c5ff5cfe63a642682ea788a6d472576d81737"
+    },
+    {
+      "label": "Avatar dependency \u00b7 opencv-python==4.12.0.88",
+      "filename": "opencv_python-4.12.0.88-cp37-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/fa/80/eb88edc2e2b11cd2dd2e56f1c80b5784d11d6e6b7f04a1145df64df40065/opencv_python-4.12.0.88-cp37-abi3-win_amd64.whl",
+      "size": 39000307,
+      "sha256": "d98edb20aa932fd8ebd276a72627dad9dc097695b3d435a4257557bbb49a79d2"
+    },
+    {
+      "label": "Avatar dependency \u00b7 scikit-image==0.25.2",
+      "filename": "scikit_image-0.25.2-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/8a/97/5fcf332e1753831abb99a2525180d3fb0d70918d461ebda9873f66dcc12f/scikit_image-0.25.2-cp313-cp313-win_amd64.whl",
+      "size": 12885116,
+      "sha256": "64785a8acefee460ec49a354706db0b09d1f325674107d7fa3eadb663fb56d6f"
+    },
+    {
+      "label": "Avatar dependency \u00b7 tifffile==2025.5.10",
+      "filename": "tifffile-2025.5.10-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5d/06/bd0a6097da704a7a7c34a94cfd771c3ea3c2f405dd214e790d22c93f6be1/tifffile-2025.5.10-py3-none-any.whl",
+      "size": 226533,
+      "sha256": "e37147123c0542d67bc37ba5cdd67e12ea6fbe6e86c52bee037a9eb6a064e5ad"
+    },
+    {
+      "label": "Avatar dependency \u00b7 future==1.0.0",
+      "filename": "future-1.0.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/da/71/ae30dadffc90b9006d77af76b393cb9dfbfc9629f339fc1574a1c52e6806/future-1.0.0-py3-none-any.whl",
+      "size": 491326,
+      "sha256": "929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216"
+    },
+    {
+      "label": "Avatar dependency \u00b7 wcwidth==0.2.13",
+      "filename": "wcwidth-0.2.13-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/fd/84/fd2ba7aafacbad3c4201d395674fc6348826569da3c0937e75505ead3528/wcwidth-0.2.13-py2.py3-none-any.whl",
+      "size": 34166,
+      "sha256": "3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"
+    },
+    {
+      "label": "Avatar dependency \u00b7 win32-setctime==1.2.0",
+      "filename": "win32_setctime-1.2.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/e1/07/c6fe3ad3e685340704d314d765b7912993bcb8dc198f0e7a89382d37974b/win32_setctime-1.2.0-py3-none-any.whl",
+      "size": 4083,
+      "sha256": "95d644c4e708aba81dc3704a116d8cbc974d70b3bdb8be1d150e36be6e9d1390"
+    },
+    {
+      "label": "Avatar dependency \u00b7 colorama==0.4.6",
+      "filename": "colorama-0.4.6-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl",
+      "size": 25335,
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
+    },
+    {
+      "label": "Avatar dependency \u00b7 importlib_metadata==8.7.0",
+      "filename": "importlib_metadata-8.7.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/20/b0/36bd937216ec521246249be3bf9855081de4c5e06a0c9b4219dbeda50373/importlib_metadata-8.7.0-py3-none-any.whl",
+      "size": 27656,
+      "sha256": "e5dd1551894c77868a30651cef00984d50e1002d06942a7101d34870c5f02afd"
+    },
+    {
+      "label": "Avatar dependency \u00b7 zipp==3.23.0",
+      "filename": "zipp-3.23.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl",
+      "size": 10276,
+      "sha256": "071652d6115ed432f5ce1d34c336c0adfd6a884660d1e9712a256d3d3bd4b14e"
+    },
+    {
+      "label": "Avatar dependency \u00b7 pyreadline3==3.5.4",
+      "filename": "pyreadline3-3.5.4-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/5a/dc/491b7661614ab97483abf2056be1deee4dc2490ecbf7bff9ab5cdbac86e1/pyreadline3-3.5.4-py3-none-any.whl",
+      "size": 83178,
+      "sha256": "eaf8e6cc3c49bcccf145fc6067ba8643d1df34d604a1ec0eccbf7a18e6d3fae6"
+    },
+    {
+      "label": "Avatar dependency \u00b7 msgpack==1.1.1",
+      "filename": "msgpack-1.1.1-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/ca/91/7dc28d5e2a11a5ad804cf2b7f7a5fcb1eb5a4966d66a5d2b41aee6376543/msgpack-1.1.1-cp313-cp313-win_amd64.whl",
+      "size": 72341,
+      "sha256": "6d489fba546295983abd142812bda76b57e33d0b9f5d5b71c09a583285506f69"
+    },
+    {
+      "label": "Avatar dependency \u00b7 standard-aifc==3.13.0",
+      "filename": "standard_aifc-3.13.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/c3/52/5fbb203394cc852334d1575cc020f6bcec768d2265355984dfd361968f36/standard_aifc-3.13.0-py3-none-any.whl",
+      "size": 10492,
+      "sha256": "f7ae09cc57de1224a0dd8e3eb8f73830be7c3d0bc485de4c1f82b4a7f645ac66"
+    },
+    {
+      "label": "Avatar dependency \u00b7 standard-sunau==3.13.0",
+      "filename": "standard_sunau-3.13.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/34/ae/e3707f6c1bc6f7aa0df600ba8075bfb8a19252140cd595335be60e25f9ee/standard_sunau-3.13.0-py3-none-any.whl",
+      "size": 7364,
+      "sha256": "53af624a9529c41062f4c2fd33837f297f3baa196b0cfceffea6555654602622"
+    },
+    {
+      "label": "Avatar dependency \u00b7 standard-chunk==3.13.0",
+      "filename": "standard_chunk-3.13.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/7a/90/a5c1084d87767d787a6caba615aa50dc587229646308d9420c960cb5e4c0/standard_chunk-3.13.0-py3-none-any.whl",
+      "size": 4944,
+      "sha256": "17880a26c285189c644bd5bd8f8ed2bdb795d216e3293e6dbe55bbd848e2982c"
+    },
+    {
+      "label": "Avatar dependency \u00b7 audioop-lts==0.2.1",
+      "filename": "audioop_lts-0.2.1-cp313-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/3a/1c/1f88e9c5dd4785a547ce5fd1eb83fff832c00cc0e15c04c1119b02582d06/audioop_lts-0.2.1-cp313-abi3-win_amd64.whl",
+      "size": 30412,
+      "sha256": "64562c5c771fb0a8b6262829b9b4f37a7b886c01b4d3ecdbae1d629717db08b4"
+    },
+    {
+      "label": "Avatar dependency \u00b7 protobuf==5.29.5",
+      "filename": "protobuf-5.29.5-cp310-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/81/7f/73cefb093e1a2a7c3ffd839e6f9fcafb7a427d300c7f8aef9c64405d8ac6/protobuf-5.29.5-cp310-abi3-win_amd64.whl",
+      "size": 434818,
+      "sha256": "3f76e3a3675b4a4d867b52e4a5f5b78a2ef9565549d4037e06cf7b0942b1d3fc"
+    },
+    {
+      "label": "Avatar dependency \u00b7 ninja==1.11.1.4",
+      "filename": "ninja-1.11.1.4-py3-none-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/5b/10/9b8fe9ac004847490cc7b54896124c01ce2d87d95dc60aabd0b8591addff/ninja-1.11.1.4-py3-none-win_amd64.whl",
+      "size": 296461,
+      "sha256": "4617b3c12ff64b611a7d93fd9e378275512bb36eff8babff7c83f5116b4f8d66"
+    },
+    {
+      "label": "Avatar dependency \u00b7 platformdirs==4.3.8",
+      "filename": "platformdirs-4.3.8-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/fe/39/979e8e21520d4e47a0bbe349e2713c0aac6f3d853d0e5b34d76206c439aa/platformdirs-4.3.8-py3-none-any.whl",
+      "size": 18567,
+      "sha256": "ff7059bb7eb1179e2685604f4aaf157cfd9535242bd23742eadc3c13542139b4"
+    }
+  ]
+}

@@ -23,9 +23,12 @@ def engine_root(root, key):
 
 def ready(root, key):
     config=catalog()[key];folder=engine_root(root,key)
-    return (load_json(folder/'installed.json',{}).get('revision')==config['revision']
+    marker=load_json(folder/'installed.json',{})
+    return (marker.get('revision')==config['revision']
+            and marker.get('extension_revision')==config.get('extension_revision')
             and runtime_python(root).is_file() and (folder/'code/main.py').is_file()
-            and (folder/'dependencies/comfy_aimdo/control.py').is_file())
+            and (folder/'dependencies/comfy_aimdo/control.py').is_file()
+            and all((folder/'code/custom_nodes'/item['name']/'__init__.py').is_file() for item in config.get('custom_nodes',[])))
 
 
 def extract(archive, destination, cancel):
@@ -53,6 +56,7 @@ def install(root, key, report, cancel):
     if ready(root,key):return
     if not runtime_python(root).is_file():raise ValueError('Install the base runtime first.')
     config=catalog()[key];folder=engine_root(root,key);base=folder.parent
+    engine_name = config.get('name', key.upper()+' engine')
     base.mkdir(parents=True,exist_ok=True)
     cache=Path(root)/'downloads'/'engines';cache.mkdir(parents=True,exist_ok=True)
     if shutil.disk_usage(cache).free<512*1024**2:raise ValueError('Allow at least 512 MB free for the separate engine.')
@@ -61,9 +65,13 @@ def install(root, key, report, cancel):
     staging=base/('.'+key+'-install-'+secrets.token_hex(6));staging.mkdir()
     backup=base/('.'+key+'-previous-'+secrets.token_hex(6))
     try:
-        report('Preparing the separate FLUX 3 engine…',None)
+        report('Preparing '+engine_name+'…',None)
         extract(archive,staging/'code',cancel)
-        log=Path(root)/'logs'/'flux3-engine-install.log';log.parent.mkdir(exist_ok=True)
+        for item in config.get('custom_nodes',[]):
+            destination=(staging/'code/custom_nodes'/item['name']).resolve()
+            if not destination.is_relative_to((staging/'code/custom_nodes').resolve()):raise ValueError('Invalid engine extension path.')
+            shutil.copytree(resource(item['resource']),destination,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+        log=Path(root)/'logs'/(key+'-engine-install.log');log.parent.mkdir(exist_ok=True)
         command=[str(runtime_python(root)),'-s','-m','pip','install','--no-index','--no-deps',
                  '--target',str(staging/'dependencies'),*[str(p) for p in wheels]]
         with log.open('w',encoding='utf-8') as output:
@@ -73,20 +81,21 @@ def install(root, key, report, cancel):
                 if cancel.wait(.2):
                     process.terminate();process.wait(timeout=20)
                     raise Cancelled('Engine installation cancelled. Retry from Models.')
-        if process.returncode:raise RuntimeError('The FLUX 3 engine dependency could not install. See logs/flux3-engine-install.log.')
-        report('Checking FLUX 3 engine nodes on CPU. No model weights are loaded.',None)
-        probe=subprocess.run([str(runtime_python(root)),'-s',str(resource('engine_worker.py')),str(staging),'--studio-probe'],
+        if process.returncode:raise RuntimeError('The '+engine_name+' dependency could not install. See logs/'+log.name+'.')
+        report('Checking '+engine_name+' on CPU. No model weights are loaded.',None)
+        probe=subprocess.run([str(runtime_python(root)),'-s',str(resource('engine_worker.py')),str(staging),'--studio-probe',*([config['probe']] if config.get('probe') else [])],
                              capture_output=True,text=True,timeout=180,creationflags=CREATE_NO_WINDOW)
         with log.open('a',encoding='utf-8') as output:output.write(probe.stdout+'\n'+probe.stderr)
-        if probe.returncode:raise RuntimeError('The separate FLUX 3 engine check failed. See logs/flux3-engine-install.log.\n'+probe.stderr[-1500:])
+        if probe.returncode:raise RuntimeError('The '+engine_name+' check failed. See logs/'+log.name+'.\n'+probe.stderr[-1500:])
         if cancel.is_set():raise Cancelled('Engine installation cancelled. Retry from Models.')
-        atomic_json(staging/'installed.json',dict(revision=config['revision'],version=config['version']))
+        atomic_json(staging/'installed.json',dict(revision=config['revision'],version=config['version'],
+            **({'extension_revision':config['extension_revision']} if config.get('extension_revision') else {})))
         if folder.exists():folder.rename(backup)
         try:staging.rename(folder)
         except Exception:
             if backup.exists():backup.rename(folder)
             raise
-        report('FLUX 3 engine installed. The original engine was preserved.',1)
+        report(engine_name+' installed. The original engine was preserved.',1)
     finally:
         # These paths are generated beneath the managed engine folder, never model/media paths.
         for temporary in (staging,backup):
@@ -94,7 +103,7 @@ def install(root, key, report, cancel):
 
 
 def command(root, key):
-    if not ready(root,key):raise ValueError('Install or repair FLUX 3 in Models first.')
+    if not ready(root,key):raise ValueError('Install or repair '+catalog()[key]['name']+' in Models first.')
     folder=engine_root(root,key);user=Path(root)/'engine-profiles'/key;user.mkdir(parents=True,exist_ok=True)
     input_folder=comfy_root(root)/'input';input_folder.mkdir(parents=True,exist_ok=True)
     return [str(runtime_python(root)),'-s',str(resource('engine_worker.py')),str(folder),

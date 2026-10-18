@@ -62,10 +62,16 @@ common = [(ROOT / "assets" / "manifest.json", "assets"), (ROOT / "assets" / "7zr
           (ROOT / 'assets' / 'packs.json', 'assets'),
           (ROOT / 'assets' / 'enhancers.json', 'assets'),
           (ROOT / 'assets' / 'engines.json', 'assets'),
+          (ROOT / 'assets' / 'avatar-runtime.json', 'assets'),
+          (ROOT / 'assets' / 'avatar-sources.zip', 'assets'),
+          (ROOT / 'assets' / 'avatar-NOTICES.txt', 'assets'),
+          (ROOT / 'assets' / 'ref2va', 'assets/ref2va'),
+          (ROOT / 'assets' / 'minimax_h3', 'assets/minimax_h3'),
+          (ROOT / 'assets' / 'viggle', 'assets/viggle'),
           (ROOT / 'assets' / 'engine_worker.py', 'assets'),
           (ROOT / 'assets' / 'studio-logo.png', 'assets'),
           (ROOT / "build" / "desktop-host", "assets/desktop")]
-freeze("app.py", Path(APP_EXE).stem, common + [(ROOT / "assets" / "index.html", "assets"), (ROOT / 'assets/studio.js', 'assets'), (ROOT / 'assets/studio-tools.js', 'assets'), (ROOT / 'assets/studio-updates.js', 'assets'), (ROOT / 'assets/studio.css', 'assets'), (ROOT / 'assets/media_worker.py', 'assets'), (ROOT / 'assets/upscale_worker.py', 'assets')])
+freeze("app.py", Path(APP_EXE).stem, common + [(ROOT / "assets" / "index.html", "assets"), (ROOT / 'assets/studio.js', 'assets'), (ROOT / 'assets/studio-tools.js', 'assets'), (ROOT / 'assets/studio-updates.js', 'assets'), (ROOT / 'assets/studio.css', 'assets'), (ROOT / 'assets/media_worker.py', 'assets'), (ROOT / 'assets/upscale_worker.py', 'assets'), (ROOT / 'assets/avatar_worker.py', 'assets'), (ROOT / 'assets/avatar_audio_worker.py', 'assets'), (ROOT / 'assets/studio-avatars.js', 'assets'), (ROOT / 'assets/studio-ref2va.js', 'assets'), (ROOT / 'assets/studio-minimax.js', 'assets'), (ROOT / 'assets/studio-qwen.js', 'assets'), (ROOT / 'assets/studio-voice.js', 'assets'), (ROOT / 'assets/voice_worker.py', 'assets')])
 shutil.copy2(OUT / APP_EXE, ROOT / "assets" / APP_EXE)
 freeze("installer.py", "AIImageVideoStudio-Setup-" + VERSION, common + [(ROOT / "assets" / APP_EXE, "assets"), (ROOT / 'assets/installer-logo.png', 'assets')])
 hashes = []

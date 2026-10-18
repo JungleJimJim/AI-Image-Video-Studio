@@ -250,7 +250,8 @@ class EnhancementTests(unittest.TestCase):
             installer=Mock(poll=Mock(return_value=0),returncode=0)
             with patch('enhancements.runtime_python',return_value=python),patch('enhancements.resource',return_value=manifest),\
                  patch('enhancements.download',side_effect=download),patch('enhancements.subprocess.Popen',return_value=installer) as launch,\
-                 patch('enhancements.subprocess.run',return_value=Mock(returncode=1,stderr='Import failed')) as check:
+                 patch('enhancements.subprocess.run',return_value=Mock(returncode=1,stderr='Import failed')) as check,\
+                 patch('enhancements.shutil.disk_usage',return_value=Mock(free=10*1024**3)):
                 with self.assertRaises(RuntimeError):enhancements.install_video(root,lambda *a:None,threading.Event())
                 marker=enhancements.extension_root(root)/'installed.json'
                 self.assertFalse(marker.exists())

@@ -1,0 +1,29 @@
+Talking-avatar components added in A.I. Image & Video Studio 1.7.0
+
+Model weights are optional downloads and retain their own upstream terms.
+The application does not bundle model weights or contact a voice service.
+Exact model URLs, revisions, sizes and SHA-256 hashes: assets/packs.json.
+
+The bundled avatar-sources.zip contains selected source, configuration and
+license files from the following projects. Original license files are kept
+inside each project folder. These components retain their respective terms;
+the app's MIT license does not replace third-party licenses.
+
+EchoMimic wrapper and EchoMimicV3 source (Apache-2.0):
+https://github.com/smthemex/ComfyUI_EchoMimic
+SoulX-FlashHead wrapper and pipeline (Apache-2.0):
+https://github.com/HM-RunningHub/ComfyUI_RH_FlashHead
+WanVideoWrapper, InfiniteTalk and LongCat adapters:
+https://github.com/kijai/ComfyUI-WanVideoWrapper
+MuseTalk (MIT): https://github.com/TMElyralab/MuseTalk
+DWPose (Apache-2.0): https://github.com/IDEA-Research/DWPose
+
+Exact bundled source revisions and dependency distribution URLs/checksums:
+assets/avatar-runtime.json. Optional Python dependencies install separately
+in engines/avatar/avatar-dependencies, alongside their distribution notices.
+The optional ComfyUI engine retains ComfyUI's GPL-3.0 license.
+
+The studio adapter uses single-GPU attention, local recordings, portable PyAV
+audio/video reading, CPU ONNX face detection and optional model offloading.
+SoulX frame values are converted to uint8; recording tails are padded before
+chunked inference and final exports are trimmed to the selected recording.

@@ -10,6 +10,7 @@ import subprocess
 import threading
 import time
 from common import CREATE_NO_WINDOW, comfy_root, resource, runtime_python
+from media_storage import media_folder
 
 
 def process(root, request, timeout=60):
@@ -27,7 +28,7 @@ def process(root, request, timeout=60):
 
 def record(root, action, source, **options):
     identifier = secrets.token_hex(12)
-    folder = Path(root) / 'Library Edits'
+    folder = media_folder(root, 'image')
     file = folder / (action.title()+'_'+time.strftime('%Y%m%d_%H%M%S')+'_'+identifier[:6]+'.png')
     dimensions = process(root, dict(action=action, source=source['path'], target=str(file), **options))
     return dict(id=identifier, path=str(file), name=file.name, kind=action, parent_id=source['id'],

@@ -28,8 +28,11 @@ from media import Thumbnails, catalog_page, crop_options, details as media_detai
 from resources import ResourceMonitor
 from job_queue import JobQueue, ACTIVE
 import enhancements
+import avatars
+import voices
 from updates import UpdateManager
 from model_removal import removal_plan, uninstall as uninstall_model
+from media_storage import media_folder, migrate_library
 
 
 class Studio:
@@ -37,14 +40,15 @@ class Studio:
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
         self.token = secrets.token_urlsafe(32)
-        self.settings = load_json(self.root / "settings.json", {"output": str(self.root / "Videos"), "options": DEFAULTS.copy()})
-        self.settings.setdefault("output", str(self.root / "Videos"))
+        self.settings = migrate_library(self.root, load_json(self.root / "settings.json",
+            {"output": str(self.root / "Library"), "options": DEFAULTS.copy()}))
+        self.settings.setdefault("output", str(self.root / "Library"))
         self.settings.setdefault("options", DEFAULTS.copy())
         self.settings.setdefault('wan_loras', self.settings['options'].get('loras', [])
                                  if self.settings['options'].get('model','wan13')=='wan13' else [])
         self.settings.setdefault('model_loras', {})
         self.settings['model_loras'].setdefault('wan13', self.settings['wan_loras'])
-        for key in ('options','image_options','edit_options'):
+        for key in ('options','image_options','edit_options','face_options'):
             saved = self.settings.get(key,{})
             if saved.get('model') in lora_models() and saved.get('loras'):
                 self.settings['model_loras'].setdefault(saved['model'],saved['loras'])
@@ -56,6 +60,7 @@ class Studio:
         self.engine = Engine(self.root, self.report)
         self.videos = load_json(self.root / "library.json", [])
         self.images = load_json(self.root / 'images.json', [])
+        self.recordings = load_json(self.root / 'recordings.json', [])
         self._last_log = ""
         self.worker = None
         self.resources = ResourceMonitor()
@@ -92,6 +97,7 @@ class Studio:
                     'lora_models': list(lora_models().values()),
                     'packs': pack_inventory(self.root), 'images': self.images[-60:][::-1],
                     'runtime_ready': runtime_ready(self.root), 'queue': self.queue.snapshot(),
+                    'recordings': self.recordings,
                     'enhancers': enhancements.inventory(self.root),
                     'updates': self.updates.snapshot(),
                     'resources': self.resources.snapshot(),
@@ -143,22 +149,27 @@ class Studio:
         if not (install_ready(self.root) or runtime_ready(self.root)) or (options['model']=='wan13' and not install_ready(self.root)):
             raise ValueError("Install the runtime and model in Settings first.")
         if options['model'] != 'wan13' and not pack_ready(self.root, options['model']):
-            raise ValueError('Install the selected video model pack in Settings first.')
+            raise ValueError('Install the selected video model pack in Models first.')
         source = None
         if options['mode'] == 'image':
             source = next((x for x in self.images if x['id']==options['source_image']), None)
             if not source or not Path(source['path']).is_file():
                 raise ValueError('Choose an existing image from the image library.')
+        last_source=None
+        if options.get('last_image'):
+            last_source=next((x for x in self.images if x['id']==options['last_image']),None)
+            if not last_source or not Path(last_source['path']).is_file():raise ValueError('The selected last image is missing from the Library.')
         if options['model'] == 'ltx2':
             options.update(steps=8, cfg=1.0, sampler='euler', scheduler='distilled', shift=1.0)
         def job():
             if source:
                 options['input_file'] = stage_image(self.root, source)
+            if last_source:options['last_input_file']=stage_image(self.root,last_source)
             with self.lock:
                 self.remember_loras(options['model'],options['loras'])
                 self.settings["options"] = {**options, "seed": raw.get("seed", "")}
                 atomic_json(self.root / "settings.json", self.settings)
-            file, workflow, seconds = self.engine.generate(options, output)
+            file, workflow, seconds = self.engine.generate(options, media_folder(self.root,'video',output))
             info = {"id": secrets.token_hex(12), "path": str(file), "name": file.name,
                     "created": time.strftime("%Y-%m-%d %H:%M"), "options": options, "seconds": seconds,
                     'width':options['width'],'height':options['height']}
@@ -189,7 +200,7 @@ class Studio:
                 self.remember_loras(options['model'],options['loras'])
                 self.settings['image_options'] = {**options, 'seed': raw.get('seed','')}
                 atomic_json(self.root / 'settings.json', self.settings)
-            folder = Path(output) / 'Images'
+            folder = media_folder(self.root,'image',output)
             file, workflow, seconds = self.engine.generate(options, folder, kind='image')
             info = dict(id=secrets.token_hex(12), path=str(file), name=file.name, kind='generated',
                         created=time.strftime('%Y-%m-%d %H:%M'), options=options, seconds=seconds,
@@ -226,6 +237,20 @@ class Studio:
             raise ValueError('This library file is missing. Import it again or choose another item.')
         return source
 
+    def open_library_folder(self, identifier):
+        with self.lock:
+            item = next((x for x in (*self.images, *self.videos) if x['id'] == identifier), None)
+        if not item or not Path(item['path']).is_file():
+            raise ValueError('This library file is missing. Choose another item or import it again.')
+        path = Path(item['path']).resolve()
+        startup = subprocess.STARTUPINFO() if os.name == 'nt' else None
+        if startup:
+            startup.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startup.wShowWindow = 1
+        # Explorer expects the /select comma immediately before the quoted path.
+        # Use no shell; the path comes only from a saved library record.
+        subprocess.Popen(f'explorer.exe /select,"{path}"', startupinfo=startup)
+
     def add_image(self, info, workflow=None):
         atomic_json(Path(info['path']).with_suffix('.json'), {**info, **({'workflow':workflow} if workflow else {})})
         with self.lock:
@@ -253,10 +278,11 @@ class Studio:
                     options['mask_file']=stage_mask(self.root,mask,options['width'],options['height'])
                 with self.lock:
                     self.remember_loras(options['model'],options['loras'])
-                    self.settings['edit_options']={k:v for k,v in options.items() if k not in ('input_file','reference_files','mask_file')}
-                    self.settings['edit_options']['seed']=raw.get('seed','')
+                    settings_key='face_options' if options['model']=='bfs' else 'edit_options'
+                    self.settings[settings_key]={k:v for k,v in options.items() if k not in ('input_file','reference_files','mask_file')}
+                    self.settings[settings_key]['seed']=raw.get('seed','')
                     atomic_json(self.root/'settings.json',self.settings)
-                file,workflow,seconds=self.engine.generate(options,Path(output)/'Images',kind='edit')
+                file,workflow,seconds=self.engine.generate(options,media_folder(self.root,'image',output),kind='edit')
                 mask_path = None
                 if options.get('mask_file'):
                     import shutil
@@ -278,6 +304,68 @@ class Studio:
         if prepare:return job,{**options,**({'mask':mask} if mask else {})}
         self.run_job(job)
 
+    def import_recording(self,raw):
+        def job():
+            info=avatars.import_audio(self.root,raw,self.report,self.cancel)
+            with self.lock:
+                self.recordings.append(info)
+                atomic_json(self.root/'recordings.json',self.recordings)
+                self.state['audio_result']=info
+            self.report('Voice recording imported. Choose a Library image or video.',1)
+        self.run_job(job)
+
+    def generate_voice(self,raw,prepare=False,output=None):
+        options=voices.validate_options(raw)
+        reference=next((x for x in self.recordings if x['id']==options['reference_id']),None) if options['reference_id'] else None
+        if options['reference_id'] and (not reference or not Path(reference['path']).is_file()):raise ValueError('The reference recording is missing.')
+        if reference and not .1<=reference.get('duration',0)<=60:raise ValueError('Choose a reference recording no longer than 60 seconds.')
+        def job():
+            self.engine.stop()
+            content,seconds=voices.generate(self.root,options,reference,self.report,self.cancel)
+            import base64
+            info=avatars.import_audio(self.root,dict(data='data:audio/wav;base64,'+base64.b64encode(content).decode(),name='Voice_'+time.strftime('%Y%m%d_%H%M%S')+'.wav'),self.report,self.cancel)
+            info.update(kind='generated_voice',options=options,seconds=seconds)
+            atomic_json(Path(info['path']).with_suffix('.json'),info)
+            with self.lock:
+                self.recordings.append(info);atomic_json(self.root/'recordings.json',self.recordings)
+                self.settings['voice_options']=options;atomic_json(self.root/'settings.json',self.settings)
+                self.state.update(audio_result=info,voice_result=info)
+            self.report('Voice saved in Library/Audio and available in Talking Avatar.',1)
+        return (job,options) if prepare else self.run_job(job)
+
+    def generate_avatar(self,raw,prepare=False,output=None):
+        options=avatars.validate_options(raw)
+        if not pack_ready(self.root,options['model']):
+            raise ValueError('Install the selected talking-avatar model in Models first.')
+        source=self.find_media(options['source_id'],options['source_type'])
+        audio=next((x for x in self.recordings if x['id']==options['audio_id']),None)
+        if not audio or not Path(audio['path']).is_file():
+            raise ValueError('Import an existing voice recording in Talking Avatar first.')
+        remaining=audio['duration']-options['audio_start']
+        if remaining<.5:raise ValueError('Choose an audio start time before the end of the recording.')
+        options['duration']=min(options['duration'],remaining)
+        options['loras']=self.selected_loras(options['model'],raw) if options['model'] in ('avatar_longcat','avatar_infinite') else []
+        def job():
+            self.engine.stop()
+            with self.lock:
+                self.settings['avatar_options']=dict(options)
+                self.remember_loras(options['model'],options['loras'])
+                atomic_json(self.root/'settings.json',self.settings)
+            file,seconds,result=avatars.generate(self.root,source,audio,options,output or self.settings['output'],self.report,self.cancel)
+            info=dict(id=secrets.token_hex(12),path=str(file),name=file.name,kind='talking_avatar',
+                parent_id=source['id'],audio_id=audio['id'],audio_name=audio['name'],
+                created=time.strftime('%Y-%m-%d %H:%M'),options=options,seconds=seconds,
+                width=result['width'],height=result['height'],duration=result['duration'],fps=result['fps'])
+            atomic_json(file.with_suffix('.json'),info)
+            with self.lock:
+                self.videos.append(info);self.revision+=1
+                atomic_json(self.root/'library.json',self.videos)
+                self.state['result']=info
+                self.state['avatar_result']=info
+                self.state['latest_media']={**info,'media_type':'video'}
+            self.report('Talking avatar saved with your recording. The source is preserved.',1)
+        return (job,options) if prepare else self.run_job(job)
+
     def auto_enhancement(self,raw,kind):
         if not raw or (isinstance(raw,dict) and not raw.get('enabled')):return dict(enabled=False)
         if not isinstance(raw,dict) or raw.get('enabled') is not True:raise ValueError('Choose whether to enhance the result.')
@@ -295,13 +383,13 @@ class Studio:
         if kind=='image':
             w,h=enhancements.image_size(source['width'],source['height'],options['scale'])
             o={**options,'model':'qwen21','width':w,'height':h,'input_file':stage_image(self.root,source)}
-            file,workflow,seconds=self.engine.generate(o,Path(output)/'Images',kind='enhance')
+            file,workflow,seconds=self.engine.generate(o,media_folder(self.root,'image',output),kind='enhance')
             info=dict(id=secrets.token_hex(12),path=str(file),name=file.name,kind='enhanced',parent_id=source['id'],
                       created=time.strftime('%Y-%m-%d %H:%M'),options=o,seconds=seconds,width=w,height=h)
             self.add_image(info,workflow)
         else:
             self.engine.stop()
-            result=enhancements.run_video(self.root,source['path'],Path(output)/'Enhanced Videos',options,self.report,self.cancel)
+            result=enhancements.run_video(self.root,source['path'],media_folder(self.root,'video',output),options,self.report,self.cancel)
             file=Path(result['output']);w,h=map(int,result['resolution'].split('x'))
             info=dict(id=secrets.token_hex(12),path=str(file),name=file.name,kind='enhanced',parent_id=source['id'],
                       created=time.strftime('%Y-%m-%d %H:%M'),options=options,seconds=result['seconds'],width=w,height=h)
@@ -319,6 +407,11 @@ class Studio:
         return (job,options) if prepare else self.run_job(job)
 
     def prepare_queued(self,kind,raw,output=None):
+        if kind=='voice':return self.generate_voice(raw,prepare=True,output=output)
+        if kind=='faceswap':
+            if raw.get('model')!='bfs':raise ValueError('Choose the BFS face-swap model.')
+            return self.edit_image(raw,prepare=True,output=output)
+        if kind=='avatar':return self.generate_avatar(raw,prepare=True,output=output)
         if kind=='image':return self.generate_image(raw,prepare=True,output=output)
         if kind=='video':return self.generate(raw,prepare=True,output=output)
         if kind=='edit':return self.edit_image(raw,prepare=True,output=output)
@@ -457,7 +550,7 @@ class Studio:
             validate_model(model)
             adapters = validate_selection(self.root, selected, model)
             self.remember_loras(model,adapters)
-            for key in ('options','image_options','edit_options'):
+            for key in ('options','image_options','edit_options','face_options'):
                 saved = self.settings.get(key,{})
                 if saved.get('model','wan13' if key=='options' else '') == model:
                     saved['loras'] = adapters
@@ -491,7 +584,8 @@ class Studio:
             output = Path(str(data.get("output", self.settings["output"]))).expanduser()
             if not output.is_absolute():
                 raise ValueError("Select a full output folder path.")
-            output.mkdir(parents=True, exist_ok=True)
+            for kind in ('image','video'):
+                media_folder(self.root,kind,output).mkdir(parents=True, exist_ok=True)
             self.settings["output"] = str(output.resolve())
             atomic_json(self.root / "settings.json", self.settings)
 
@@ -537,7 +631,7 @@ def pick_folder(initial):
         try:
             display = ctypes.create_unicode_buffer(32768)
             info = BrowseInfo(None, None, ctypes.cast(display, wintypes.LPWSTR),
-                              "Choose where to save your videos", 0x41, callback, 0, 0)
+                              "Choose your Library folder (Images and Videos)", 0x41, callback, 0, 0)
             selected = shell.SHBrowseForFolderW(ctypes.byref(info))
             if not selected:
                 return ""
@@ -555,7 +649,7 @@ def pick_folder(initial):
     root = tk.Tk()
     root.withdraw()
     root.attributes("-topmost", True)
-    result = filedialog.askdirectory(initialdir=initial if Path(initial).exists() else str(Path.home()), title="Choose a video output folder", parent=root)
+    result = filedialog.askdirectory(initialdir=initial if Path(initial).exists() else str(Path.home()), title="Choose a library folder", parent=root)
     root.destroy()
     return result
 
@@ -584,6 +678,12 @@ def make_handler(studio, shutdown):
             url = urllib.parse.urlsplit(self.path)
             if not self.valid_host():
                 return self.send_json({"error": "Invalid host"}, 403)
+            if url.path == '/api/health':
+                if not self.authorized():
+                    return self.send_json({'error': 'Unauthorized'}, 403)
+                # The native window must remain responsive while a library request
+                # holds the studio lock or the model drive is slow. No disk scans.
+                return self.send_json({'ok': True, 'closing': studio.closing})
             if url.path == "/api/state":
                 if not self.authorized():
                     return self.send_json({"error": "Unauthorized"}, 403)
@@ -608,7 +708,7 @@ def make_handler(studio, shutdown):
                     with studio.lock:
                         item=studio.queue.get(url.path.removeprefix('/api/queue/'))
                         raw=studio.hydrate_queued(item)
-                        identifiers=[raw.get('source_image'),raw.get('source_id'),*raw.get('references',[])]
+                        identifiers=[raw.get('source_image'),raw.get('last_image'),raw.get('source_id'),*raw.get('references',[])]
                         sources=[x for x in studio.images+studio.videos if x['id'] in identifiers]
                         return self.send_json({**item,'options':raw,'sources':sources})
                 except (ValueError,OSError) as error:return self.send_json({'error':str(error)},400)
@@ -639,12 +739,28 @@ def make_handler(studio, shutdown):
                 if not record or not Path(record['path']).is_file():
                     return self.send_json({'error':'Image not found'},404)
                 return self.send_file(Path(record['path']), 'image/png')
+            if url.path.startswith('/audio/'):
+                query=urllib.parse.parse_qs(url.query)
+                if query.get('token',[''])[0]!=studio.token:return self.send_json({'error':'Unauthorized'},403)
+                record=next((x for x in studio.recordings if x['id']==url.path.removeprefix('/audio/')),None)
+                if not record or not Path(record['path']).is_file():return self.send_json({'error':'Recording not found'},404)
+                return self.send_file(Path(record['path']),'audio/wav',ranges=True)
             if url.path == '/studio.js':
                 return self.send_file(resource('studio.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-tools.js':
                 return self.send_file(resource('studio-tools.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-updates.js':
                 return self.send_file(resource('studio-updates.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-avatars.js':
+                return self.send_file(resource('studio-avatars.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-ref2va.js':
+                return self.send_file(resource('studio-ref2va.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-minimax.js':
+                return self.send_file(resource('studio-minimax.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-qwen.js':
+                return self.send_file(resource('studio-qwen.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-voice.js':
+                return self.send_file(resource('studio-voice.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio.css':
                 return self.send_file(resource('studio.css'), 'text/css; charset=utf-8')
             if url.path == '/studio-logo.png':
@@ -705,7 +821,7 @@ def make_handler(studio, shutdown):
                 return self.send_json({"error": "Invalid origin"}, 403)
             try:
                 length = int(self.headers.get("Content-Length", "0"))
-                limit = 36 * 1024**2 if self.path in ('/api/images/import','/api/images/edit','/api/queue/add','/api/queue/action') else 100000
+                limit = 84*1024**2 if self.path=='/api/avatars/audio/import' else 36 * 1024**2 if self.path in ('/api/images/import','/api/images/edit','/api/queue/add','/api/queue/action') else 100000
                 if not 0 <= length <= limit:
                     raise ValueError("Request is too large.")
                 data = json.loads(self.rfile.read(length) or b"{}")
@@ -717,6 +833,17 @@ def make_handler(studio, shutdown):
                     studio.install_update(data.get('ticket'),shutdown)
                 elif self.path == "/api/generate":
                     return self.send_json({'ok':True,'id':studio.enqueue('video',data,data.get('priority',5))})
+                elif self.path == '/api/avatars/audio/import':
+                    studio.import_recording(data)
+                elif self.path == '/api/voice/check':
+                    return self.send_json(voices.check(data))
+                elif self.path == '/api/voice/settings':
+                    connection=voices.connection(data)
+                    with studio.lock:
+                        studio.settings['voice_connection']=connection;atomic_json(studio.root/'settings.json',studio.settings)
+                    return self.send_json({'ok':True})
+                elif self.path == '/api/avatars/generate':
+                    return self.send_json({'ok':True,'id':studio.enqueue('avatar',data,data.get('priority',5))})
                 elif self.path == '/api/images/generate':
                     return self.send_json({'ok':True,'id':studio.enqueue('image',data,data.get('priority',5))})
                 elif self.path == '/api/images/import':
@@ -792,9 +919,11 @@ def make_handler(studio, shutdown):
                     studio.save_settings(data)
                 elif self.path == "/api/pick-folder":
                     return self.send_json({"path": pick_folder(studio.settings["output"])})
+                elif self.path == '/api/library/open-folder':
+                    studio.open_library_folder(data.get('id'))
                 elif self.path == "/api/open-folder":
                     kind = data.get("kind")
-                    folder = lora_folder(studio.root,data.get('model','wan13')) if kind == "loras" else studio.root / "logs" if kind == "logs" else Path(studio.settings["output"])/'Images' if kind=='images' else Path(studio.settings["output"])
+                    folder = lora_folder(studio.root,data.get('model','wan13')) if kind == "loras" else studio.root / "logs" if kind == "logs" else media_folder(studio.root,'image' if kind=='images' else 'video',studio.settings['output'])
                     folder.mkdir(parents=True, exist_ok=True)
                     startup = subprocess.STARTUPINFO() if os.name == 'nt' else None
                     if startup:

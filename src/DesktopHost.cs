@@ -61,11 +61,13 @@ internal sealed class StudioWindow : Form
     private readonly string root;
     private readonly WebView2 view;
     private readonly Label loading;
+    private readonly Label connectionStatus;
     private readonly Timer health;
     private bool forceClose;
     private bool checking;
     private int failedChecks;
     private bool fullscreen;
+    private bool imageViewerFullscreen;
     private Rectangle previousBounds;
     private FormWindowState previousWindowState;
 
@@ -89,6 +91,11 @@ internal sealed class StudioWindow : Form
         view = new WebView2 { Dock = DockStyle.Fill, DefaultBackgroundColor = BackColor };
         Controls.Add(view);
         Controls.Add(loading);
+        connectionStatus = new Label { Text = "Connection interrupted. Reconnecting… Your studio will stay open.",
+            Dock = DockStyle.Top, Height = 36, Visible = false,
+            ForeColor = Color.FromArgb(255, 220, 150), BackColor = Color.FromArgb(45, 35, 20),
+            TextAlign = ContentAlignment.MiddleCenter };
+        Controls.Add(connectionStatus);
         health = new Timer { Interval = 1200 };
         health.Tick += CheckBackend;
         Shown += InitializeView;
@@ -98,6 +105,7 @@ internal sealed class StudioWindow : Form
 
     private async void InitializeView(object sender, EventArgs args)
     {
+        LogConnection("Desktop interface starting.");
         try
         {
             CoreWebView2Environment environment = await CoreWebView2Environment.CreateAsync(null, Path.Combine(root, "desktop-profile"));
@@ -151,9 +159,9 @@ internal sealed class StudioWindow : Form
         }
     }
 
-    private Dictionary<string, object> ReadState()
+    private Dictionary<string, object> ReadState(string route = "/api/state")
     {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(studioUrl, "/api/state"));
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(new Uri(studioUrl, route));
         request.Headers["X-Wan-Token"] = token;
         request.Timeout = 1800;
         request.ReadWriteTimeout = 1800;
@@ -169,6 +177,18 @@ internal sealed class StudioWindow : Form
         string message;
         try { message = args.TryGetWebMessageAsString(); } catch { return; }
         if (message == "toggle-fullscreen") { ToggleFullscreen(); return; }
+        if (message == "open-image-viewer")
+        {
+            imageViewerFullscreen = !fullscreen;
+            if (imageViewerFullscreen) ToggleFullscreen();
+            return;
+        }
+        if (message == "close-image-viewer")
+        {
+            if (imageViewerFullscreen && fullscreen) ToggleFullscreen();
+            imageViewerFullscreen = false;
+            return;
+        }
         if (message == "exit-fullscreen") { if (fullscreen) ToggleFullscreen(); return; }
         if (message == "open-videos")
         {
@@ -176,7 +196,7 @@ internal sealed class StudioWindow : Form
             {
                 Dictionary<string, object> state = await Task.Run(() => ReadState());
                 Dictionary<string, object> settings = (Dictionary<string, object>)state["settings"];
-                string folder = Path.GetFullPath(Convert.ToString(settings["output"]));
+                string folder = Path.Combine(Path.GetFullPath(Convert.ToString(settings["output"])), "Videos");
                 Directory.CreateDirectory(folder);
                 Process.Start(new ProcessStartInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Windows), "explorer.exe"), "\"" + folder + "\"")
                     { UseShellExecute = true, WindowStyle = ProcessWindowStyle.Normal });
@@ -225,12 +245,42 @@ internal sealed class StudioWindow : Form
     {
         if (checking || forceClose) return;
         checking = true;
-        try { await Task.Run(() => ReadState()); failedChecks = 0; }
-        catch
+        try
         {
-            if (++failedChecks >= 15) { forceClose = true; Close(); }
+            Dictionary<string, object> state = await Task.Run(() => ReadState("/api/health"));
+            if (IsDisposed || Disposing || forceClose) return;
+            if (state.ContainsKey("closing") && Convert.ToBoolean(state["closing"]))
+            {
+                forceClose = true;
+                Close();
+                return;
+            }
+            if (failedChecks >= 3) LogConnection("Backend connection restored.");
+            failedChecks = 0;
+            connectionStatus.Visible = false;
+        }
+        catch (Exception error)
+        {
+            if (IsDisposed || Disposing || forceClose) return;
+            if (++failedChecks == 3)
+            {
+                LogConnection("Backend health check failed; keeping the window open. " + error.Message);
+                connectionStatus.Visible = true;
+                connectionStatus.BringToFront();
+            }
         }
         finally { checking = false; }
+    }
+
+    private void LogConnection(string message)
+    {
+        try
+        {
+            string folder = Path.Combine(root, "logs");
+            Directory.CreateDirectory(folder);
+            File.AppendAllText(Path.Combine(folder, "desktop.log"), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + " " + message + Environment.NewLine);
+        }
+        catch { }
     }
 
     private void BeforeClose(object sender, FormClosingEventArgs args)

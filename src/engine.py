@@ -27,10 +27,15 @@ HISTORY_RESPONSE_GRACE = 120
 
 def validate_options(raw):
     options = {**DEFAULTS, **{k: v for k, v in raw.items() if k in DEFAULTS}}
+    ref2va=options['model']=='ref2va'
+    turbo=options['model']=='minimax_h3'
+    minimax=ref2va or turbo
+    if turbo and 'steps' not in raw:options['steps']=6
     if options['model'] == 'ltx2' and options['scheduler'] == 'distilled':
         options['scheduler'] = 'simple'  # Accept the saved recipe when reusing a render.
-    if options['model'] not in ('wan13', 'wan22', 'ltx2') or options['mode'] not in ('text', 'image'):
+    if options['model'] not in ('wan13', 'wan22', 'ltx2','ref2va','minimax_h3') or options['mode'] not in ('text', 'image'):
         raise ValueError('Choose a supported video model and input mode.')
+    if ref2va and options['mode']!='image':raise ValueError('Ref2VA needs a reference image. Choose Image → Video and a Library image.')
     if options['mode'] == 'image' and options['model'] == 'wan13':
         raise ValueError('NSFW Wan 1.3B is text-only. Choose Wan 2.2 or LTX-2 for image-to-video.')
     if not isinstance(options['source_image'], str) or len(options['source_image']) > 100:
@@ -41,7 +46,7 @@ def validate_options(raw):
         raise ValueError('Choose whether to prepare a new seed for each job.')
     if not isinstance(options['audio'], bool):
         raise ValueError('Audio must be enabled or disabled.')
-    for name, lo, hi in [("width", 144, 1024), ("height", 144, 1024), ("frames", 9, MAX_VIDEO_FRAMES),
+    for name, lo, hi in [("width", 144, 1344 if minimax else 1024), ("height", 144, 1344 if minimax else 1024), ("frames", 22 if minimax else 9, 362 if minimax else MAX_VIDEO_FRAMES),
                          ("fps", 8, 30), ("steps", 1, 80)]:
         try:
             number = float(options[name])
@@ -52,12 +57,37 @@ def validate_options(raw):
             raise ValueError(f"{name.capitalize()} must be a whole number from {lo} to {hi}.") from None
     if options["width"] % 16 or options["height"] % 16:
         raise ValueError("Width and height must be multiples of 16.")
-    if options["frames"] % 4 != 1:
+    if not minimax and options["frames"] % 4 != 1:
         raise ValueError("Frame count must be 4n + 1, such as 33, 49 or 81.")
     if options['model'] == 'ltx2' and (options['width'] % 64 or options['height'] % 64 or options['frames'] % 8 != 1):
         raise ValueError('LTX-2 needs dimensions divisible by 64 and 8n + 1 frames (33, 49, 81, 121).')
     if options['model'] == 'wan22' and (options['width'] % 32 or options['height'] % 32):
         raise ValueError('Wan 2.2 needs dimensions divisible by 32.')
+    if minimax:
+        if options['width']%32 or options['height']%32 or options['width']*options['height']>1344*768:
+            raise ValueError('MiniMax H3 needs dimensions divisible by 32, up to 1344 × 768 pixels of area.')
+        if options['frames']%17!=5:raise ValueError('MiniMax H3 needs 17n + 5 frames at 24 fps, such as 124, 243 or 362.')
+    if ref2va:
+        options['vsa']=raw.get('vsa',True)
+        if not isinstance(options['vsa'],bool):raise ValueError('Choose whether to use VSA acceleration.')
+        try:
+            options['sparsity']=float(raw.get('sparsity',.75))
+            if not 0<=options['sparsity']<=.95:raise ValueError()
+        except (TypeError,ValueError,OverflowError):raise ValueError('Choose VSA sparsity from 0 to 0.95.') from None
+    if turbo:
+        options['turbo']=raw.get('turbo','larry850')
+        if options['turbo'] not in ('larry850','larryv4','off'):raise ValueError('Choose a supported MiniMax Turbo adapter.')
+        if options['turbo']!='off' and not 4<=options['steps']<=8:raise ValueError('MiniMax Turbo needs 4–8 sampling steps. Start with 6.')
+        options['turbo_low_vram']=raw.get('turbo_low_vram',True)
+        if not isinstance(options['turbo_low_vram'],bool):raise ValueError('Choose whether to use low-memory Turbo merging.')
+        try:
+            options['turbo_strength']=float(raw.get('turbo_strength',1))
+            if not .1<=options['turbo_strength']<=2:raise ValueError()
+        except (TypeError,ValueError,OverflowError):raise ValueError('Choose Turbo strength from 0.1 to 2.') from None
+        last=raw.get('last_image','')
+        if not isinstance(last,str) or len(last)>100:raise ValueError('Choose a valid last image from the Library.')
+        if last and options['mode']!='image':raise ValueError('Choose Image → Video to use a last image.')
+        options['last_image']=last
     for name, lo, hi in [("cfg", 1, 15), ("shift", 1, 15)]:
         try:
             options[name] = float(options[name])
@@ -87,10 +117,18 @@ def validate_options(raw):
             raise ValueError("Seed must be empty for random, or a whole number from 0 to 9007199254740991.") from None
     if options['model'] == 'ltx2':
         options.update(steps=8, cfg=1.0, sampler='euler', scheduler='distilled', shift=1.0, memory='low')
+    if ref2va:options.update(steps=4,cfg=1.0,sampler='euler',scheduler='simple',shift=12.0,fps=24,memory='low')
+    if turbo:options.update(cfg=1.0,sampler='euler',scheduler='simple',shift=12.0,fps=24,memory='low')
     return options
 
 
 def build_workflow(o, prefix):
+    if o.get('model')=='minimax_h3':
+        from minimax_h3 import workflow
+        return workflow(o,prefix)
+    if o.get('model')=='ref2va':
+        from ref2va import workflow
+        return workflow(o,prefix)
     if o.get('model') == 'ltx2':
         from workflows import ltx_workflow
         return ltx_workflow(o, prefix)
@@ -119,13 +157,16 @@ def build_workflow(o, prefix):
 
 
 def engine_command(root, port, output, memory, model='wan13'):
-    if model=='flux3':
+    if model in ('flux3','ref2va','minimax_h3','viggle','bfs'):
         from engine_support import command as optional_command
-        command=optional_command(root,'flux3')
+        command=optional_command(root,'qwen_turbo' if model in ('viggle','bfs') else model)
     else:command=[str(runtime_python(root)), '-s', str(comfy_root(root) / 'main.py')]
     command += ['--windows-standalone-build', '--listen', '127.0.0.1', '--port', str(port),
                '--disable-auto-launch', '--disable-all-custom-nodes', '--output-directory', str(output)]
-    if model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21', 'flux3'):
+    if model=='ref2va':command+=['--whitelist-custom-nodes','studio_ref2va_vsa']
+    if model=='minimax_h3':command+=['--whitelist-custom-nodes','studio_minimax_h3_turbo']
+    if model in ('viggle','bfs'):command+=['--whitelist-custom-nodes','studio_viggle_turbo']
+    if model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21', 'flux3','ref2va','minimax_h3','viggle','bfs'):
         # Keep the native disk-backed loader. Legacy low-VRAM mode disables it
         # and maps entire checkpoints through safetensors on Windows. This also
         # triggered a native access violation while loading Wan 2.2 in low mode.
@@ -289,7 +330,7 @@ class Engine:
         else:
             workflow = build_workflow(options, prefix)
         loaders = {node['class_type'] for node in workflow.values()
-                   if node['class_type'] in ('LoraLoader', 'LoraLoaderModelOnly')}
+                   if node['class_type'] in ('LoraLoader', 'LoraLoaderModelOnly','Ref2VAVSAGatePatch','MiniMaxH3TurboLoRA','ViggleTurboLora')}
         if loaders:
             from loras import resolve_engine_names
             schemas = {}

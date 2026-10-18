@@ -1,0 +1,11 @@
+MiniMax-H3 Turbo ComfyUI extension by Larryvrh
+Source: https://github.com/Larryvrh/ComfyUI-MiniMax-H3-Turbo
+Revision: 4274783a23afcfdbea3b4876cb79effd6c510785
+License: Apache-2.0 (included LICENSE)
+Bundled source and timing table are unmodified. The table is 5.5 MB; model weights download separately.
+Timing table SHA256: 30eb3c2cc7fb6b470d9717ff840d359313ac27cd64b705e32da1baa10f72d6a8
+
+Space inspected: Pepe104/MiniMax-H3-Turbo-Lora-UNCENSORED
+Revision: f5e402f0bcad6f86258d7ccfac3899c59f8f0e8c
+The Space uses the standard MiniMaxAI/MiniMax-H3 and Larry v1-850 Turbo by default. No separate uncensoring checkpoint was found in its source.
+Studio runs locally using the official Comfy-Org quantized FL2VA checkpoint and shared encoder/VAEs, rather than the Space's split unquantized cloud deployment. No remote conditioner or prompt rewriting service is used. Results need not match the Space.

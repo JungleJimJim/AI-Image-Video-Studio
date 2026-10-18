@@ -26,6 +26,15 @@ def model_catalog():
         'qwenimage': 'Use Qwen-Image adapters compatible with the 2512 image generator. Check the author’s base model and sampling recommendations.',
         'qwenedit': 'Use Qwen Image Edit adapters compatible with 2511. Control and acceleration adapters may require additional workflow changes.',
         'qwen21': 'Use Qwen-Image 2.1 adapters. The detail-enhancement pass includes Elusarca’s LoRA; extra selected adapters must also match Qwen 2.1. Qwen-Image-2512 and Edit-2511 adapters do not fit.',
+        'ref2va': 'Use MiniMax H3 Ref2VA-compatible adapters. The four-step Turbo LoRA and VSA gates install automatically. They are not interchangeable with Wan or FL2VA adapters.',
+        'minimax_h3': 'Use MiniMax H3 FL2VA / T2VA-compatible adapters. Larry Turbo v1 and v4 install with the model and are selected in Video. Ref2VA and Wan adapters do not fit. Extra adapters apply after Turbo.',
+        'viggle': 'Use Qwen Image 2.1 adapters compatible with Viggle six-step sampling. The built-in Turbo adapter stays at strength 1. Extra adapters may need different sampling recipes.',
+        'bfs': 'Use Qwen Image 2.1 adapters compatible with BFS v1.1. The required BFS adapter is included automatically; adding more identity adapters can conflict.',
+        'avatar_echo': 'Adapters can be stored here. The EchoMimicV3-Flash talking-avatar workflow currently uses its included weights and does not apply extra LoRAs.',
+        'avatar_soulx': 'Adapters can be stored here. The SoulX-FlashHead talking-avatar workflow currently uses its included weights and does not apply extra LoRAs.',
+        'avatar_longcat': 'Use LongCat-Video-Avatar 1.5 adapters. The required distillation LoRA is included automatically; extra compatible adapters apply in the talking-avatar workflow.',
+        'avatar_infinite': 'Use adapters explicitly compatible with InfiniteTalk and its Wan 2.1 14B base. Wan 1.3B and Wan 2.2 5B adapters do not fit.',
+        'avatar_musetalk': 'Adapters can be stored here. MuseTalk 1.5 uses its dedicated lip-sync network and does not apply extra LoRAs in this workflow.',
     }
     search = {'wan13':'Wan 1.3B', 'wan22':'Wan 2.2 5B', 'ltx2':'LTX-2', 'sdxl':'SDXL',
               'zimage':'Z-Image', 'fluxklein':'FLUX.2 Klein 4B', 'flux3':'FLUX 3 Image Klein', 'qwenimage':'Qwen-Image', 'qwenedit':'Qwen-Image-Edit-2511', 'qwen21':'Qwen-Image-2.1'}
@@ -96,6 +105,7 @@ def installed_loras(root, model=None):
             continue
         relative = path.relative_to(folder)
         scope = relative.parts[1] if len(relative.parts)>2 and relative.parts[0]=='studio' else 'wan13'
+        if scope.startswith('_'):continue  # Required runtime gates/adapters are managed by their model pack.
         if model is not None and models[model]['scope'] != scope:
             continue
         note = notes.get(relative.as_posix(), {})
@@ -242,17 +252,18 @@ def resolve_engine_names(graph, object_info):
     """Use the engine's exact combo values while keeping saved names portable."""
     for node in graph.values():
         kind = node['class_type']
-        if kind not in ('LoraLoader', 'LoraLoaderModelOnly'):
+        if kind not in ('LoraLoader', 'LoraLoaderModelOnly','Ref2VAVSAGatePatch','MiniMaxH3TurboLoRA','ViggleTurboLora'):
             continue
-        schema = object_info[kind]['input']['required']['lora_name']
+        field='gate_file' if kind=='Ref2VAVSAGatePatch' else 'lora_name'
+        schema = object_info[kind]['input']['required'][field]
         choices = schema[1].get('options', []) if schema[0] == 'COMBO' else schema[0]
-        name = node['inputs']['lora_name']
+        name = node['inputs'][field]
         if name in choices:
             continue
         matches = [value for value in choices if value.replace('\\', '/') == name.replace('\\', '/')]
         if len(matches) != 1:
             raise ValueError(f'The engine cannot find the selected LoRA: {name}. Check its installation in LoRAs.')
-        node['inputs']['lora_name'] = matches[0]
+        node['inputs'][field] = matches[0]
     return graph
 
 

@@ -1,0 +1,18 @@
+ComfyUI-Ref2VA-VSA by Kablex, Apache-2.0.
+Source: https://github.com/Kablex/ComfyUI-Ref2VA-VSA
+Bundled revision: 323a0a5f7c636cc70f95464145732f81f04a72e9
+The original __init__.py, nodes.py and LICENSE are bundled unchanged.
+
+The optional studio workflow follows the author's four-step Ref2VA example,
+using an INT8 MiniMax H3 Ref2VA checkpoint, Qwen3-VL NVFP4/AWQ encoder,
+video/audio VAEs, LightX2V Turbo LoRA, and FastH3 VSA gates.
+Model weights download separately and retain their own upstream terms.
+MiniMax H3 model terms: https://huggingface.co/Comfy-Org/MiniMax-H3
+Gate provenance: https://huggingface.co/barelymining/ComfyUI-MiniMax-H3-FastVideo
+Turbo LoRA: https://huggingface.co/lightx2v/Minimax-h3-Turbo
+
+Pinned model file sizes, revisions and SHA-256 hashes: assets/packs.json.
+Pinned engine source and isolated Windows dependency wheels: assets/engines.json.
+The optional ComfyUI engine retains its GPL-3.0 license and source notices.
+VSA is experimental. The author specifies a 24 GB NVIDIA GPU. Performance
+on smaller GPUs and actual model generation have not been verified by this app update.

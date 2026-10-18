@@ -10,6 +10,7 @@ from app import Studio
 from common import atomic_json
 from engine import build_workflow, validate_options
 from loras import import_loras, installed_loras, model_catalog, validate_selection
+from packs import catalog
 from workflows import image_workflow, edit_workflow, validate_image_options, validate_edit_options
 from test_loras import fixture
 
@@ -32,8 +33,8 @@ class AllModelLoRATests(unittest.TestCase):
         original=self.source.read_bytes()
         for model in model_catalog():
             self.imported(model)
-        self.assertEqual(len(model_catalog()),12)
-        self.assertEqual(len(installed_loras(self.root)),10)
+        self.assertEqual(set(model_catalog()),{'wan13'}|set(catalog()))
+        self.assertEqual(len(installed_loras(self.root)),len({m['scope'] for m in model_catalog().values()}))
         self.assertEqual(self.source.read_bytes(),original)
         sdxl=self.imported('juggernaut')
         for model in ('juggernaut','dreamshaper','illustrious'):
@@ -48,7 +49,7 @@ class AllModelLoRATests(unittest.TestCase):
     def test_all_model_workflows_apply_both_adapters_before_sampling(self):
         adapters=[{'name':'first.safetensors','strength':.7,'strength_clip':.25},{'name':'second.safetensors','strength':.4,'strength_clip':0}]
         for model in model_catalog():
-            if model=='qwen21':continue  # Dedicated enhancement graph is covered separately.
+            if model in ('qwen21','ref2va','minimax_h3','viggle','bfs') or catalog().get(model,{}).get('kind')=='avatar':continue  # Dedicated workflows are covered separately.
             opts=dict(model=model,prompt='A greenhouse',seed=42,loras=adapters,width=512,height=320,frames=33)
             if model in ('wan13','wan22','ltx2'):
                 graph=build_workflow(validate_options(opts),'test')

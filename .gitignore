@@ -20,6 +20,7 @@ runtime/
 downloads/
 desktop-profile/
 *.safetensors
+!assets/minimax_h3/h3_silu_temb_grid.safetensors
 *.ckpt
 *.pt
 *.pth
@@ -41,3 +42,6 @@ engines/
 engine-profiles/
 
 .flux3-*/
+.avatar-*/
+.ref2va-*/
+.ui-validation/

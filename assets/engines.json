@@ -19,5 +19,134 @@
         "label": "FLUX 3 isolated dynamic VRAM support"
       }
     ]
+  },
+  "avatar": {
+    "name": "Talking Avatar compatible ComfyUI",
+    "version": "0.41.0",
+    "revision": "29e28e2b488e7739c351c331d73da25aa435da5c",
+    "archive": {
+      "label": "Separate FLUX 3 engine",
+      "filename": "ComfyUI-flux3-29e28e2.zip",
+      "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/29e28e2b488e7739c351c331d73da25aa435da5c",
+      "size": 13417933,
+      "sha256": "9fa864aa6115f67a77966994b127fa7b2677550082dead9706e64f1119b70af9"
+    },
+    "wheels": [
+      {
+        "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "size": 280910,
+        "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03",
+        "label": "FLUX 3 isolated dynamic VRAM support"
+      }
+    ]
+  },
+  "ref2va": {
+    "name": "MiniMax H3 Ref2VA compatible ComfyUI",
+    "version": "0.41.0-ref2va",
+    "revision": "c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+    "probe": "ref2va",
+    "extension_revision": "323a0a5f7c636cc70f95464145732f81f04a72e9",
+    "custom_nodes": [
+      {
+        "resource": "ref2va",
+        "name": "studio_ref2va_vsa"
+      }
+    ],
+    "archive": {
+      "label": "Separate Ref2VA engine",
+      "filename": "ComfyUI-ref2va-c9ea36b9.zip",
+      "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+      "size": 13429471,
+      "sha256": "67144d41d4e852b2ccba806ac205864c4467acb3cdc0687695e30365da04bf7e"
+    },
+    "wheels": [
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "size": 280910,
+        "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03"
+      },
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "filename": "comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/82/f1/3db1bbb097896f048ecc2bceaf29e5c8cf058f3580194433372ea4f80963/comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "size": 61931193,
+        "sha256": "420364e48f5cad46c20948c668fe3befd8692a5f7baf25e8ddbd434ee3806e9c"
+      }
+    ]
+  },
+  "minimax_h3": {
+    "name": "MiniMax H3 Turbo compatible ComfyUI",
+    "version": "0.41.0-turbo",
+    "revision": "c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+    "probe": "minimax_h3",
+    "extension_revision": "4274783a23afcfdbea3b4876cb79effd6c510785",
+    "custom_nodes": [
+      {
+        "resource": "minimax_h3",
+        "name": "studio_minimax_h3_turbo"
+      }
+    ],
+    "archive": {
+      "label": "Separate Ref2VA engine",
+      "filename": "ComfyUI-ref2va-c9ea36b9.zip",
+      "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+      "size": 13429471,
+      "sha256": "67144d41d4e852b2ccba806ac205864c4467acb3cdc0687695e30365da04bf7e"
+    },
+    "wheels": [
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "size": 280910,
+        "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03"
+      },
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "filename": "comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/82/f1/3db1bbb097896f048ecc2bceaf29e5c8cf058f3580194433372ea4f80963/comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "size": 61931193,
+        "sha256": "420364e48f5cad46c20948c668fe3befd8692a5f7baf25e8ddbd434ee3806e9c"
+      }
+    ]
+  },
+  "qwen_turbo": {
+    "name": "Qwen 2.1 Turbo compatible ComfyUI",
+    "version": "0.41.0-qwen-turbo",
+    "revision": "c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+    "probe": "qwen_turbo",
+    "extension_revision": "009a44a895ef85f7e643c80fdca9543795248867",
+    "custom_nodes": [
+      {
+        "resource": "viggle",
+        "name": "studio_viggle_turbo"
+      }
+    ],
+    "archive": {
+      "label": "Separate Ref2VA engine",
+      "filename": "ComfyUI-ref2va-c9ea36b9.zip",
+      "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+      "size": 13429471,
+      "sha256": "67144d41d4e852b2ccba806ac205864c4467acb3cdc0687695e30365da04bf7e"
+    },
+    "wheels": [
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "size": 280910,
+        "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03"
+      },
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "filename": "comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/82/f1/3db1bbb097896f048ecc2bceaf29e5c8cf058f3580194433372ea4f80963/comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "size": 61931193,
+        "sha256": "420364e48f5cad46c20948c668fe3befd8692a5f7baf25e8ddbd434ee3806e9c"
+      }
+    ]
   }
 }
