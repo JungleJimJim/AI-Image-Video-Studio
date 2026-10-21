@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 import queue
 import secrets
+import stat
 import subprocess
 import threading
 import time
@@ -110,21 +111,28 @@ class Thumbnails:
         self.thread=None
         self.stop=threading.Event()
 
-    def get(self, record, media_type):
+    def describe(self, record, media_type):
         file=Path(record['path'])
-        if not file.is_file(): return None
-        stat=file.stat()
-        stamp=hashlib.sha256(f'{file.resolve()}:{stat.st_size}:{stat.st_mtime_ns}'.encode()).hexdigest()[:20]
+        try:
+            info=file.stat()
+            if not stat.S_ISREG(info.st_mode):return dict(status='unavailable')
+            stamp=hashlib.sha256(f'{file.resolve()}:{info.st_size}:{info.st_mtime_ns}'.encode()).hexdigest()[:20]
+        except OSError:return dict(status='unavailable')
         target=self.root/'thumbnails'/(stamp+'.jpg')
-        if target.is_file(): return target
+        if target.is_file(): return dict(key=stamp,status='ready')
         with self.lock:
+            if stamp in self.failed:return dict(key=stamp,status='unavailable')
             if stamp not in self.pending and stamp not in self.failed and not self.queue.full():
                 self.pending.add(stamp)
                 self.queue.put((stamp,dict(action='thumbnail',source=str(file),target=str(target),media_type=media_type)))
                 if not self.thread or not self.thread.is_alive():
                     self.thread=threading.Thread(target=self.work,daemon=True)
                     self.thread.start()
-        return None
+        return dict(key=stamp,status='pending')
+
+    def get(self, record, media_type):
+        info=self.describe(record,media_type)
+        return self.root/'thumbnails'/(info['key']+'.jpg') if info['status']=='ready' else None
 
     def work(self):
         while not self.stop.is_set():
@@ -141,6 +149,7 @@ class Thumbnails:
             try: result=process(self.root,[x[1] for x in batch],timeout=90)
             except Exception: result=[{'error':'Thumbnail unavailable'}]*len(batch)
             with self.lock:
-                for (key,_), item in zip(batch,result):
+                for index,(key,_) in enumerate(batch):
                     self.pending.discard(key)
+                    item=result[index] if isinstance(result,list) and index<len(result) else {'error':'Thumbnail unavailable'}
                     if item.get('error'): self.failed.add(key)

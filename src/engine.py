@@ -10,7 +10,7 @@ import time
 import urllib.error
 import urllib.request
 
-from common import CREATE_NO_WINDOW, comfy_root, runtime_python
+from common import CREATE_NO_WINDOW, comfy_root, runtime_python, load_json
 from downloads import Cancelled
 
 
@@ -40,6 +40,8 @@ def validate_options(raw):
         raise ValueError('NSFW Wan 1.3B is text-only. Choose Wan 2.2 or LTX-2 for image-to-video.')
     if not isinstance(options['source_image'], str) or len(options['source_image']) > 100:
         raise ValueError('Choose an image from the image library.')
+    if options['mode'] == 'text' and options['source_image']:
+        raise ValueError('A starting image is selected, but this job is Text → Video. Choose Image → Video with Wan 2.2, LTX-2 or MiniMax H3 to use it; Wan 1.3B is text-only.')
     if options['mode'] == 'image' and not options['source_image']:
         raise ValueError('Choose or generate a starting image first.')
     if not isinstance(options['randomize_seed'], bool):
@@ -156,17 +158,25 @@ def build_workflow(o, prefix):
     return apply_to_graph(graph, o, ['1',0], ['2',0], start=20)
 
 
-def engine_command(root, port, output, memory, model='wan13'):
-    if model in ('flux3','ref2va','minimax_h3','viggle','bfs'):
+def engine_command(root, port, output, memory, model='wan13', attention='pytorch', session=''):
+    import attention_support
+    attention_support.validate(attention)
+    engine_dir=None
+    import moss
+    moss_model=moss.is_model(model)
+    if moss_model or model in ('flux3','ref2va','minimax_h3','viggle','bfs','krea2'):
         from engine_support import command as optional_command
-        command=optional_command(root,'qwen_turbo' if model in ('viggle','bfs') else model)
+        engine_key='moss' if moss_model else 'qwen_turbo' if model in ('viggle','bfs','krea2') else model
+        command=optional_command(root,engine_key)
+        from engine_support import engine_root
+        engine_dir=engine_root(root,engine_key)
     else:command=[str(runtime_python(root)), '-s', str(comfy_root(root) / 'main.py')]
     command += ['--windows-standalone-build', '--listen', '127.0.0.1', '--port', str(port),
                '--disable-auto-launch', '--disable-all-custom-nodes', '--output-directory', str(output)]
     if model=='ref2va':command+=['--whitelist-custom-nodes','studio_ref2va_vsa']
     if model=='minimax_h3':command+=['--whitelist-custom-nodes','studio_minimax_h3_turbo']
     if model in ('viggle','bfs'):command+=['--whitelist-custom-nodes','studio_viggle_turbo']
-    if model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21', 'flux3','ref2va','minimax_h3','viggle','bfs'):
+    if moss_model or model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21', 'flux3','ref2va','minimax_h3','viggle','bfs','krea2'):
         # Keep the native disk-backed loader. Legacy low-VRAM mode disables it
         # and maps entire checkpoints through safetensors on Windows. This also
         # triggered a native access violation while loading Wan 2.2 in low mode.
@@ -175,10 +185,15 @@ def engine_command(root, port, output, memory, model='wan13'):
             command += ['--vram-headroom', '1']
     elif memory == 'low':
         command += ['--disable-dynamic-vram', '--lowvram']
-    return command
+    return attention_support.command(root,command,session,engine_dir) if attention=='sage' else command
 
 
 def explain_engine_error(detail):
+    if any(text in detail.lower() for text in ('hostbuf_file_reader_read failed', 'hostbuffer.read_file_slice failed', 'error=1450')):
+        return ('Windows could not complete a disk-backed model read. Ref2VA and MiniMax H3 now use bounded synchronous reads '
+                'to avoid the native asynchronous transfer that failed with Windows error 1450. '
+                'If it persists, release the GPU, close memory-heavy applications and check that the model drive is available. '
+                'See logs/engine.log for details.\n' + detail)
     if '1455' in detail or 'paging file is too small' in detail.lower():
         return ('Windows could not reserve enough committed memory while loading the model (error 1455). '
                 'This is RAM plus paging-file capacity, not just GPU memory. '
@@ -204,6 +219,9 @@ class Engine:
         self.log_handle = None
         self.cancel = threading.Event()
         self.stop_lock = threading.Lock()
+        self.attention = load_json(self.root/'settings.json',{}).get('attention','pytorch')
+        if self.attention not in ('pytorch','sage'):self.attention='pytorch'
+        self.attention_session = ''
 
     def request(self, path, data=None, timeout=15):
         encoded = None if data is None else json.dumps(data).encode()
@@ -277,7 +295,7 @@ class Engine:
                 self.log_handle = None
 
     def start(self, memory, output, model='wan13'):
-        signature = (memory, str(output), model)
+        signature = (memory, str(output), model, self.attention)
         if self.process and self.process.poll() is None and self.signature == signature:
             return
         self.stop()
@@ -288,7 +306,8 @@ class Engine:
         log = self.root / "logs" / "engine.log"
         log.parent.mkdir(parents=True, exist_ok=True)
         self.log_handle = log.open("w", encoding="utf-8")
-        command = engine_command(self.root, self.port, output, memory, model)
+        self.attention_session=secrets.token_hex(12)
+        command = engine_command(self.root, self.port, output, memory, model,self.attention,self.attention_session)
         self.report("Starting the local video engine…", None)
         self.process = subprocess.Popen(command, cwd=comfy_root(self.root), stdout=self.log_handle,
                                         stderr=subprocess.STDOUT, creationflags=CREATE_NO_WINDOW)
@@ -395,4 +414,6 @@ class Engine:
                         files = sorted(output.glob(prefix + '*' + extension))
                     if not files:
                         raise RuntimeError(f'The engine finished but did not produce a {extension} file. See logs/engine.log.')
+                    import attention_support
+                    options['attention_backend']=attention_support.snapshot(self.root,self.attention,self).get('active','pytorch')
                     return files[0], workflow, round(time.monotonic() - started, 1)

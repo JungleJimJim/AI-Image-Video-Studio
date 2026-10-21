@@ -13,11 +13,13 @@ import wave
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT/'src'))
 from app import Studio
 from common import load_json
+from media_storage import metadata_path
 import avatars
 from packs import catalog
 
 class AvatarTests(unittest.TestCase):
     def setUp(self):
+        sound=patch('app.play_completion_ping');sound.start();self.addCleanup(sound.stop)
         self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup)
         self.root=Path(self.temp.name)
         with patch('app.gpu_info',return_value={}):self.studio=Studio(self.root)
@@ -74,7 +76,7 @@ class AvatarTests(unittest.TestCase):
         self.assertEqual(saved['options']['model'],'avatar_echo');self.assertEqual(saved['options']['seed'],42)
         self.assertEqual(saved['parent_id'],'portrait')
         self.assertEqual(self.image.read_bytes(),b'original portrait');self.assertEqual(self.video.read_bytes(),b'original video')
-        self.assertEqual(load_json(target.with_suffix('.json'),{}),saved)
+        self.assertEqual(load_json(metadata_path(target),{}),saved)
 
     def test_missing_audio_or_range_past_end_is_rejected_before_queueing(self):
         with patch('app.pack_ready',return_value=True):

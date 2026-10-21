@@ -23,6 +23,8 @@ def removal_plan(root, key):
     # A complete or partial unique weight establishes that a model uses its shared files.
     active=set()
     for model,pack in models.items():
+        if all(model_path(root,f).is_file() for f in pack['files']):
+            active.add(model)
         for f in pack['files']:
             path=model_path(root,f)
             if ownership[(f['folder'],f['filename'])]=={model} and (path.exists() or path.with_name(path.name+'.part').exists()):
@@ -40,11 +42,12 @@ def removal_plan(root, key):
             if candidate.is_symlink() or not candidate.resolve().is_relative_to(base):
                 raise ValueError('A model file redirects outside the managed folder.')
             stat=candidate.stat()
-            item=dict(path=str(candidate),filename=candidate.name,bytes=stat.st_size,modified=stat.st_mtime_ns)
+            item=dict(path=str(candidate),filename=candidate.name,bytes=stat.st_size,modified=stat.st_mtime_ns,
+                      reclaimed_bytes=0 if stat.st_nlink>1 else stat.st_size)
             if users or f['folder'].startswith('loras'):
                 keep.append(item|dict(used_by=[models[x]['name'] for x in users] or ['LoRA library (preserved)']))
             else:remove.append(item)
-    payload=dict(model=key,name=models[key]['name'],files=remove,shared=keep,bytes=sum(x['bytes'] for x in remove))
+    payload=dict(model=key,name=models[key]['name'],files=remove,shared=keep,bytes=sum(x['reclaimed_bytes'] for x in remove))
     payload['ticket']=hashlib.sha256(json.dumps(payload,sort_keys=True).encode()).hexdigest()
     return payload
 

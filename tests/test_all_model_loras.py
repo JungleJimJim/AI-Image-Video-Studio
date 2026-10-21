@@ -33,7 +33,7 @@ class AllModelLoRATests(unittest.TestCase):
         original=self.source.read_bytes()
         for model in model_catalog():
             self.imported(model)
-        self.assertEqual(set(model_catalog()),{'wan13'}|set(catalog()))
+        self.assertEqual(set(model_catalog()),{'wan13'}|{k for k,v in catalog().items() if v.get('kind')!='addon'})
         self.assertEqual(len(installed_loras(self.root)),len({m['scope'] for m in model_catalog().values()}))
         self.assertEqual(self.source.read_bytes(),original)
         sdxl=self.imported('juggernaut')
@@ -64,7 +64,7 @@ class AllModelLoRATests(unittest.TestCase):
                 first,last=nodes
                 self.assertEqual(last[1]['inputs']['model'],[first[0],0])
                 self.assertTrue(any(n['inputs'].get('model')==[last[0],0] for k,n in graph.items() if k!=last[0]))
-                if model in ('wan13','juggernaut','dreamshaper','illustrious'):
+                if model=='wan13' or catalog().get(model,{}).get('family')=='sdxl':
                     self.assertEqual(first[1]['inputs']['strength_clip'],.25)
                     self.assertEqual(last[1]['inputs']['clip'],[first[0],1])
                     self.assertTrue(any(n['inputs'].get('clip')==[last[0],1] for k,n in graph.items() if k!=last[0]))
@@ -106,6 +106,7 @@ class AllModelLoRATests(unittest.TestCase):
                 studio.images=[dict(id='a'*24,path=str(source),name='source.png')]
                 with patch.object(studio.engine,'generate',return_value=(output,{},1)) as generate:
                     raw=dict(model=model,prompt='A greenhouse',seed=42,source_image='a'*24)
+                    if kind=='video':raw['mode']='image'
                     {'video':studio.generate,'image':studio.generate_image,'edit':studio.edit_image}[kind](raw)
                     studio.worker.join(5)
                     self.assertFalse(studio.state['error'])

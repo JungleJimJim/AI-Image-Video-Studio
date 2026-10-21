@@ -20,6 +20,14 @@
         "size": 1409400960,
         "sha256": "e40321bd36b9709991dae2530eb4ac303dd168276980d3e9bc4b6e2b75fed156",
         "url": "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/ee6f4a40737a995bf5818954cfce6d59443b0f04/split_files/vae/wan2.2_vae.safetensors"
+      },
+      {
+        "label": "UMT5 text encoder (memory-saving FP8)",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "filename": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 6735906897,
+        "sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
       }
     ]
   },
@@ -1074,5 +1082,502 @@
         "sha256": "d1d748d5601077f3b6d05766f6823510e901970d916afa404a97e85dc92fa88e"
       }
     ]
+  },
+  "realvisxl": {
+    "name": "RealVisXL v5",
+    "description": "Photorealistic image generation and masked editing. Complete SDXL checkpoint with built-in text encoders and VAE; no separate SDXL base download.",
+    "family": "sdxl",
+    "kind": "image",
+    "editing": true,
+    "defaults": {
+      "steps": 50,
+      "cfg": 6
+    },
+    "source": "https://huggingface.co/NSFW-API/RealVisXL",
+    "license": "See the model author\u2019s license and usage terms.",
+    "license_url": "https://huggingface.co/NSFW-API/RealVisXL",
+    "files": [
+      {
+        "label": "RealVisXL v5",
+        "filename": "realvisXL_v5.safetensors",
+        "folder": "checkpoints",
+        "size": 6938040706,
+        "sha256": "912c9dc74f5855175c31a7993f863a043ac8dcc31732b324cd05d75cd7e16844",
+        "url": "https://huggingface.co/NSFW-API/RealVisXL/resolve/5b6b1ce928ac1af84a9d68737d5c22c693f8aad6/realvisXL_v5.safetensors"
+      }
+    ]
+  },
+  "cyberrealistic": {
+    "name": "CyberRealistic XL v1.1",
+    "description": "Photorealistic image generation and masked editing. Complete SDXL checkpoint with built-in text encoders and VAE; no separate SDXL base download.",
+    "family": "sdxl",
+    "kind": "image",
+    "editing": true,
+    "defaults": {
+      "steps": 30,
+      "cfg": 6
+    },
+    "source": "https://huggingface.co/NSFW-API/CyberRealism",
+    "license": "See the model author\u2019s license and usage terms.",
+    "license_url": "https://huggingface.co/NSFW-API/CyberRealism",
+    "files": [
+      {
+        "label": "CyberRealistic XL v1.1",
+        "filename": "cyberrealisticXL_v11VAE.safetensors",
+        "folder": "checkpoints",
+        "size": 6938040682,
+        "sha256": "e9337ae032d6a2d411702fc6acad76bfbdddeb1a697a62bfdb83881e949532c8",
+        "url": "https://huggingface.co/NSFW-API/CyberRealism/resolve/21530760b1ff267c8074b6a40452b25d1b4d3988/cyberrealisticXL_v11VAE.safetensors"
+      }
+    ]
+  },
+  "krea2": {
+    "name": "Krea 2 Turbo",
+    "description": "Fast eight-step text-to-image generation with optional Krea 2 LoRAs. FP8 weights with CPU offloading; reuses the Qwen-Image VAE. This pack generates images; it does not perform instruction edits.",
+    "family": "krea2",
+    "kind": "image",
+    "editing": false,
+    "engine": "qwen_turbo",
+    "defaults": {
+      "steps": 8,
+      "cfg": 1,
+      "memory": "low"
+    },
+    "source": "https://huggingface.co/krea/Krea-2-Turbo",
+    "license": "Krea 2 Community License",
+    "license_url": "https://huggingface.co/krea/Krea-2-Turbo",
+    "files": [
+      {
+        "label": "krea2_turbo_fp8_scaled.safetensors",
+        "folder": "diffusion_models",
+        "filename": "krea2_turbo_fp8_scaled.safetensors",
+        "size": 13141730784,
+        "sha256": "eb4dd8c612cfd10f64f25b057e6e6bbcb5737c94a7372177e456dbf7579502f1",
+        "url": "https://huggingface.co/Comfy-Org/Krea-2/resolve/1171f4dc7e325bf3734586942e737872506c73e1/diffusion_models/krea2_turbo_fp8_scaled.safetensors"
+      },
+      {
+        "label": "qwen3vl_4b_fp8_scaled.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3vl_4b_fp8_scaled.safetensors",
+        "size": 5242467968,
+        "sha256": "54bd5144df0bbc25dd6ccadfcb826b521445a1b06ae5a42570bdd2974ca87094",
+        "url": "https://huggingface.co/Comfy-Org/Krea-2/resolve/1171f4dc7e325bf3734586942e737872506c73e1/text_encoders/qwen3vl_4b_fp8_scaled.safetensors"
+      },
+      {
+        "label": "qwen_image_vae.safetensors",
+        "filename": "qwen_image_vae.safetensors",
+        "folder": "vae",
+        "size": 253806246,
+        "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
+        "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/vae/qwen_image_vae.safetensors"
+      }
+    ]
+  },
+  "moss_sft": {
+    "name": "MOSS-Image SFT \u00b7 INT8",
+    "kind": "image",
+    "family": "moss_image",
+    "engine": "moss",
+    "editing": true,
+    "max_references": 1,
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "description": "Text, tags and spatial layouts. Optional fast LoRAs and color/depth maps in MOSS controls. Compact INT8 model and W4A8 text encoder for lower memory use.",
+    "defaults": {
+      "width": 1024,
+      "height": 1024,
+      "steps": 50,
+      "cfg": 3.0,
+      "negative": "",
+      "memory": "low"
+    },
+    "moss_variant": "moss_sft",
+    "moss_encoder": "w4a8",
+    "files": [
+      {
+        "label": "MOSS \u00b7 moss_image_sft_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "filename": "moss_image_sft_int8_convrot.safetensors",
+        "size": 5413698958,
+        "sha256": "b4d1475bc7eeffd7b809e82ea13a1fba1fb85c4e18365af3813722faa5c0fe4f",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/diffusion_models/moss_image_sft_int8_convrot.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_w4a8_gptq.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "size": 7343591088,
+        "sha256": "4cc6a1543ad2061806da46f35f90cadb4801dcba246c44782cf42ec0feb6407c",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 flux2-vae_small.safetensors",
+        "folder": "vae",
+        "filename": "flux2-vae_small.safetensors",
+        "size": 249521340,
+        "sha256": "d8d52ba036475f5fb07c8b435e176d3d97ebfa82f0d1a1c317f9cc1e25bd013b",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/vae/flux2-vae_small.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_sft_bf16": {
+    "name": "MOSS-Image SFT \u00b7 BF16",
+    "kind": "image",
+    "family": "moss_image",
+    "engine": "moss",
+    "editing": true,
+    "max_references": 1,
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "description": "Text, tags and spatial layouts. Optional fast LoRAs and color/depth maps in MOSS controls. Full BF16 model and text encoder; substantially more RAM/VRAM needed.",
+    "defaults": {
+      "width": 1024,
+      "height": 1024,
+      "steps": 50,
+      "cfg": 3.0,
+      "negative": "",
+      "memory": "low"
+    },
+    "moss_variant": "moss_sft",
+    "moss_encoder": "bf16",
+    "files": [
+      {
+        "label": "MOSS \u00b7 moss_image_sft_bf16.safetensors",
+        "folder": "diffusion_models",
+        "filename": "moss_image_sft_bf16.safetensors",
+        "size": 10164655808,
+        "sha256": "f96738d8116d78b7316b57c663d8c98591ddafab7488f48e3099b7655e34ab6f",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/diffusion_models/moss_image_sft_bf16.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_bf16.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_bf16.safetensors",
+        "size": 19306312328,
+        "sha256": "7e6e9f08d598f829cb940e60ac0c698e1f1c27a47daffd7e598cd78c78b4cc53",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_bf16.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 flux2-vae_small.safetensors",
+        "folder": "vae",
+        "filename": "flux2-vae_small.safetensors",
+        "size": 249521340,
+        "sha256": "d8d52ba036475f5fb07c8b435e176d3d97ebfa82f0d1a1c317f9cc1e25bd013b",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/vae/flux2-vae_small.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_base": {
+    "name": "MOSS-Image Base \u00b7 INT8",
+    "kind": "image",
+    "family": "moss_image",
+    "engine": "moss",
+    "editing": true,
+    "max_references": 1,
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "description": "Text, tags and spatial layouts. Optional fast LoRAs and color/depth maps in MOSS controls. Compact INT8 model and W4A8 text encoder for lower memory use.",
+    "defaults": {
+      "width": 1024,
+      "height": 1024,
+      "steps": 50,
+      "cfg": 3.0,
+      "negative": "",
+      "memory": "low"
+    },
+    "moss_variant": "moss_base",
+    "moss_encoder": "w4a8",
+    "files": [
+      {
+        "label": "MOSS \u00b7 moss_image_base_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "filename": "moss_image_base_int8_convrot.safetensors",
+        "size": 5413698958,
+        "sha256": "f601c1e1161915fb3fea003da0c1782e374dd960fbb3978bc0e4e3fa1f2d8e6f",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/diffusion_models/moss_image_base_int8_convrot.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_w4a8_gptq.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "size": 7343591088,
+        "sha256": "4cc6a1543ad2061806da46f35f90cadb4801dcba246c44782cf42ec0feb6407c",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 flux2-vae_small.safetensors",
+        "folder": "vae",
+        "filename": "flux2-vae_small.safetensors",
+        "size": 249521340,
+        "sha256": "d8d52ba036475f5fb07c8b435e176d3d97ebfa82f0d1a1c317f9cc1e25bd013b",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/vae/flux2-vae_small.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_base_bf16": {
+    "name": "MOSS-Image Base \u00b7 BF16",
+    "kind": "image",
+    "family": "moss_image",
+    "engine": "moss",
+    "editing": true,
+    "max_references": 1,
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "description": "Text, tags and spatial layouts. Optional fast LoRAs and color/depth maps in MOSS controls. Full BF16 model and text encoder; substantially more RAM/VRAM needed.",
+    "defaults": {
+      "width": 1024,
+      "height": 1024,
+      "steps": 50,
+      "cfg": 3.0,
+      "negative": "",
+      "memory": "low"
+    },
+    "moss_variant": "moss_base",
+    "moss_encoder": "bf16",
+    "files": [
+      {
+        "label": "MOSS \u00b7 moss_image_base_bf16.safetensors",
+        "folder": "diffusion_models",
+        "filename": "moss_image_base_bf16.safetensors",
+        "size": 10164655808,
+        "sha256": "cacd158728a1fb9e57c408a922b54752ec71fceb566b3821269927964e62b41f",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/diffusion_models/moss_image_base_bf16.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_bf16.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_bf16.safetensors",
+        "size": 19306312328,
+        "sha256": "7e6e9f08d598f829cb940e60ac0c698e1f1c27a47daffd7e598cd78c78b4cc53",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_bf16.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 flux2-vae_small.safetensors",
+        "folder": "vae",
+        "filename": "flux2-vae_small.safetensors",
+        "size": 249521340,
+        "sha256": "d8d52ba036475f5fb07c8b435e176d3d97ebfa82f0d1a1c317f9cc1e25bd013b",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/vae/flux2-vae_small.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "kromoss": {
+    "name": "Kromoss \u00b7 INT8",
+    "kind": "image",
+    "family": "moss_image",
+    "engine": "moss",
+    "editing": true,
+    "max_references": 1,
+    "source": "https://huggingface.co/lodestones/Kromoss",
+    "description": "Text, tags and spatial layouts. Optional fast LoRAs and color/depth maps in MOSS controls. Compact INT8 model and W4A8 text encoder for lower memory use.",
+    "defaults": {
+      "width": 1024,
+      "height": 1024,
+      "steps": 50,
+      "cfg": 3.0,
+      "negative": "",
+      "memory": "low"
+    },
+    "moss_variant": "kromoss",
+    "moss_encoder": "w4a8",
+    "files": [
+      {
+        "label": "MOSS \u00b7 kromoss_int8_convrot.safetensors",
+        "folder": "diffusion_models",
+        "filename": "kromoss_int8_convrot.safetensors",
+        "size": 5413698958,
+        "sha256": "cacff0dd25cd2cf531e1f5ddae7872c3d57a54dbf66f1a1279f2f118514e7905",
+        "url": "https://huggingface.co/lodestones/Kromoss/resolve/7f9bb7b06d7b6c27d294b0bab5a2b3056c379279/diffusion_models/kromoss_int8_convrot.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_w4a8_gptq.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "size": 7343591088,
+        "sha256": "4cc6a1543ad2061806da46f35f90cadb4801dcba246c44782cf42ec0feb6407c",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 flux2-vae_small.safetensors",
+        "folder": "vae",
+        "filename": "flux2-vae_small.safetensors",
+        "size": 249521340,
+        "sha256": "d8d52ba036475f5fb07c8b435e176d3d97ebfa82f0d1a1c317f9cc1e25bd013b",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/vae/flux2-vae_small.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "kromoss_bf16": {
+    "name": "Kromoss \u00b7 BF16",
+    "kind": "image",
+    "family": "moss_image",
+    "engine": "moss",
+    "editing": true,
+    "max_references": 1,
+    "source": "https://huggingface.co/lodestones/Kromoss",
+    "description": "Text, tags and spatial layouts. Optional fast LoRAs and color/depth maps in MOSS controls. Full BF16 model and text encoder; substantially more RAM/VRAM needed.",
+    "defaults": {
+      "width": 1024,
+      "height": 1024,
+      "steps": 50,
+      "cfg": 3.0,
+      "negative": "",
+      "memory": "low"
+    },
+    "moss_variant": "kromoss",
+    "moss_encoder": "bf16",
+    "files": [
+      {
+        "label": "MOSS \u00b7 kromoss_bf16.safetensors",
+        "folder": "diffusion_models",
+        "filename": "kromoss_bf16.safetensors",
+        "size": 10164655808,
+        "sha256": "54c863b9392f7b6a02f557d32a416b22765b4ffbee322ade9945e379f09adaba",
+        "url": "https://huggingface.co/lodestones/Kromoss/resolve/7f9bb7b06d7b6c27d294b0bab5a2b3056c379279/diffusion_models/kromoss_bf16.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_bf16.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_bf16.safetensors",
+        "size": 19306312328,
+        "sha256": "7e6e9f08d598f829cb940e60ac0c698e1f1c27a47daffd7e598cd78c78b4cc53",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_bf16.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 flux2-vae_small.safetensors",
+        "folder": "vae",
+        "filename": "flux2-vae_small.safetensors",
+        "size": 249521340,
+        "sha256": "d8d52ba036475f5fb07c8b435e176d3d97ebfa82f0d1a1c317f9cc1e25bd013b",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/vae/flux2-vae_small.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_encoder_w4a8": {
+    "name": "MOSS text encoder \u00b7 W4A8",
+    "kind": "addon",
+    "family": "moss_image",
+    "description": "Optional Qwen3.5-9B precision choice. Identical files used by installed MOSS models are reused.",
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "files": [
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_w4a8_gptq.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "size": 7343591088,
+        "sha256": "4cc6a1543ad2061806da46f35f90cadb4801dcba246c44782cf42ec0feb6407c",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_encoder_int8": {
+    "name": "MOSS text encoder \u00b7 INT8",
+    "kind": "addon",
+    "family": "moss_image",
+    "description": "Optional Qwen3.5-9B precision choice. Identical files used by installed MOSS models are reused.",
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "files": [
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_int8_convrot.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_int8_convrot.safetensors",
+        "size": 9748121532,
+        "sha256": "32e3787472f708fa5f83624acbf5ef23f7fc89c439e05065ea57cfe5a97f025a",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_int8_convrot.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_encoder_bf16": {
+    "name": "MOSS text encoder \u00b7 BF16",
+    "kind": "addon",
+    "family": "moss_image",
+    "description": "Optional Qwen3.5-9B precision choice. Identical files used by installed MOSS models are reused.",
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "files": [
+      {
+        "label": "MOSS \u00b7 qwen3.5_9b_bf16.safetensors",
+        "folder": "text_encoders",
+        "filename": "qwen3.5_9b_bf16.safetensors",
+        "size": 19306312328,
+        "sha256": "7e6e9f08d598f829cb940e60ac0c698e1f1c27a47daffd7e598cd78c78b4cc53",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/text_encoders/qwen3.5_9b_bf16.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_vae_full": {
+    "name": "MOSS full VAE",
+    "kind": "addon",
+    "family": "moss_image",
+    "description": "Optional full decoder with MOSS normalization; reused between all MOSS variants. Choose Small or Full in MOSS controls.",
+    "source": "https://huggingface.co/Comfy-Org/MOSS-Image",
+    "files": [
+      {
+        "label": "MOSS \u00b7 moss_flux2_vae_full.safetensors",
+        "folder": "vae",
+        "filename": "moss_flux2_vae_full.safetensors",
+        "size": 336211292,
+        "sha256": "868fe7b343cc8f3a19dbcfcafbc3d5f888802be3f89bd81b65b3621a066ce8f3",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/vae/flux2-vae.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "moss_tools": {
+    "name": "MOSS fast LoRAs & color/depth control",
+    "kind": "addon",
+    "family": "moss_image",
+    "description": "SFT 8-step DMD, Kromoss DMD/DMD2, and the community color/depth adapter. Configure them in MOSS controls; these are optional and shared by all variants.",
+    "source": "https://huggingface.co/lodestones/MOSS-Image-SFT-8-steps-dmd",
+    "files": [
+      {
+        "label": "MOSS \u00b7 moss_sft_8step_dmd.safetensors",
+        "folder": "loras/studio/moss_image",
+        "filename": "moss_sft_8step_dmd.safetensors",
+        "size": 1189176800,
+        "sha256": "4abb14e39c1a59018907581e609f43616ec6810126144ec2b1d2e6f8969628fe",
+        "url": "https://huggingface.co/lodestones/MOSS-Image-SFT-8-steps-dmd/resolve/f95df83b5e90ae91ea412434b3f9b7f1c8c6314f/lora.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 kromoss_8step_dmd.safetensors",
+        "folder": "loras/studio/moss_image",
+        "filename": "kromoss_8step_dmd.safetensors",
+        "size": 1189176800,
+        "sha256": "f0e6cd07f222dfaea798afe3b796e2c2995cadfd44ad56e02ca616f0467aec28",
+        "url": "https://huggingface.co/lodestones/Kromoss/resolve/7f9bb7b06d7b6c27d294b0bab5a2b3056c379279/8-steps-dmd-lora.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 kromoss_8step_dmd2.safetensors",
+        "folder": "loras/studio/moss_image",
+        "filename": "kromoss_8step_dmd2.safetensors",
+        "size": 1189176800,
+        "sha256": "7683fe1fb51f73f5d690f24dd6b7f46f31ab9a9873729a854ac5c9a420ffe6f2",
+        "url": "https://huggingface.co/lodestones/Kromoss/resolve/7f9bb7b06d7b6c27d294b0bab5a2b3056c379279/8-steps-dmd2-lora.safetensors"
+      },
+      {
+        "label": "MOSS \u00b7 moss_image_color_depth_control.safetensors",
+        "folder": "loras/studio/moss_image",
+        "filename": "moss_image_color_depth_control.safetensors",
+        "size": 313063368,
+        "sha256": "e5c0c3efd05e4269207a39de6005798f14c90c6687c89c54eaffe4b76c43a763",
+        "url": "https://huggingface.co/Comfy-Org/MOSS-Image/resolve/ee64003102c8470ee32501cf883419235db81884/loras/moss_image_color_depth_control.safetensors"
+      }
+    ],
+    "license": "Apache-2.0",
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
   }
 }

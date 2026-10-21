@@ -1,7 +1,9 @@
 """Sibling image/video storage and a recoverable upgrade from the old layout."""
 import hashlib
+import os
 from pathlib import Path
 import shutil
+import tempfile
 from common import atomic_json, load_json
 
 
@@ -13,6 +15,45 @@ def media_folder(root, kind, output=None):
 def digest(path):
     with Path(path).open('rb') as stream:
         return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def metadata_path(file):
+    file=Path(file)
+    known=file.parent.name in ('Images','Videos')
+    base=file.parent.parent if known else file.parent
+    kind=file.parent.name if known else 'Videos' if file.suffix.lower() in ('.mp4','.webm','.mov') else 'Images'
+    return base/'Metadata'/kind/(file.name+'.json')
+
+
+def migrate_metadata(images, videos):
+    """Move only indexed media sidecars; retry safely after an interrupted copy."""
+    warnings=[]
+    for item in [*images,*videos]:
+        source=Path(item['path']).with_suffix('.json')
+        try:
+            if not source.is_file():continue
+            content=source.read_bytes()
+            target=metadata_path(item['path'])
+            # An unrelated existing file must survive, including an older sidecar.
+            if target.exists() and target.read_bytes()!=content:
+                suffix=hashlib.sha256(content).hexdigest()[:16]
+                target=target.with_name(target.stem+'-previous-'+suffix+'.json')
+            if target.exists() and target.read_bytes()!=content:
+                raise OSError('A different metadata file already occupies the backup location.')
+            if not target.exists():
+                target.parent.mkdir(parents=True,exist_ok=True)
+                fd,temporary=tempfile.mkstemp(prefix='.metadata-',dir=target.parent)
+                try:
+                    with os.fdopen(fd,'wb') as stream:stream.write(content)
+                    if Path(temporary).read_bytes()!=content:raise OSError('Metadata copy verification failed.')
+                    if target.exists():raise OSError('Metadata destination changed during migration.')
+                    os.replace(temporary,target)
+                finally:Path(temporary).unlink(missing_ok=True)
+            if target.read_bytes()==content and source.read_bytes()==content:
+                source.unlink()
+        except OSError:
+            warnings.append('Metadata relocation deferred; original preserved: '+source.name)
+    return warnings
 
 
 def replace_paths(value, mapping):

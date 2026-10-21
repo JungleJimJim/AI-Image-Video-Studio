@@ -10,7 +10,7 @@ from common import CREATE_NO_WINDOW, comfy_root, runtime_python
 from media_storage import media_folder
 
 
-def import_image(root, data, report):
+def import_image(root, data, report, preserve_alpha=False):
     value = data.get('data', '')
     name = data.get('name', 'Image')
     if not isinstance(value, str) or not value.startswith(('data:image/png;base64,', 'data:image/jpeg;base64,', 'data:image/webp;base64,')):
@@ -42,14 +42,14 @@ with Image.open(sys.argv[1]) as im:
  im=ImageOps.exif_transpose(im)
  im.load()
  if im.width*im.height>25000000: raise ValueError('Image exceeds 25 megapixels')
- if 'A' in im.getbands():
+ if 'A' in im.getbands() and sys.argv[3]!='1':
   rgba=im.convert('RGBA'); bg=Image.new('RGBA',im.size,'white'); bg.alpha_composite(rgba); im=bg.convert('RGB')
- else: im=im.convert('RGB')
+ else: im=im.convert('RGBA' if sys.argv[3]=='1' else 'RGB')
  im.save(sys.argv[2],'PNG')
  print(json.dumps({'width':im.width,'height':im.height}))
 """
     try:
-        result = subprocess.run([str(runtime_python(root)), '-s', '-c', script, str(incoming), str(target)],
+        result = subprocess.run([str(runtime_python(root)), '-s', '-c', script, str(incoming), str(target), '1' if preserve_alpha else '0'],
                                 capture_output=True, text=True, timeout=45, creationflags=CREATE_NO_WINDOW)
         if result.returncode:
             raise ValueError('The image could not be decoded. Use a valid PNG, JPEG or WebP under 25 megapixels.')

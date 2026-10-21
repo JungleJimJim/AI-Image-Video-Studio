@@ -21,7 +21,7 @@ import enhancements
 class QueueTests(unittest.TestCase):
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory();self.root=Path(self.temp.name)
-        self.patches=[patch('app.gpu_info',return_value={}),patch('app.install_ready',return_value=True),patch('app.pack_ready',return_value=True)]
+        self.patches=[patch('app.gpu_info',return_value={}),patch('app.install_ready',return_value=True),patch('app.pack_ready',return_value=True),patch('app.play_completion_ping')]
         for p in self.patches:p.start()
         self.studio=Studio(self.root);self.studio.queue.paused=True
         self.output=self.root/'fixture.png';self.output.write_bytes(b'existing-test-fixture')

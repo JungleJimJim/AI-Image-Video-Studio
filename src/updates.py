@@ -24,7 +24,7 @@ LATEST = 'https://api.github.com/repos/JungleJimJim/AI-Image-Video-Studio/releas
 
 def version_tuple(value):
     if not isinstance(value, str) or not re.fullmatch(r'v?\d{1,5}\.\d{1,5}\.\d{1,5}', value):
-        raise ValueError('GitHub did not return a supported stable version number.')
+        raise ValueError('The update service did not return a supported stable version number.')
     return tuple(int(part) for part in value.removeprefix('v').split('.'))
 
 
@@ -35,19 +35,19 @@ def latest_release():
         with urllib.request.urlopen(request, timeout=15) as response:
             data = response.read(1024 * 1024 + 1)
         if len(data) > 1024 * 1024:
-            raise ValueError('The GitHub release response was too large.')
+            raise ValueError('The update response was too large.')
         return json.loads(data)
     except urllib.error.HTTPError as error:
         if error.code == 404:
-            raise ValueError('No published update was found on GitHub.') from None
-        raise ValueError(f'GitHub could not check for updates (HTTP {error.code}). Try again later.') from None
+            raise ValueError('No published update is available yet.') from None
+        raise ValueError(f'Could not check for updates (HTTP {error.code}). Try again later.') from None
     except (OSError, ValueError) as error:
-        raise ValueError('Could not check GitHub for updates. Check your connection and try again.') from error
+        raise ValueError('Could not check for updates. Check your connection and try again.') from error
 
 
 def release_offer(release, current):
     if not isinstance(release, dict) or release.get('draft') is not False or release.get('prerelease') is not False:
-        raise ValueError('Only published stable GitHub releases can be installed.')
+        raise ValueError('Only published stable releases can be installed.')
     tag = release.get('tag_name', '')
     available = version_tuple(tag) > version_tuple(current)
     version = tag.removeprefix('v')
@@ -63,9 +63,9 @@ def release_offer(release, current):
     expected = REPOSITORY + '/releases/download/' + tag + '/' + name
     digest, size = asset.get('digest', ''), asset.get('size')
     if asset.get('browser_download_url') != expected or asset.get('state') != 'uploaded':
-        raise ValueError('The release installer is not available from the expected GitHub repository.')
+        raise ValueError('The installer is not available from the expected update source.')
     if not isinstance(digest, str) or not re.fullmatch(r'sha256:[a-fA-F0-9]{64}', digest):
-        raise ValueError('GitHub has not supplied a SHA-256 checksum for this installer. Try again later.')
+        raise ValueError('The update service has not supplied a verification checksum for this installer. Try again later.')
     if type(size) is not int or not 0 < size <= 1024**3:
         raise ValueError('The release installer has an unsupported size.')
     public['bytes'] = size

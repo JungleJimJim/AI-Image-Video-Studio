@@ -53,7 +53,7 @@ class CreativeModesTests(unittest.TestCase):
         with patch('resources.subprocess.run') as run:
             run.return_value.returncode=0;run.return_value.stdout='65, 4096, 16384\n'
             value=sample_gpu()
-            self.assertEqual(value,dict(percent=65,used=4*1024**3,total=16*1024**3))
+            self.assertEqual(value,dict(percent=65,used=4*1024**3,total=16*1024**3,source='nvidia-smi'))
 
     def test_import_rejects_non_images_before_launching_decoder(self):
         with patch('images.subprocess.run') as decoder,self.assertRaises(ValueError):

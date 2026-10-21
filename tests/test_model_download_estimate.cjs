@@ -1,0 +1,10 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const js=fs.readFileSync('assets/studio.js','utf8');
+const fn=js.split('\n').find(line=>line.startsWith('function downloadEstimate()'));
+const gb=1024**3,models={a:{download_files:[{id:'base',remaining:10*gb},{id:'lora-a',remaining:gb}]},b:{download_files:[{id:'base',remaining:10*gb},{id:'lora-b',remaining:2*gb}]},c:{download_files:[{id:'base',remaining:0}]}};
+let selected=['a','b'];const label={};const ctx={Map,pack:id=>models[id],$:()=>label,document:{querySelectorAll:()=>selected.map(value=>({value}))}};
+vm.createContext(ctx);vm.runInContext(fn,ctx);ctx.downloadEstimate();assert(label.textContent.includes('13.0 GB'));assert(label.textContent.includes('counted once'));
+selected=['c'];ctx.downloadEstimate();assert(label.textContent.includes('0.0 GB'));
+selected=[];ctx.downloadEstimate();assert.equal(label.textContent,'Select the models to download.');
+console.log('MODEL_DOWNLOAD_ESTIMATE_PASS: shared base counted once; installed base adds no download.');

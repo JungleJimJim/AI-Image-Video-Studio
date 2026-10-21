@@ -321,8 +321,13 @@ class Installer:
     def refresh_disk(self):
         try:
             free = shutil.disk_usage(existing_parent(self.data_path.get())).free / 1024**3
-            extra = sum(sum(f['size'] for f in pack_catalog()[key]['files']) for key,var in self.packs.items() if var.get()) / 1024**3
-            self.disk.set(f"{free:.1f} GB free · allow {30+extra:.1f} GB for setup and selected packs")
+            from common import manifest
+            from model_files import remaining_bytes
+            packs = pack_catalog()
+            selected = manifest()['models'] + [f for key,var in self.packs.items() if var.get() for f in packs[key]['files']]
+            known = manifest()['models'] + [f for pack in packs.values() for f in pack['files']]
+            extra = remaining_bytes(self.data_path.get(), selected, known) / 1024**3
+            self.disk.set(f"{free:.1f} GB free · allow {18+extra:.1f} GB for setup and selected packs (shared files counted once)")
         except (OSError, ValueError):
             self.disk.set("Choose an accessible local drive.")
 

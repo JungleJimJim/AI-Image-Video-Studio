@@ -118,7 +118,7 @@ def download(spec, destination, report, cancel, token=""):
             raise Cancelled("Cancelled. Downloads can be resumed.")
 
 
-def provision(root, report, cancel, token=""):
+def provision(root, report, cancel, token="", include_models=True):
     root = Path(root)
     m = manifest()
     root.mkdir(parents=True, exist_ok=True)
@@ -128,7 +128,11 @@ def provision(root, report, cancel, token=""):
         ready = json.loads(runtime_marker.read_text())["version"] == m["runtime_version"] and runtime_python(root).exists()
     except (OSError, ValueError, KeyError):
         pass
-    remaining = sum(f["size"] for f in m["models"] if not (comfy_root(root) / "models" / f["folder"] / f["filename"]).exists())
+    from model_files import remaining_bytes, reuse_alias
+    from packs import catalog
+    models = m['models'] if include_models else []
+    known = m['models'] + [f for pack in catalog().values() for f in pack['files']]
+    remaining = remaining_bytes(root, models, known)
     reserve = remaining + (18 * 1024**3 if not ready else 2 * 1024**3)
     if shutil.disk_usage(existing_parent(root)).free < reserve:
         raise RuntimeError(f"Not enough free space. This setup needs about {reserve / 1024**3:.1f} GB free in {root.drive or root}.")
@@ -169,6 +173,7 @@ def provision(root, report, cancel, token=""):
             raise RuntimeError("The GPU runtime check failed. Install a current NVIDIA driver, then retry.\n" + (probe.stderr + probe.stdout)[-3000:])
         atomic_json(runtime_marker, {"version": m["runtime_version"], "probe": probe.stdout.strip()})
         archive.unlink()  # Keep the extracted runtime; reclaim the 2 GB archive.
-    for spec in m["models"]:
-        download(spec, comfy_root(root) / "models" / spec["folder"] / spec["filename"], report, cancel, token)
-    report("Installation complete. The model is ready to use.", 1)
+    for spec in models:
+        if not reuse_alias(root, spec, known, report, cancel):
+            download(spec, comfy_root(root) / "models" / spec["folder"] / spec["filename"], report, cancel, token)
+    report("Installation complete. The model is ready to use." if include_models else "Base runtime installed. Installing selected models…", 1)

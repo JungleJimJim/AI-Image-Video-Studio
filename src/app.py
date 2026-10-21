@@ -14,7 +14,7 @@ import time
 import urllib.parse
 import urllib.request
 
-from common import (APP_NAME, CREATE_NO_WINDOW, VERSION, app_root, atomic_json, runtime_ready,
+from common import (APP_NAME, CREATE_NO_WINDOW, VERSION, app_root, installed_app_for_copy, atomic_json, runtime_ready,
                     gpu_info, install_ready, load_json, manifest, resource)
 from downloads import Cancelled, provision
 from engine import DEFAULTS, Engine, validate_options
@@ -32,7 +32,12 @@ import avatars
 import voices
 from updates import UpdateManager
 from model_removal import removal_plan, uninstall as uninstall_model
-from media_storage import media_folder, migrate_library
+from media_storage import media_folder, migrate_library, metadata_path, migrate_metadata
+from notifications import play_completion_ping
+import attention_support
+import video_faceswap
+import moss
+import canvas_projects
 
 
 class Studio:
@@ -60,6 +65,7 @@ class Studio:
         self.engine = Engine(self.root, self.report)
         self.videos = load_json(self.root / "library.json", [])
         self.images = load_json(self.root / 'images.json', [])
+        self.events.extend(migrate_metadata(self.images,self.videos))
         self.recordings = load_json(self.root / 'recordings.json', [])
         self._last_log = ""
         self.worker = None
@@ -86,10 +92,12 @@ class Studio:
                 self.state["stage"] = "Ready"
             base=manifest()['models']
             from packs import model_path
+            from model_files import file_status
+            base_status=file_status(self.root,base)
             base_info=dict(id='wan13',name='NSFW Wan 1.3B · E14',kind='video',family='wan13',
                 description='The original text-to-video model. Runtime software remains available if these weights are removed.',
                 ready=install_ready(self.root),size=sum(f['size'] for f in base),
-                remaining=sum(f['size'] for f in base if not model_path(self.root,f).is_file() or model_path(self.root,f).stat().st_size!=f['size']))
+                remaining=sum(x['remaining'] for x in base_status),download_files=base_status)
             return {**self.state, "ready": install_ready(self.root), "gpu": self.gpu,
                     'base_model':base_info,
                     "settings": self.settings, "library": self.videos[-30:][::-1],
@@ -99,12 +107,14 @@ class Studio:
                     'runtime_ready': runtime_ready(self.root), 'queue': self.queue.snapshot(),
                     'recordings': self.recordings,
                     'enhancers': enhancements.inventory(self.root),
+                    'video_faceswap':video_faceswap.inventory(self.root),
                     'updates': self.updates.snapshot(),
                     'resources': self.resources.snapshot(),
+                    'attention':attention_support.snapshot(self.root,self.settings.get('attention','pytorch'),self.engine),
                     'library_revision': self.revision, 'library_count': len(self.images)+len(self.videos),
                     "log": self.events[-40:], "root": str(self.root), "version": VERSION}
 
-    def run_job(self, target, queue_id=None):
+    def run_job(self, target, queue_id=None, notify_completion=False):
         with self.lock:
             if self.state["busy"]:
                 raise ValueError("Wait for the current operation to finish, or cancel it first.")
@@ -135,6 +145,8 @@ class Studio:
                         if outcome=='completed' and self.state.get('latest_media'):
                             item['result_id']=self.state['latest_media']['id']
                         self.queue.save()
+                    if outcome=='completed' and (queue_id or notify_completion) and self.settings.get('completion_sound',True):
+                        play_completion_ping()
                     self.removing_model=None
                     self.state["busy"] = False
                     self._kick_queue()
@@ -173,7 +185,8 @@ class Studio:
             info = {"id": secrets.token_hex(12), "path": str(file), "name": file.name,
                     "created": time.strftime("%Y-%m-%d %H:%M"), "options": options, "seconds": seconds,
                     'width':options['width'],'height':options['height']}
-            atomic_json(file.with_suffix(".json"), {**info, "workflow": workflow})
+            atomic_json(metadata_path(file), {**info, "workflow": workflow})
+            self.thumbnails.get(info,'video')
             with self.lock:
                 self.videos.append(info)
                 self.revision += 1
@@ -183,7 +196,7 @@ class Studio:
             self.report(f"Video saved · {seconds:.0f} seconds to generate · seed {options['seed']}", 1)
             if options['upscale']['enabled']:self.enhance_record(info,'video',options['upscale']['options'],output)
         if prepare:return job,options
-        self.run_job(job)
+        self.run_job(job,notify_completion=True)
 
     def generate_image(self, raw, prepare=False, output=None):
         output=output or self.settings['output']
@@ -195,7 +208,9 @@ class Studio:
             raise ValueError('That model needs a starting image. Use the Image Editor.')
         if not (install_ready(self.root) or runtime_ready(self.root)) or not pack_ready(self.root, options['model']):
             raise ValueError('Install the base runtime and selected image model in Settings first.')
+        moss_maps=moss.prepare(self,options) if moss.is_model(options['model']) else {}
         def job():
+            if moss_maps:moss.stage(self,options,moss_maps)
             with self.lock:
                 self.remember_loras(options['model'],options['loras'])
                 self.settings['image_options'] = {**options, 'seed': raw.get('seed','')}
@@ -205,7 +220,8 @@ class Studio:
             info = dict(id=secrets.token_hex(12), path=str(file), name=file.name, kind='generated',
                         created=time.strftime('%Y-%m-%d %H:%M'), options=options, seconds=seconds,
                         width=options['width'], height=options['height'])
-            atomic_json(file.with_suffix('.json'), {**info, 'workflow':workflow})
+            atomic_json(metadata_path(file), {**info, 'workflow':workflow})
+            self.thumbnails.get(info,'image')
             with self.lock:
                 self.images.append(info)
                 self.revision += 1
@@ -215,12 +231,13 @@ class Studio:
             self.report(f'Image saved · {seconds:.0f} seconds · seed {options["seed"]}', 1)
             if options['upscale']['enabled']:self.enhance_record(info,'image',options['upscale']['options'],output)
         if prepare:return job,options
-        self.run_job(job)
+        self.run_job(job,notify_completion=True)
 
     def import_image(self, data):
         def job():
             info = import_image(self.root, data, self.report)
             info['created'] = time.strftime('%Y-%m-%d %H:%M')
+            self.thumbnails.get(info,'image')
             with self.lock:
                 self.images.append(info)
                 self.revision += 1
@@ -237,6 +254,24 @@ class Studio:
             raise ValueError('This library file is missing. Import it again or choose another item.')
         return source
 
+    def canvas_image(self, data, composite=False):
+        project=canvas_projects.validate(data.get('project',{})) if composite else None
+        info=import_image(self.root,data,lambda *_:None,preserve_alpha=not composite)
+        if project and (info['width'],info['height'])!=(project['width'],project['height']):
+            Path(info['path']).unlink(missing_ok=True)
+            raise ValueError('Exported image dimensions do not match the canvas.')
+        info.update(created=time.strftime('%Y-%m-%d %H:%M'),kind='canvas_composite' if composite else 'canvas_source')
+        if project:
+            info['options']=dict(tool='canvas',width=project['width'],height=project['height'])
+            info['canvas_project']=project
+            info['reference_ids']=list(dict.fromkeys(x['source_id'] for x in project['layers'] if x['kind']=='image'))
+        atomic_json(metadata_path(info['path']),info)
+        self.thumbnails.get(info,'image')
+        # Canvas CPU work does not replace a running generator's progress/result.
+        with self.lock:
+            atomic_json(self.root/'images.json',[*self.images,info]);self.images.append(info);self.revision+=1
+        return {**info,'media_type':'image'}
+
     def open_library_folder(self, identifier):
         with self.lock:
             item = next((x for x in (*self.images, *self.videos) if x['id'] == identifier), None)
@@ -252,7 +287,8 @@ class Studio:
         subprocess.Popen(f'explorer.exe /select,"{path}"', startupinfo=startup)
 
     def add_image(self, info, workflow=None):
-        atomic_json(Path(info['path']).with_suffix('.json'), {**info, **({'workflow':workflow} if workflow else {})})
+        atomic_json(metadata_path(info['path']), {**info, **({'workflow':workflow} if workflow else {})})
+        self.thumbnails.get(info,'image')
         with self.lock:
             self.images.append(info)
             self.revision += 1
@@ -270,7 +306,9 @@ class Studio:
         source=self.find_media(options['source_image'])
         refs=[self.find_media(x) for x in options['references']]
         mask=raw.get('mask','')
+        moss_maps=moss.prepare(self,options) if moss.is_model(options['model']) else {}
         def job():
+            if moss_maps:moss.stage(self,options,moss_maps)
             options['input_file']=stage_image(self.root,source)
             options['reference_files']=[stage_image(self.root,x) for x in refs]
             try:
@@ -302,7 +340,7 @@ class Studio:
                     from common import comfy_root
                     (comfy_root(self.root)/'input'/options['mask_file']).unlink(missing_ok=True)
         if prepare:return job,{**options,**({'mask':mask} if mask else {})}
-        self.run_job(job)
+        self.run_job(job,notify_completion=True)
 
     def import_recording(self,raw):
         def job():
@@ -331,7 +369,7 @@ class Studio:
                 self.settings['voice_options']=options;atomic_json(self.root/'settings.json',self.settings)
                 self.state.update(audio_result=info,voice_result=info)
             self.report('Voice saved in Library/Audio and available in Talking Avatar.',1)
-        return (job,options) if prepare else self.run_job(job)
+        return (job,options) if prepare else self.run_job(job,notify_completion=True)
 
     def generate_avatar(self,raw,prepare=False,output=None):
         options=avatars.validate_options(raw)
@@ -356,7 +394,8 @@ class Studio:
                 parent_id=source['id'],audio_id=audio['id'],audio_name=audio['name'],
                 created=time.strftime('%Y-%m-%d %H:%M'),options=options,seconds=seconds,
                 width=result['width'],height=result['height'],duration=result['duration'],fps=result['fps'])
-            atomic_json(file.with_suffix('.json'),info)
+            atomic_json(metadata_path(file),info)
+            self.thumbnails.get(info,'video')
             with self.lock:
                 self.videos.append(info);self.revision+=1
                 atomic_json(self.root/'library.json',self.videos)
@@ -364,7 +403,7 @@ class Studio:
                 self.state['avatar_result']=info
                 self.state['latest_media']={**info,'media_type':'video'}
             self.report('Talking avatar saved with your recording. The source is preserved.',1)
-        return (job,options) if prepare else self.run_job(job)
+        return (job,options) if prepare else self.run_job(job,notify_completion=True)
 
     def auto_enhancement(self,raw,kind):
         if not raw or (isinstance(raw,dict) and not raw.get('enabled')):return dict(enabled=False)
@@ -393,7 +432,8 @@ class Studio:
             file=Path(result['output']);w,h=map(int,result['resolution'].split('x'))
             info=dict(id=secrets.token_hex(12),path=str(file),name=file.name,kind='enhanced',parent_id=source['id'],
                       created=time.strftime('%Y-%m-%d %H:%M'),options=options,seconds=result['seconds'],width=w,height=h)
-            atomic_json(file.with_suffix('.json'),info)
+            atomic_json(metadata_path(file),info)
+            self.thumbnails.get(info,'video')
             with self.lock:
                 self.videos.append(info);self.revision+=1;atomic_json(self.root/'library.json',self.videos)
                 self.state['result']=info;self.state['latest_media']={**info,'media_type':'video'}
@@ -404,9 +444,41 @@ class Studio:
         wrapper=self.auto_enhancement(dict(enabled=True,options=raw),kind)
         options={**wrapper['options'],'source_id':source['id'],'model':'qwen21' if kind=='image' else 'rtx_vsr'}
         def job():self.enhance_record(source,kind,wrapper['options'],output or self.settings['output'])
-        return (job,options) if prepare else self.run_job(job)
+        return (job,options) if prepare else self.run_job(job,notify_completion=True)
+
+    def generate_video_faceswap(self,raw,prepare=False,output=None):
+        options=video_faceswap.validate(raw)
+        if not video_faceswap.ready(self.root):raise ValueError('Install video faceswap in Faceswap or Models first.')
+        source=self.find_media(options['source_id'],'video')
+        reference=self.find_media(options['reference_id'],'image')
+        frames=source.get('frames') or source.get('options',{}).get('frames')
+        if frames and options['reference_frame']>=frames:raise ValueError('Choose a reference frame inside the target video.')
+        def job():
+            self.engine.stop()
+            file,seconds,result=video_faceswap.run(self.root,source,reference,options,output or self.settings['output'],self.report,self.cancel)
+            info=dict(id=secrets.token_hex(12),path=str(file),name=file.name,kind='video_faceswap',
+                parent_id=source['id'],reference_id=reference['id'],reference_name=reference['name'],
+                created=time.strftime('%Y-%m-%d %H:%M'),options=options,seconds=seconds,**result)
+            atomic_json(metadata_path(file),info);self.thumbnails.get(info,'video')
+            with self.lock:
+                self.videos.append(info);self.revision+=1;atomic_json(self.root/'library.json',self.videos)
+                self.settings['video_face_options']=options;atomic_json(self.root/'settings.json',self.settings)
+                self.state.update(result=info,latest_media={**info,'media_type':'video'})
+            self.report('Faceswapped video saved. The target video and reference image are preserved.',1)
+        return (job,options) if prepare else self.run_job(job,notify_completion=True)
+
+    def import_local_video(self,path):
+        def job():
+            info=video_faceswap.import_video(self.root,path,self.settings['output'],self.report,self.cancel)
+            atomic_json(metadata_path(info['path']),info);self.thumbnails.get(info,'video')
+            with self.lock:
+                self.videos.append(info);self.revision+=1;atomic_json(self.root/'library.json',self.videos)
+                self.state['latest_media']={**info,'media_type':'video'}
+            self.report('Video copied into Library. The original file is preserved.',1)
+        self.run_job(job)
 
     def prepare_queued(self,kind,raw,output=None):
+        if kind=='faceswap_video':return self.generate_video_faceswap(raw,prepare=True,output=output)
         if kind=='voice':return self.generate_voice(raw,prepare=True,output=output)
         if kind=='faceswap':
             if raw.get('model')!='bfs':raise ValueError('Choose the BFS face-swap model.')
@@ -503,6 +575,9 @@ class Studio:
             self._kick_queue()
 
     def model_references(self,key):
+        from packs import catalog
+        if catalog().get(key,{}).get('kind')=='addon' and catalog()[key].get('family')=='moss_image':
+            return [x for x in self.queue.jobs if x['status'] in ACTIVE and moss.is_model(x['options'].get('model'))]
         return [x for x in self.queue.jobs if x['status'] in ACTIVE and (x['options'].get('model')==key or
                 (key=='qwen21' and x['options'].get('upscale',{}).get('enabled') and x['kind'] in ('image','edit')))]
 
@@ -579,15 +654,43 @@ class Studio:
 
     def save_settings(self, data):
         with self.lock:
-            if self.state["busy"]:
-                raise ValueError("Wait for the current operation to finish before changing folders.")
-            output = Path(str(data.get("output", self.settings["output"]))).expanduser()
-            if not output.is_absolute():
-                raise ValueError("Select a full output folder path.")
-            for kind in ('image','video'):
-                media_folder(self.root,kind,output).mkdir(parents=True, exist_ok=True)
-            self.settings["output"] = str(output.resolve())
-            atomic_json(self.root / "settings.json", self.settings)
+            if 'video_source_image' in data:
+                identifier=data['video_source_image']
+                if not isinstance(identifier,str) or len(identifier)>100:
+                    raise ValueError('Choose a valid starting image from Library.')
+                if identifier:self.find_media(identifier)
+            if 'attention' in data:attention_support.validate(data['attention'])
+            if 'completion_sound' in data and not isinstance(data['completion_sound'],bool):
+                raise ValueError('Choose whether to play the completion sound.')
+            previous=self.settings.copy();previous_attention=self.engine.attention
+            if 'output' in data:
+                if self.state["busy"]:
+                    raise ValueError("Wait for the current operation to finish before changing folders.")
+                output = Path(str(data['output'])).expanduser()
+                if not output.is_absolute():
+                    raise ValueError("Select a full output folder path.")
+                for kind in ('image','video'):
+                    media_folder(self.root,kind,output).mkdir(parents=True, exist_ok=True)
+                self.settings["output"] = str(output.resolve())
+            if 'completion_sound' in data:self.settings['completion_sound']=data['completion_sound']
+            if 'video_source_image' in data:self.settings['video_source_image']=data['video_source_image']
+            if 'attention' in data:
+                self.settings['attention']=data['attention']
+                self.engine.attention=data['attention']
+            try:atomic_json(self.root / "settings.json", self.settings)
+            except Exception:
+                self.settings.clear();self.settings.update(previous)
+                self.engine.attention=previous_attention
+                raise
+
+    def check_attention(self, enable=False):
+        if not isinstance(enable,bool):raise ValueError('Choose whether to enable SageAttention after checking.')
+        def job():
+            self.engine.stop()
+            result=attention_support.check(self.root,self.report,self.cancel)
+            if enable and result.get('available'):
+                self.save_settings({'attention':'sage'})
+        self.run_job(job)
 
 
 def pick_folder(initial):
@@ -688,27 +791,48 @@ def make_handler(studio, shutdown):
                 if not self.authorized():
                     return self.send_json({"error": "Unauthorized"}, 403)
                 return self.send_json(studio.snapshot())
+            if url.path.startswith('/api/canvas/'):
+                if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
+                try:
+                    if url.path=='/api/canvas/projects':return self.send_json({'items':canvas_projects.catalog(studio.root)})
+                    if url.path=='/api/canvas/draft':project=canvas_projects.load(studio.root)
+                    elif url.path.startswith('/api/canvas/project/'):project=canvas_projects.load(studio.root,url.path.removeprefix('/api/canvas/project/'))
+                    else:raise ValueError('Unknown canvas request.')
+                    ids={x['source_id'] for x in (project or {}).get('layers',[]) if x['kind']=='image'}
+                    return self.send_json({'project':project,'sources':[{**x,'media_type':'image'} for x in list(studio.images) if x['id'] in ids]})
+                except (ValueError,OSError) as error:return self.send_json({'error':str(error)},400)
             if url.path.startswith('/api/library/'):
                 if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
                 try:
-                    with studio.lock:
-                        return self.send_json(media_details(studio.images,studio.videos,url.path.removeprefix('/api/library/')))
+                    return self.send_json(media_details(list(studio.images),list(studio.videos),url.path.removeprefix('/api/library/')))
                 except ValueError as error:return self.send_json({'error':str(error)},404)
             if url.path == '/api/library':
                 if not self.authorized():
                     return self.send_json({'error':'Unauthorized'},403)
                 try:
-                    with studio.lock:
-                        return self.send_json(catalog_page(studio.images,studio.videos,urllib.parse.parse_qs(url.query)))
+                    # Saved histories only append. Copy without waiting for a slow
+                    # model/status scan that currently owns the Studio lock.
+                    images,videos=list(studio.images),list(studio.videos)
+                    page=catalog_page(images,videos,urllib.parse.parse_qs(url.query))
+                    for item in page['items']:
+                        item['thumbnail']=studio.thumbnails.describe(item,item['media_type'])
+                    return self.send_json(page)
                 except ValueError as error:
                     return self.send_json({'error':str(error)},400)
+            if url.path == '/api/thumbnails':
+                if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
+                ids=urllib.parse.parse_qs(url.query).get('ids',[''])[0].split(',')
+                if len(ids)>100:return self.send_json({'error':'Too many preview requests'},400)
+                records={x['id']:(x,kind) for items,kind in ((studio.images,'image'),(studio.videos,'video')) for x in items}
+                return self.send_json({key:studio.thumbnails.describe(*records[key]) if key in records else {'status':'unavailable'} for key in ids})
             if url.path.startswith('/api/queue/'):
                 if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
                 try:
                     with studio.lock:
                         item=studio.queue.get(url.path.removeprefix('/api/queue/'))
                         raw=studio.hydrate_queued(item)
-                        identifiers=[raw.get('source_image'),raw.get('last_image'),raw.get('source_id'),*raw.get('references',[])]
+                        identifiers=[raw.get('source_image'),raw.get('last_image'),raw.get('source_id'),raw.get('reference_id'),*raw.get('references',[])]
+                        identifiers += [raw.get('moss',{}).get('color_id'),raw.get('moss',{}).get('depth_id')]
                         sources=[x for x in studio.images+studio.videos if x['id'] in identifiers]
                         return self.send_json({**item,'options':raw,'sources':sources})
                 except (ValueError,OSError) as error:return self.send_json({'error':str(error)},400)
@@ -719,8 +843,12 @@ def make_handler(studio, shutdown):
                 identifier=url.path.removeprefix('/thumbnail/')
                 item=next((x for x in studio.images+studio.videos if x['id']==identifier),None)
                 if not item: return self.send_json({'error':'Not found'},404)
-                thumb=studio.thumbnails.get(item,'image' if item in studio.images else 'video')
-                if thumb: return self.send_file(thumb,'image/jpeg')
+                info=studio.thumbnails.describe(item,'image' if item in studio.images else 'video')
+                if info['status']=='ready':
+                    thumb=studio.thumbnails.root/'thumbnails'/(info['key']+'.jpg')
+                    immutable=query.get('v',[''])[0]==info['key']
+                    return self.send_file(thumb,'image/jpeg',cache_key=info['key'],immutable=immutable)
+                if info['status']=='unavailable':return self.send_json({'error':'Preview unavailable'},404)
                 return self.send_json({'error':'Thumbnail pending'},202)
             if url.path.startswith("/video/"):
                 query = urllib.parse.parse_qs(url.query)
@@ -753,6 +881,12 @@ def make_handler(studio, shutdown):
                 return self.send_file(resource('studio-updates.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-avatars.js':
                 return self.send_file(resource('studio-avatars.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-video-faceswap.js':
+                return self.send_file(resource('studio-video-faceswap.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-moss.js':
+                return self.send_file(resource('studio-moss.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-canvas.js':
+                return self.send_file(resource('studio-canvas.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-ref2va.js':
                 return self.send_file(resource('studio-ref2va.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-minimax.js':
@@ -780,7 +914,13 @@ def make_handler(studio, shutdown):
                 return self.wfile.write(body)
             return self.send_json({"error": "Not found"}, 404)
 
-        def send_file(self, path, content_type, ranges=False):
+        def send_file(self, path, content_type, ranges=False, cache_key=None, immutable=False):
+            if cache_key and self.headers.get('If-None-Match')=='"'+cache_key+'"':
+                self.send_response(304)
+                self.send_header('ETag','"'+cache_key+'"')
+                self.send_header('Cache-Control','private, max-age=31536000, immutable' if immutable else 'private, no-cache')
+                self.end_headers()
+                return
             size = path.stat().st_size
             start, end = 0, size - 1
             partial = False
@@ -798,6 +938,9 @@ def make_handler(studio, shutdown):
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(end - start + 1))
             self.send_header("Accept-Ranges", "bytes")
+            if cache_key:
+                self.send_header('ETag','"'+cache_key+'"')
+                self.send_header('Cache-Control','private, max-age=31536000, immutable' if immutable else 'private, no-cache')
             if partial:
                 self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
             self.end_headers()
@@ -821,7 +964,7 @@ def make_handler(studio, shutdown):
                 return self.send_json({"error": "Invalid origin"}, 403)
             try:
                 length = int(self.headers.get("Content-Length", "0"))
-                limit = 84*1024**2 if self.path=='/api/avatars/audio/import' else 36 * 1024**2 if self.path in ('/api/images/import','/api/images/edit','/api/queue/add','/api/queue/action') else 100000
+                limit = 84*1024**2 if self.path=='/api/avatars/audio/import' else 36 * 1024**2 if self.path in ('/api/images/import','/api/images/edit','/api/queue/add','/api/queue/action','/api/canvas/import','/api/canvas/export') else 512*1024 if self.path in ('/api/canvas/project','/api/canvas/draft') else 100000
                 if not 0 <= length <= limit:
                     raise ValueError("Request is too large.")
                 data = json.loads(self.rfile.read(length) or b"{}")
@@ -829,6 +972,10 @@ def make_handler(studio, shutdown):
                     raise ValueError("Expected an object.")
                 if self.path == '/api/updates/check':
                     return self.send_json(studio.updates.check())
+                elif self.path in ('/api/canvas/import','/api/canvas/export'):
+                    return self.send_json({'ok':True,'item':studio.canvas_image(data,self.path.endswith('/export'))})
+                elif self.path in ('/api/canvas/project','/api/canvas/draft'):
+                    return self.send_json({'ok':True,'project':canvas_projects.save(studio.root,data.get('project'),self.path.endswith('/draft'))})
                 elif self.path == '/api/updates/install':
                     studio.install_update(data.get('ticket'),shutdown)
                 elif self.path == "/api/generate":
@@ -837,6 +984,8 @@ def make_handler(studio, shutdown):
                     studio.import_recording(data)
                 elif self.path == '/api/voice/check':
                     return self.send_json(voices.check(data))
+                elif self.path == '/api/attention/check':
+                    studio.check_attention(data.get('enable',False))
                 elif self.path == '/api/voice/settings':
                     connection=voices.connection(data)
                     with studio.lock:
@@ -860,6 +1009,16 @@ def make_handler(studio, shutdown):
                     return self.send_json(removal_plan(studio.root,data.get('model')))
                 elif self.path == '/api/models/uninstall':
                     studio.remove_model(data.get('model'),data.get('ticket'))
+                elif self.path == '/api/faceswap/install-video':
+                    def install_faceswap():
+                        studio.engine.stop();video_faceswap.install(studio.root,studio.report,studio.cancel)
+                    studio.run_job(install_faceswap)
+                elif self.path == '/api/videos/import-local':
+                    if studio.state['busy']:raise ValueError('Wait for the current operation to finish before importing a video.')
+                    from native_files import pick_video
+                    path=pick_video()
+                    if not path:return self.send_json({'ok':True,'cancelled':True})
+                    studio.import_local_video(path)
                 elif self.path == '/api/enhancers/install-video':
                     def install_enhancer():
                         studio.engine.stop();enhancements.install_video(studio.root,studio.report,studio.cancel)
@@ -883,7 +1042,7 @@ def make_handler(studio, shutdown):
                     def pack_job():
                         studio.engine.stop()
                         if not runtime_ready(studio.root) or 'wan13' in keys:
-                            provision(studio.root, studio.report, studio.cancel, access)
+                            provision(studio.root, studio.report, studio.cancel, access, include_models='wan13' in keys)
                         optional=[k for k in keys if k!='wan13']
                         if optional:install_packs(studio.root, optional, studio.report, studio.cancel, access)
                     studio.run_job(pack_job)
@@ -917,6 +1076,8 @@ def make_handler(studio, shutdown):
                     studio.report("Cancelling…", None)
                 elif self.path == "/api/settings":
                     studio.save_settings(data)
+                elif self.path == '/api/notifications/test':
+                    if not play_completion_ping():raise ValueError('Windows could not play the ping. Check your audio output and volume.')
                 elif self.path == "/api/pick-folder":
                     return self.send_json({"path": pick_folder(studio.settings["output"])})
                 elif self.path == '/api/library/open-folder':
@@ -962,6 +1123,12 @@ def main():
         elif sys.stdout:
             print(result)
         return
+    if not args.root:
+        installed = installed_app_for_copy()
+        if installed:
+            subprocess.Popen([str(installed), *sys.argv[1:]], cwd=installed.parent,
+                             creationflags=CREATE_NO_WINDOW)
+            return
     root = Path(args.root) if args.root else app_root()
     headless = args.headless or args.no_browser
     # Reopen the existing local session if this installation is already running.

@@ -10,7 +10,7 @@ import time
 
 APP_NAME = "A.I. Image & Video Studio"
 APP_EXE = 'AIImageVideoStudio.exe'
-VERSION = "1.9.0"
+VERSION = "1.13.1"
 INSTALL_DIR_NAME = "AI Image & Video Studio"
 UNINSTALL_KEY = r'Software\Microsoft\Windows\CurrentVersion\Uninstall\WanVideoStudio'
 CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
@@ -30,6 +30,27 @@ def app_root():
         installation = Path(sys.executable).resolve().parent
         return installed_data_path(installation)
     return Path(__file__).resolve().parent.parent / "dev-install"
+
+
+def installed_app_for_copy():
+    """Build/download copies reopen the registered app, without creating data nearby."""
+    if not getattr(sys, 'frozen', False):
+        return None
+    current = Path(sys.executable).resolve()
+    # A deliberately separate portable installation keeps its own data.
+    if any((current.parent / name).is_file() for name in
+           ('studio-install.json', 'studio-data.json', 'settings.json', 'runtime-ready.json')):
+        return None
+    installation, data = registered_installation()
+    if not installation or not data:
+        return None
+    target = (installation / APP_EXE).resolve()
+    if target == current or not target.is_file():
+        return None
+    if (load_json(installation / 'studio-install.json', {}).get('app') != APP_NAME
+            or load_json(data / 'studio-data.json', {}).get('app') != APP_NAME):
+        return None
+    return target
 
 
 def runtime_root(root):

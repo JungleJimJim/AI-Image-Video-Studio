@@ -1,0 +1,275 @@
+{
+  "version": "3.9.1",
+  "revision": "72470819a0373be3388b3929c8f8f311f418fc3c",
+  "repository": "https://github.com/facefusion/facefusion",
+  "archive": {
+    "label": "facefusion-3.9.1.zip",
+    "filename": "facefusion-3.9.1.zip",
+    "url": "https://codeload.github.com/facefusion/facefusion/zip/72470819a0373be3388b3929c8f8f311f418fc3c",
+    "size": 1413896,
+    "sha256": "c77d152fdd8a3aa77036233b0f23631b53f75c31c98546e67a4154b0fc4c79d5"
+  },
+  "wheels": [
+    {
+      "label": "colorama-0.4.6-py2.py3-none-any.whl",
+      "filename": "colorama-0.4.6-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/d1/d6/3965ed04c63042e047cb6a3e6ed1a63a35087b6a609aa3a15ed8ac56c221/colorama-0.4.6-py2.py3-none-any.whl",
+      "size": 25335,
+      "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"
+    },
+    {
+      "label": "flatbuffers-25.12.19-py2.py3-none-any.whl",
+      "filename": "flatbuffers-25.12.19-py2.py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/e8/2d/d2a548598be01649e2d46231d151a6c56d10b964d94043a335ae56ea2d92/flatbuffers-25.12.19-py2.py3-none-any.whl",
+      "size": 26661,
+      "sha256": "7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4"
+    },
+    {
+      "label": "ml_dtypes-0.6.0-cp313-cp313-win_amd64.whl",
+      "filename": "ml_dtypes-0.6.0-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/e2/55/4561acefa00fa4bcbfb82ca6a48578b41f372cd7dd7cdd6eb4720abc2e5f/ml_dtypes-0.6.0-cp313-cp313-win_amd64.whl",
+      "size": 439357,
+      "sha256": "fb87f46b4f7ad7b5d3ad8f4b452b024bd4229d44c8ff934798c1fe656210387a"
+    },
+    {
+      "label": "numpy-2.4.6-cp313-cp313-win_amd64.whl",
+      "filename": "numpy-2.4.6-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/b5/cd/9cc4dc876fb065d5c220aae4d5e14826b2715331bb7618ce1fb07a679d99/numpy-2.4.6-cp313-cp313-win_amd64.whl",
+      "size": 12318598,
+      "sha256": "c4fc99836233ea196540b17ab0983aff60ed07941751930f5f4d05bc3b3b7359"
+    },
+    {
+      "label": "onnx-1.23.1-cp312-abi3-win_amd64.whl",
+      "filename": "onnx-1.23.1-cp312-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/97/92/4cec47f8f9cf9f76a94d3f1f781e3c16b7cee2dd4adf3f6cf4b35fad9d0e/onnx-1.23.1-cp312-abi3-win_amd64.whl",
+      "size": 7872487,
+      "sha256": "7a1de7765463c7baab9a102ca89bcfda833e8343c3b15ac535bc74c87d96b11e"
+    },
+    {
+      "label": "onnxruntime_gpu-1.30.0-cp313-cp313-win_amd64.whl",
+      "filename": "onnxruntime_gpu-1.30.0-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/7e/d3/50fba71f4174f25f1e677ffe4b2ebc9f6c2a2aa8093c12e82c93792fd4e8/onnxruntime_gpu-1.30.0-cp313-cp313-win_amd64.whl",
+      "size": 160479611,
+      "sha256": "cf494da233f3fc02bbeb2a3178e3ace7361b6b4fef7031b19c1e5aed5e9328ce"
+    },
+    {
+      "label": "opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl",
+      "filename": "opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/b8/88/763b967f7efd7226b82c9fae16d560cba049b1f0c036647e65c610fd636e/opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl",
+      "size": 43825962,
+      "sha256": "829717b6a95554f273e49e357cee3b3a2a26b6f4842fbc1bed2b45bdd8f87e0e"
+    },
+    {
+      "label": "packaging-26.3-py3-none-any.whl",
+      "filename": "packaging-26.3-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+      "size": 129956,
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c"
+    },
+    {
+      "label": "protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+      "filename": "protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/8a/55/b77bda4e5e5f5971fb51b07663694690e9afdb9402136c16a522bd621cad/protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+      "size": 456514,
+      "sha256": "a300819d441e078a5608c0d3c709796bb548136058fda017ae51d425b44fd353"
+    },
+    {
+      "label": "scipy-1.18.1-cp313-cp313-win_amd64.whl",
+      "filename": "scipy-1.18.1-cp313-cp313-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/93/0e/e0348fbc0dbab65c114cf78957e7dfeb49f8e8b556b4d930cc12ff195e18/scipy-1.18.1-cp313-cp313-win_amd64.whl",
+      "size": 36622841,
+      "sha256": "559ed65f60c1af5a03f3912605a1b5114f522c7c32fb23c3376ae8f03219fe28"
+    },
+    {
+      "label": "tqdm-4.70.1-py3-none-any.whl",
+      "filename": "tqdm-4.70.1-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/a7/03/921a3d3c75785aca9ebfbfcabfbc3a1be12e2ab5265deb026d55a5a3f83e/tqdm-4.70.1-py3-none-any.whl",
+      "size": 80199,
+      "sha256": "c293e525e6fef9c20e8728fd4612df02a0aa31bb5fe91ecd93e123b1b7bffa73"
+    },
+    {
+      "label": "typing_extensions-4.16.0-py3-none-any.whl",
+      "filename": "typing_extensions-4.16.0-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "size": 45571,
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8"
+    }
+  ],
+  "models": [
+    {
+      "label": "nsfw_1.hash",
+      "filename": "nsfw_1.hash",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/nsfw_1.hash",
+      "size": 8,
+      "sha256": "48c61a15ffcda1ae9e6d4c790224072c8e5648d4ba2f767cf4cfe0be7e282853"
+    },
+    {
+      "label": "nsfw_2.hash",
+      "filename": "nsfw_2.hash",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/nsfw_2.hash",
+      "size": 8,
+      "sha256": "64cbc0c1a4d72e181fae364281b6d2130be3b87d5784909c5a29adf436f09a01"
+    },
+    {
+      "label": "nsfw_3.hash",
+      "filename": "nsfw_3.hash",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/nsfw_3.hash",
+      "size": 8,
+      "sha256": "b15c591d8177511959174a0c6761827e3bf9c0aa1d63aaa79645d9fc9a4e774b"
+    },
+    {
+      "label": "nsfw_1.onnx",
+      "filename": "nsfw_1.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/nsfw_1.onnx",
+      "size": 80414194,
+      "sha256": "3debfd72763bc931dd308f57d1e9299ae13bb309d14ddbdc17ce8f1fd42f96af"
+    },
+    {
+      "label": "nsfw_2.onnx",
+      "filename": "nsfw_2.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/nsfw_2.onnx",
+      "size": 22489928,
+      "sha256": "5aae1806ce44e3c27fab0a7d44eed581dd25ca71a4387ff809a191c98239c1be"
+    },
+    {
+      "label": "nsfw_3.onnx",
+      "filename": "nsfw_3.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/nsfw_3.onnx",
+      "size": 358188033,
+      "sha256": "778139fb930240ac39812a1480295bfc5dc2cec8a8e46ee6b453481d600c0fa2"
+    },
+    {
+      "label": "fairface.hash",
+      "filename": "fairface.hash",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/fairface.hash",
+      "size": 8,
+      "sha256": "e232c933114a6c9ce446195e4a96bf1c3327dd31c13165849cd00f9f19a2ea62"
+    },
+    {
+      "label": "fairface.onnx",
+      "filename": "fairface.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/fairface.onnx",
+      "size": 85170772,
+      "sha256": "b176b1e4b0739496e7943af7ba4ff306271fecf837bca5ec5d9a48201959db37"
+    },
+    {
+      "label": "yoloface_8n.hash",
+      "filename": "yoloface_8n.hash",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/yoloface_8n.hash",
+      "size": 8,
+      "sha256": "7a4bd7e1a8cd938db2234dba41d4a8b7719bedbf7496d35510927cbd4b71683f"
+    },
+    {
+      "label": "yoloface_8n.onnx",
+      "filename": "yoloface_8n.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/yoloface_8n.onnx",
+      "size": 12659761,
+      "sha256": "821cdbb1e65fbbabdde7dd0933f754797a343e56fd962729c61ffcefcd135929"
+    },
+    {
+      "label": "fan_68_5.hash",
+      "filename": "fan_68_5.hash",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/fan_68_5.hash",
+      "size": 8,
+      "sha256": "092d902410959b3ce01294d7c1ad157f1c602e3918238117e7ef87157be9534e"
+    },
+    {
+      "label": "2dfan4.hash",
+      "filename": "2dfan4.hash",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/2dfan4.hash",
+      "size": 8,
+      "sha256": "e6a6ef99b10b9fdb790c790879ca201f7afbe52560e4379248922324a9d503e8"
+    },
+    {
+      "label": "fan_68_5.onnx",
+      "filename": "fan_68_5.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/fan_68_5.onnx",
+      "size": 944321,
+      "sha256": "ea05f7d9d014ae1d9cdc6e9c72643d8f00d198b5db3fdd384148ddff499a613e"
+    },
+    {
+      "label": "2dfan4.onnx",
+      "filename": "2dfan4.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/2dfan4.onnx",
+      "size": 97904803,
+      "sha256": "678c6fa539d52335a31c980feefdf4a6e02d781d83dce00af8a894f114557285"
+    },
+    {
+      "label": "xseg_1.hash",
+      "filename": "xseg_1.hash",
+      "url": "https://huggingface.co/facefusion/models-3.1.0/resolve/c9e3a503d8e84e91c5cd89ee2d510fe5e793e570/xseg_1.hash",
+      "size": 8,
+      "sha256": "da3648ccecaa79f3be5ca0e1c3713f775504dd5c5dff716c095925132c02b08e"
+    },
+    {
+      "label": "bisenet_resnet_34.hash",
+      "filename": "bisenet_resnet_34.hash",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/bisenet_resnet_34.hash",
+      "size": 8,
+      "sha256": "bfca5e43ca55110701ab691d864cacfddccad324dc42043aea8c001a949ce1f8"
+    },
+    {
+      "label": "xseg_1.onnx",
+      "filename": "xseg_1.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.1.0/resolve/c9e3a503d8e84e91c5cd89ee2d510fe5e793e570/xseg_1.onnx",
+      "size": 70324286,
+      "sha256": "c4d1498b8a03b5fe2a3a5d2ef2a0402ab03bd51edaf5b2d8d5fb764702a97dd3"
+    },
+    {
+      "label": "bisenet_resnet_34.onnx",
+      "filename": "bisenet_resnet_34.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/bisenet_resnet_34.onnx",
+      "size": 93632546,
+      "sha256": "4a0b8c958a3c938913bd06a8365dbb3c8761afba6ecbf0d14b3b1f77eb230c96"
+    },
+    {
+      "label": "arcface_w600k_r50.hash",
+      "filename": "arcface_w600k_r50.hash",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/arcface_w600k_r50.hash",
+      "size": 8,
+      "sha256": "e3a6d709939a81fe09e71c7d36f96d54a0deede904e31a38c191a1904e808371"
+    },
+    {
+      "label": "arcface_w600k_r50.onnx",
+      "filename": "arcface_w600k_r50.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/arcface_w600k_r50.onnx",
+      "size": 174388474,
+      "sha256": "f1f79dc3b0b79a69f94799af1fffebff09fbd78fd96a275fd8f0cbbea23270d1"
+    },
+    {
+      "label": "kim_vocal_2.hash",
+      "filename": "kim_vocal_2.hash",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/kim_vocal_2.hash",
+      "size": 8,
+      "sha256": "fcd81ca30adf430b697fe58d60183031173c8ab0ca82efef308d652b1afb4197"
+    },
+    {
+      "label": "kim_vocal_2.onnx",
+      "filename": "kim_vocal_2.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.0.0/resolve/728b9659bd9691bf32cbf7f61af478d94b7ba81e/kim_vocal_2.onnx",
+      "size": 66766794,
+      "sha256": "fbde1fd7d35a6b1785add2225ce03255a01ccef6c8a5fb7b2ccd4e0c1e9097f7"
+    },
+    {
+      "label": "hyperswap_1a_256.hash",
+      "filename": "hyperswap_1a_256.hash",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/hyperswap_1a_256.hash",
+      "size": 8,
+      "sha256": "70b33d0a9d6044847d9b29f9d08ce7afc140a2cada5b4b5f532bbd6440ba48c1"
+    },
+    {
+      "label": "hyperswap_1a_256.onnx",
+      "filename": "hyperswap_1a_256.onnx",
+      "url": "https://huggingface.co/facefusion/models-3.3.0/resolve/6271ab1c4619ceb2e534d65e0ec973f22a9aec38/hyperswap_1a_256.onnx",
+      "size": 402742682,
+      "sha256": "c0e98a8a03a238f461ed3d2570e426b49f46745ee400854a60dceeb70c246add"
+    }
+  ],
+  "ffmpeg": {
+    "label": "ffmpeg-9.0.2-essentials_build.zip",
+    "filename": "ffmpeg-9.0.2-essentials_build.zip",
+    "url": "https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip",
+    "size": 114768076,
+    "sha256": "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba"
+  }
+}

@@ -8,9 +8,62 @@ from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
 import common
 import installer
+import app
 
 
 class InstallLocationTests(unittest.TestCase):
+    def test_uninstalled_build_copy_reopens_verified_registered_app(self):
+        with tempfile.TemporaryDirectory() as folder:
+            base = Path(folder)
+            installation, data, copy = (base / name for name in ('App', 'Data', 'assets'))
+            installation.mkdir(); data.mkdir(); copy.mkdir()
+            target = installation / common.APP_EXE
+            target.write_bytes(b'installed')
+            common.atomic_json(installation / 'studio-install.json', {'app': common.APP_NAME})
+            common.atomic_json(data / 'studio-data.json', {'app': common.APP_NAME})
+            with patch.object(sys, 'frozen', True, create=True), \
+                    patch.object(sys, 'executable', str(copy / common.APP_EXE)), \
+                    patch('common.registered_installation', return_value=(installation, data)):
+                self.assertEqual(common.installed_app_for_copy(), target.resolve())
+                self.assertEqual(list(copy.iterdir()), [])
+                common.atomic_json(data / 'studio-data.json', {'app': 'unrelated'})
+                self.assertIsNone(common.installed_app_for_copy())
+                common.atomic_json(data / 'studio-data.json', {'app': common.APP_NAME})
+                target.unlink()
+                self.assertIsNone(common.installed_app_for_copy())
+
+    def test_portable_data_and_source_runs_never_redirect(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            with patch.object(sys, 'frozen', True, create=True), \
+                    patch.object(sys, 'executable', str(root / common.APP_EXE)), \
+                    patch('common.registered_installation') as registered:
+                for name in ('studio-install.json','studio-data.json','settings.json','runtime-ready.json'):
+                    file = root / name
+                    file.write_text('{}')
+                    self.assertIsNone(common.installed_app_for_copy())
+                    file.unlink()
+                registered.assert_not_called()
+            with patch.object(sys, 'frozen', False, create=True):
+                self.assertIsNone(common.installed_app_for_copy())
+
+    def test_redirect_preserves_launch_flags_and_explicit_root_bypasses_it(self):
+        target = Path('I:/Studio') / common.APP_EXE
+        with patch.object(sys, 'argv', ['studio.exe','--headless']), \
+                patch('app.installed_app_for_copy', return_value=target), \
+                patch('app.subprocess.Popen') as launch, patch('app.Studio') as studio:
+            app.main()
+            launch.assert_called_once_with([str(target),'--headless'], cwd=target.parent,
+                                           creationflags=common.CREATE_NO_WINDOW)
+            studio.assert_not_called()
+        with tempfile.TemporaryDirectory() as folder, \
+                patch.object(sys, 'argv', ['studio.exe','--root',folder,'--headless']), \
+                patch('app.installed_app_for_copy') as redirect, \
+                patch('app.Studio', side_effect=RuntimeError('explicit test profile')):
+            with self.assertRaisesRegex(RuntimeError, 'explicit test profile'):
+                app.main()
+            redirect.assert_not_called()
+
     def test_program_files_default_does_not_follow_previous_install(self):
         with patch.dict(common.os.environ, {'ProgramW6432': 'C:/Program Files'}), \
                 patch('common.registered_installation', return_value=(Path('I:/OldStudio'), Path('I:/OldStudio'))):

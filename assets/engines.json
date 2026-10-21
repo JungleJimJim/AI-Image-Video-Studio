@@ -148,5 +148,34 @@
         "sha256": "420364e48f5cad46c20948c668fe3befd8692a5f7baf25e8ddbd434ee3806e9c"
       }
     ]
+  },
+  "moss": {
+    "name": "MOSS compatible ComfyUI",
+    "version": "0.42.0",
+    "probe": "moss",
+    "revision": "7a28332047b6af638dc6c7f72ef3481a718769fd",
+    "archive": {
+      "label": "MOSS compatible engine",
+      "filename": "ComfyUI-moss-7a283320.zip",
+      "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/7a28332047b6af638dc6c7f72ef3481a718769fd",
+      "size": 13462567,
+      "sha256": "e7de22a06cfbecab179addbeefd0e10a3d35b72c068ca9e0c8c9d002dd741d27"
+    },
+    "wheels": [
+      {
+        "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "size": 280910,
+        "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03",
+        "label": "FLUX 3 isolated dynamic VRAM support"
+      },
+      {
+        "label": "MOSS compatible kernels",
+        "filename": "comfy_kitchen-0.2.39-cp312-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/80/15/3907945e97063945b0dc58c4fc203dd1a3d050ce24acf6d6c1e8d50ed972/comfy_kitchen-0.2.39-cp312-abi3-win_amd64.whl",
+        "size": 61931646,
+        "sha256": "fa2da09c8ae68748baed7d38e1d4915c55f3fb098039192c004920d773de6dfc"
+      }
+    ]
   }
 }

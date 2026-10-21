@@ -1,5 +1,6 @@
 """CPU-only media operations, executed by the installed Pillow/PyAV runtime."""
 import json
+import os
 from pathlib import Path
 import sys
 import warnings
@@ -37,11 +38,30 @@ def image(path):
 
 def run(o):
     action = o['action']
+    if action == 'video_info':
+        import av
+        with av.open(str(o['source'])) as container:
+            if not container.streams.video:raise ValueError('The file has no video stream.')
+            stream=container.streams.video[0]
+            duration=float(stream.duration*stream.time_base) if stream.duration else container.duration/av.time_base if container.duration else 0
+            fps=float(stream.average_rate or stream.base_rate or 0)
+            if stream.width<1 or stream.height<1 or fps<=0 or duration<=0:raise ValueError('The video metadata could not be read.')
+            return dict(width=stream.width,height=stream.height,duration=duration,fps=fps,has_audio=bool(container.streams.audio),frames=int(round(duration*fps)))
     target = Path(o['target'])
     target.parent.mkdir(parents=True, exist_ok=True)
     if action == 'thumbnail':
-        im = video_frame(o['source']) if o['media_type']=='video' else image(o['source'])
-        ImageOps.fit(im, (256,256), method=Image.Resampling.LANCZOS).save(target, 'JPEG', quality=85)
+        if o['media_type']=='video':
+            im=video_frame(o['source'])
+        else:
+            with Image.open(o['source']) as original:
+                # Downsample before orientation and RGB copies, especially for large JPEGs.
+                original.thumbnail((512,512),Image.Resampling.LANCZOS,reducing_gap=3.0)
+                im=ImageOps.exif_transpose(original).convert('RGB')
+        temporary=target.with_suffix('.tmp')
+        try:
+            ImageOps.fit(im,(256,256),method=Image.Resampling.LANCZOS).save(temporary,'JPEG',quality=85)
+            os.replace(temporary,target)  # Never serve a partially written JPEG.
+        finally:temporary.unlink(missing_ok=True)
         return {}
     if action == 'frame':
         im = video_frame(o['source'], o['timestamp'])

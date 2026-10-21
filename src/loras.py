@@ -14,12 +14,13 @@ from downloads import Cancelled, SafeRedirect, checksum, download
 
 def model_catalog():
     from packs import catalog
-    models = {'wan13': {'name': 'NSFW Wan 1.3B · E14'}} | catalog()
+    models = {'wan13': {'name': 'NSFW Wan 1.3B · E14'}} | {k:v for k,v in catalog().items() if v.get('kind')!='addon'}
     guidance = {
         'wan13': 'Use Wan 2.1 T2V 1.3B adapters compatible with E14. Wan 14B adapters do not fit.',
         'wan22': 'Use Wan 2.2 TI2V 5B adapters. The 14B high/low-noise adapters do not fit this 5B model.',
         'ltx2': 'Use standard LTX-2 19B LoRAs compatible with the distilled checkpoint. IC-LoRAs and adapters for other LTX versions need different workflows.',
-        'sdxl': 'Use SDXL adapters. This library is shared by Juggernaut, DreamShaper and Illustrious; each model remembers its own enabled selection. SD 1.5 and FLUX adapters do not fit.',
+        'sdxl': 'Use SDXL adapters. This library is shared by the SDXL image models; each model remembers its own enabled selection. SD 1.5 and FLUX adapters do not fit.',
+        'krea2': 'Use Krea 2 LoRAs compatible with Turbo. Krea 2 RAW style adapters can also be used with Turbo. FLUX Krea, SDXL and other architectures do not fit. Include the author’s trigger words in your prompt.',
         'zimage': 'Use Z-Image / Z-Image-Turbo adapters. Follow the author’s Turbo compatibility and step recommendations.',
         'fluxklein': 'Use FLUX.2 Klein 4B adapters compatible with the distilled model. FLUX.1, FLUX.2 Dev and Klein 9B adapters do not fit.',
         'flux3': 'Use FLUX 3 Image Klein 5.6B adapters explicitly compatible with the distilled checkpoint. FLUX.1 and FLUX.2 adapters do not fit. Base-model training adapters need the author’s distilled-compatibility guidance.',
@@ -37,10 +38,13 @@ def model_catalog():
         'avatar_musetalk': 'Adapters can be stored here. MuseTalk 1.5 uses its dedicated lip-sync network and does not apply extra LoRAs in this workflow.',
     }
     search = {'wan13':'Wan 1.3B', 'wan22':'Wan 2.2 5B', 'ltx2':'LTX-2', 'sdxl':'SDXL',
-              'zimage':'Z-Image', 'fluxklein':'FLUX.2 Klein 4B', 'flux3':'FLUX 3 Image Klein', 'qwenimage':'Qwen-Image', 'qwenedit':'Qwen-Image-Edit-2511', 'qwen21':'Qwen-Image-2.1'}
+              'zimage':'Z-Image', 'krea2':'Krea-2', 'fluxklein':'FLUX.2 Klein 4B', 'flux3':'FLUX 3 Image Klein', 'qwenimage':'Qwen-Image', 'qwenedit':'Qwen-Image-Edit-2511', 'qwen21':'Qwen-Image-2.1'}
     result = {}
     for key, pack in models.items():
-        scope = 'sdxl' if pack.get('family') == 'sdxl' else key
+        scope = pack['family'] if pack.get('family') in ('sdxl','moss_image') else key
+        if scope=='moss_image':
+            guidance[scope]='MOSS Base, SFT and Kromoss share this adapter library. Configure built-in fast and color/depth adapters in MOSS controls. Extra LoRAs must target MOSS-Image; Qwen, FLUX and SDXL adapters do not fit.'
+            search[scope]='MOSS-Image'
         result[key] = dict(id=key, name=pack['name'], scope=scope, guidance=guidance.get(scope, 'Check the adapter’s exact base model.'),
             text_encoder=scope in ('sdxl','wan13'),
             civitai_url='https://civitai.com/models?types=LORA',

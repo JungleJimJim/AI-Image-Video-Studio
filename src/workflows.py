@@ -84,7 +84,9 @@ def validate_image_options(raw):
             raise ValueError('Prompts must be text under 10,000 characters.')
     if not o['prompt'].strip():
         raise ValueError('Describe the image you want first.')
-    for field, lo, hi in (('width',256,1536),('height',256,1536),('steps',1,60)):
+    moss_model=pack.get('family')=='moss_image'
+    limit=4096 if moss_model else 1536
+    for field, lo, hi in (('width',256,limit),('height',256,limit),('steps',1,60)):
         try:
             value = float(o[field])
             if not value.is_integer() or not lo <= value <= hi:
@@ -92,7 +94,9 @@ def validate_image_options(raw):
             o[field] = int(value)
         except (TypeError, ValueError, OverflowError):
             raise ValueError(f'{field.capitalize()} must be a whole number from {lo} to {hi}.') from None
-    if o['width'] % 64 or o['height'] % 64:
+    if moss_model and (o['width']%16 or o['height']%16 or o['width']*o['height']>4194304):
+        raise ValueError('MOSS dimensions must be divisible by 16, with up to 4,194,304 output pixels.')
+    if not moss_model and (o['width'] % 64 or o['height'] % 64):
         raise ValueError('Image dimensions must be divisible by 64.')
     try:
         o['cfg'] = float(o['cfg'])
@@ -109,12 +113,17 @@ def validate_image_options(raw):
     if not isinstance(o['randomize_seed'], bool):
         raise ValueError('Choose whether to prepare a new seed for each job.')
     if o['model']=='flux3':o.update(cfg=1.0,negative='')
+    if o['model']=='krea2':o.update(cfg=1.0,negative='')
     if o['model'] in ('viggle','bfs'):o.update(cfg=1.0,negative='')
     if o['model']=='viggle':o['steps']=6
+    import moss
+    if moss.is_model(o['model']):moss.validate(raw,o)
     return o
 
 
 def image_workflow(o, prefix):
+    import moss
+    if moss.is_model(o['model']):return moss.workflow(o,prefix)
     if o['model'] in ('viggle','bfs'):
         from qwen21 import workflow
         return workflow(o,prefix)
@@ -165,7 +174,7 @@ def native_image_workflow(o, prefix):
     diffusion, encoder, vae = [f['filename'] for f in pack['files']]
     g = {
         '1': node('UNETLoader', unet_name=diffusion, weight_dtype='default'),
-        '2': node('CLIPLoader', clip_name=encoder, type=family if family in ('flux2','flux3') else 'lumina2' if family=='zimage' else 'qwen_image', device='default'),
+        '2': node('CLIPLoader', clip_name=encoder, type=family if family in ('flux2','flux3','krea2') else 'lumina2' if family=='zimage' else 'qwen_image', device='default'),
         '3': node('VAELoader', vae_name=vae),
         '4': node('CLIPTextEncode', text=o['prompt'], clip=['2',0]),
         '5': node('CLIPTextEncode', text=o['negative'], clip=['2',0]),
@@ -175,12 +184,16 @@ def native_image_workflow(o, prefix):
         '9': decode(['8',0], ['3',0]),
         '10': node('SaveImage', images=['9',0], filename_prefix=prefix),
     }
-    if family in ('zimage', 'flux2','flux3'):
+    if family in ('zimage', 'flux2','flux3','krea2'):
         g['5'] = node('ConditioningZeroOut', conditioning=['4',0])
         g['8']['inputs']['cfg'] = 1.0
     if family=='flux3':
         # FLUX 3's native loader supplies its own timestep shift; the FLUX.2 scheduler is different.
         del g['7'];g['8']['inputs']['model']=['1',0]
+    if family=='krea2':
+        # The native Krea loader sets mu=1.15; don't override it with AuraFlow's shift.
+        del g['7'];g['8']['inputs']['model']=['1',0]
+        g['6']=node('EmptyLatentImage',width=o['width'],height=o['height'],batch_size=1)
     if family == 'flux2':
         del g['7']
         g['8'] = node('SamplerCustomAdvanced', noise=['11',0], guider=['12',0], sampler=['13',0], sigmas=['14',0], latent_image=['6',0])
@@ -192,6 +205,8 @@ def native_image_workflow(o, prefix):
 
 
 def edit_workflow(o, prefix):
+    import moss
+    if moss.is_model(o['model']):return moss.workflow(o,prefix)
     if o['model'] in ('viggle','bfs'):
         from qwen21 import workflow
         return workflow(o,prefix)

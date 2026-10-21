@@ -6,6 +6,7 @@ import shutil
 from common import comfy_root, existing_parent, resource, runtime_python
 from downloads import download
 import engine_support
+from model_files import available_ids, file_status, remaining_bytes, reuse_alias, unique_files
 
 
 def catalog():
@@ -26,14 +27,23 @@ def ready(root, key):
 
 def inventory(root):
     result = []
-    for key, pack in catalog().items():
-        remaining = sum(f['size'] for f in pack['files'] if not model_path(root, f).is_file()
-                        or model_path(root, f).stat().st_size != f['size'])
+    packs = catalog()
+    known = manifest_files() + [f for pack in packs.values() for f in pack['files']]
+    available = available_ids(root, known)
+    for key, pack in packs.items():
+        statuses = file_status(root, pack['files'], available=available)
+        remaining = sum(x['remaining'] for x in {x['id']:x for x in statuses}.values())
         result.append({k:v for k,v in pack.items() if k != 'files'} | dict(
             id=key, ready=ready(root, key), size=sum(f['size'] for f in pack['files']), remaining=remaining,
+            download_files=statuses,
             engine_ready=(not pack.get('engine') or engine_support.ready(root,pack['engine']))
                          and (not pack.get('avatar_runtime') or __import__('avatar_runtime').ready(root))))
     return result
+
+
+def manifest_files():
+    from common import manifest
+    return manifest()['models']
 
 
 def install(root, keys, report, cancel, token=''):
@@ -51,16 +61,9 @@ def install(root, keys, report, cancel, token=''):
     if not runtime_python(root).is_file():
         raise ValueError('Install the base runtime in Settings first.')
     # Encoders and VAEs shared by packs are downloaded and counted only once.
-    unique = {}
-    for key in keys:
-        for file in packs[key]['files']:
-            identity = (file['folder'], file['filename'])
-            if identity in unique and unique[identity]['sha256'] != file['sha256']:
-                raise ValueError('Conflicting shared model files in the catalog.')
-            unique[identity] = file
-    files = list(unique.values())
-    remaining = sum(f['size'] for f in files if not model_path(root, f).is_file()
-                    or model_path(root, f).stat().st_size != f['size'])
+    files = unique_files(f for key in keys for f in packs[key]['files'])
+    known = unique_files(manifest_files() + [f for pack in packs.values() for f in pack['files']])
+    remaining = remaining_bytes(root, files, known)
     reserve=3 if any(packs[key].get('avatar_runtime') for key in keys) else 2
     if shutil.disk_usage(existing_parent(root)).free < remaining + reserve * 1024**3:
         raise ValueError(f'Allow {remaining/1024**3 + reserve:.1f} GB free for the selected packs.')
@@ -70,5 +73,6 @@ def install(root, keys, report, cancel, token=''):
         from avatar_runtime import install as install_avatar_runtime
         install_avatar_runtime(root,report,cancel)
     for f in files:
-        download(f, model_path(root, f), report, cancel, token)
+        if not reuse_alias(root, f, known, report, cancel):
+            download(f, model_path(root, f), report, cancel, token)
     report('Selected model packs are installed and verified.', 1)

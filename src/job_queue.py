@@ -7,7 +7,7 @@ import time
 from common import atomic_json, load_json
 
 ACTIVE = ('queued', 'running')
-KINDS = ('image', 'video', 'edit', 'enhance_image', 'enhance_video', 'avatar','faceswap','voice')
+KINDS = ('image', 'video', 'edit', 'enhance_image', 'enhance_video', 'avatar','faceswap','faceswap_video','voice')
 
 
 class JobQueue:
