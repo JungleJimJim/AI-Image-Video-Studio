@@ -49,7 +49,7 @@ class AllModelLoRATests(unittest.TestCase):
     def test_all_model_workflows_apply_both_adapters_before_sampling(self):
         adapters=[{'name':'first.safetensors','strength':.7,'strength_clip':.25},{'name':'second.safetensors','strength':.4,'strength_clip':0}]
         for model in model_catalog():
-            if model in ('qwen21','ref2va','minimax_h3','viggle','bfs') or catalog().get(model,{}).get('kind')=='avatar':continue  # Dedicated workflows are covered separately.
+            if model in ('qwen21','ref2va','singularity','minimax_h3','wamu','viggle','bfs') or catalog().get(model,{}).get('kind')=='avatar':continue  # Dedicated workflows are covered separately.
             opts=dict(model=model,prompt='A greenhouse',seed=42,loras=adapters,width=512,height=320,frames=33)
             if model in ('wan13','wan22','ltx2'):
                 graph=build_workflow(validate_options(opts),'test')

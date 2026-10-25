@@ -19,6 +19,7 @@ def main():
         turbo=arguments[1:]==['minimax_h3']
         qwen=arguments[1:]==['qwen_turbo']
         moss=arguments[1:]==['moss']
+        wamu=arguments[1:]==['wamu']
         os.environ['CUDA_VISIBLE_DEVICES']=''
         sys.argv=['flux3-engine-probe','--cpu','--disable-all-custom-nodes','--offline']
         import comfy.options
@@ -31,8 +32,10 @@ def main():
         import comfy.supported_models
         import torch
         async def relevant_nodes():
-            for filename in (('nodes_moss_image.py','nodes_slg.py','nodes_flux.py') if moss else ('nodes_qwen.py','nodes_custom_sampler.py') if qwen else ('nodes_minimax_h3.py','nodes_video.py','nodes_audio.py','nodes_custom_sampler.py') if ref2va or turbo else ('nodes_flux.py','nodes_edit_model.py')):
+            for filename in (('nodes_wan.py','nodes_video.py','nodes_custom_sampler.py') if wamu else ('nodes_moss_image.py','nodes_slg.py','nodes_flux.py') if moss else ('nodes_qwen.py','nodes_custom_sampler.py') if qwen else ('nodes_minimax_h3.py','nodes_video.py','nodes_audio.py','nodes_custom_sampler.py') if ref2va or turbo else ('nodes_flux.py','nodes_edit_model.py')):
                 assert await nodes.load_custom_node(str(code/'comfy_extras'/filename),module_parent='comfy_extras')
+            if wamu:
+                assert await nodes.load_custom_node(str(code/'custom_nodes/studio_wamu'),module_parent='custom_nodes')
             if ref2va:
                 assert await nodes.load_custom_node(str(code/'custom_nodes/studio_ref2va_vsa'),module_parent='custom_nodes')
             if turbo:
@@ -40,7 +43,9 @@ def main():
             if qwen:
                 assert await nodes.load_custom_node(str(code/'custom_nodes/studio_viggle_turbo'),module_parent='custom_nodes')
         asyncio.run(relevant_nodes())
-        if moss:
+        if wamu:
+            assert {'WAMUShardedLoader','WAMUSplitSigmas','WanImageToVideo','SamplerCustomAdvanced','DisableNoise','CreateVideo','SaveVideo'} <= nodes.NODE_CLASS_MAPPINGS.keys()
+        elif moss:
             assert hasattr(comfy.supported_models,'MOSSImage'), 'MOSS model support is missing'
             assert 'moss_image' in nodes.CLIPLoader.INPUT_TYPES()['required']['type'][0]
             assert {'MOSSImageControl','MOSSImageLayoutPrompt','SkipLayerGuidanceDiTSimple','EmptyFlux2LatentImage'} <= nodes.NODE_CLASS_MAPPINGS.keys()
@@ -62,7 +67,7 @@ def main():
             assert 'flux3' in nodes.CLIPLoader.INPUT_TYPES()['required']['type'][0]
             assert 'ReferenceMultiLatent' in nodes.NODE_CLASS_MAPPINGS
         assert not torch.cuda.is_initialized(), 'The CPU probe unexpectedly initialized CUDA'
-        print(json.dumps(dict(model='moss' if moss else 'qwen_turbo' if qwen else 'minimax_h3' if turbo else 'ref2va' if ref2va else 'flux3',references=True,cpu_only=True,generation_started=False)))
+        print(json.dumps(dict(model='wamu' if wamu else 'moss' if moss else 'qwen_turbo' if qwen else 'minimax_h3' if turbo else 'ref2va' if ref2va else 'flux3',references=True,cpu_only=True,generation_started=False)))
     else:
         sys.argv=[str(code/'main.py'),*arguments]
         from model_reader import install

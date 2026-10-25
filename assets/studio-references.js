@@ -23,7 +23,7 @@ function renderGenerationReferences(){
   $(p+'-reference-images').innerHTML=items.map((item,index)=>`<div class="source-chip">${item.missing?'':`<img src="${mediaURL(item)}" alt="">`}<span><strong>${esc(p==='v'?'<Picture '+(index+2)+'>':key==='flux3'?'<ref_image_'+index+'>':'Image '+(index+1))}</strong><small>${esc(item.name)}${item.missing?' · unavailable':''}</small></span><button type="button" data-generation-remove="${p}:${index}" aria-label="Remove reference ${index+1}">×</button></div>`).join('');
   $(p+'-reference-images').querySelectorAll('[data-generation-remove]').forEach(button=>button.onclick=()=>{generationRefRestore[p]++;generationRefItems(p).splice(Number(button.dataset.generationRemove.split(':')[1]),1);renderGenerationReferences();});
  }
- const label=$('vsource').previousElementSibling;if(label?.tagName==='LABEL')label.innerHTML=$('vmodel').value==='ref2va'?'Reference image 1 '+q('videoReferences'):'Starting image '+q('source');
+ const label=$('vsource').previousElementSibling;if(label?.tagName==='LABEL')label.innerHTML=['ref2va','singularity'].includes($('vmodel').value)?'Reference image 1 '+q('videoReferences'):'Starting image '+q('source');
  // MOSS/SDXL accept a starting image for repainting, not extra reference conditioning.
  $('reference-panel').hidden=!['fluxklein','flux3','qwenedit','viggle'].includes($('emodel').value);
  updateImageImportButtons();

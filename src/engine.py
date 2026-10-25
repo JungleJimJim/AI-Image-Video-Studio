@@ -27,14 +27,15 @@ HISTORY_RESPONSE_GRACE = 120
 
 def validate_options(raw):
     options = {**DEFAULTS, **{k: v for k, v in raw.items() if k in DEFAULTS}}
-    ref2va=options['model']=='ref2va'
+    ref2va=options['model'] in ('ref2va','singularity')
     turbo=options['model']=='minimax_h3'
     minimax=ref2va or turbo
     if turbo and 'steps' not in raw:options['steps']=6
     if options['model'] == 'ltx2' and options['scheduler'] == 'distilled':
         options['scheduler'] = 'simple'  # Accept the saved recipe when reusing a render.
-    if options['model'] not in ('wan13', 'wan22', 'ltx2','ref2va','minimax_h3') or options['mode'] not in ('text', 'image'):
+    if options['model'] not in ('wan13', 'wan22', 'ltx2','ref2va','singularity','minimax_h3','wamu') or options['mode'] not in ('text', 'image'):
         raise ValueError('Choose a supported video model and input mode.')
+    if options['model']=='wamu' and options['mode']!='image':raise ValueError('WAMU Lightning needs a starting image. Choose Image → Video.')
     if ref2va and options['mode']!='image':raise ValueError('Ref2VA needs a reference image. Choose Image → Video and a Library image.')
     if options['mode'] == 'image' and options['model'] == 'wan13':
         raise ValueError('NSFW Wan 1.3B is text-only. Choose Wan 2.2 or LTX-2 for image-to-video.')
@@ -63,7 +64,7 @@ def validate_options(raw):
         raise ValueError("Frame count must be 4n + 1, such as 33, 49 or 81.")
     if options['model'] == 'ltx2' and (options['width'] % 64 or options['height'] % 64 or options['frames'] % 8 != 1):
         raise ValueError('LTX-2 needs dimensions divisible by 64 and 8n + 1 frames (33, 49, 81, 121).')
-    if options['model'] == 'wan22' and (options['width'] % 32 or options['height'] % 32):
+    if options['model'] in ('wan22','wamu') and (options['width'] % 32 or options['height'] % 32):
         raise ValueError('Wan 2.2 needs dimensions divisible by 32.')
     if minimax:
         if options['width']%32 or options['height']%32 or options['width']*options['height']>1344*768:
@@ -74,8 +75,9 @@ def validate_options(raw):
     if options['source_image'] in refs:raise ValueError('The primary image and extra references must be different.')
     if refs or 'video_references' in raw:options['video_references']=refs
     if ref2va:
-        options['vsa']=raw.get('vsa',True)
+        options['vsa']=raw.get('vsa',options['model']!='singularity')
         if not isinstance(options['vsa'],bool):raise ValueError('Choose whether to use VSA acceleration.')
+        if options['model']=='singularity' and options['vsa']:raise ValueError('Singularity uses dense attention; VSA gates have not been validated for this checkpoint.')
         try:
             options['sparsity']=float(raw.get('sparsity',.75))
             if not 0<=options['sparsity']<=.95:raise ValueError()
@@ -124,15 +126,21 @@ def validate_options(raw):
     if options['model'] == 'ltx2':
         options.update(steps=8, cfg=1.0, sampler='euler', scheduler='distilled', shift=1.0, memory='low')
     if ref2va:options.update(steps=4,cfg=1.0,sampler='euler',scheduler='simple',shift=12.0,fps=24,memory='low')
+    if options['model']=='wamu':
+        if not 4<=options['steps']<=8 and 'steps' in raw:raise ValueError('WAMU Lightning uses 4–8 steps.')
+        options.update(steps=options['steps'] if 'steps' in raw else 4,cfg=1.0,shift=3.0,sampler='uni_pc',scheduler='simple',audio=False,memory='low')
     if turbo:options.update(cfg=1.0,sampler='euler',scheduler='simple',shift=12.0,fps=24,memory='low')
     return options
 
 
 def build_workflow(o, prefix):
+    if o.get('model')=='wamu':
+        from wamu import workflow
+        return workflow(o,prefix)
     if o.get('model')=='minimax_h3':
         from minimax_h3 import workflow
         return workflow(o,prefix)
-    if o.get('model')=='ref2va':
+    if o.get('model') in ('ref2va','singularity'):
         from ref2va import workflow
         return workflow(o,prefix)
     if o.get('model') == 'ltx2':
@@ -163,12 +171,13 @@ def build_workflow(o, prefix):
 
 
 def engine_command(root, port, output, memory, model='wan13', attention='pytorch', session=''):
+    if model=='singularity':model='ref2va'
     import attention_support
     attention_support.validate(attention)
     engine_dir=None
     import moss
     moss_model=moss.is_model(model)
-    if moss_model or model in ('flux3','ref2va','minimax_h3','viggle','bfs','krea2'):
+    if moss_model or model in ('flux3','ref2va','minimax_h3','viggle','bfs','krea2','wamu'):
         from engine_support import command as optional_command
         engine_key='moss' if moss_model else 'qwen_turbo' if model in ('viggle','bfs','krea2') else model
         command=optional_command(root,engine_key)
@@ -177,10 +186,11 @@ def engine_command(root, port, output, memory, model='wan13', attention='pytorch
     else:command=[str(runtime_python(root)), '-s', str(comfy_root(root) / 'main.py')]
     command += ['--windows-standalone-build', '--listen', '127.0.0.1', '--port', str(port),
                '--disable-auto-launch', '--disable-all-custom-nodes', '--output-directory', str(output)]
+    if model=='wamu':command+=['--whitelist-custom-nodes','studio_wamu']
     if model=='ref2va':command+=['--whitelist-custom-nodes','studio_ref2va_vsa']
     if model=='minimax_h3':command+=['--whitelist-custom-nodes','studio_minimax_h3_turbo']
     if model in ('viggle','bfs'):command+=['--whitelist-custom-nodes','studio_viggle_turbo']
-    if moss_model or model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21', 'flux3','ref2va','minimax_h3','viggle','bfs','krea2'):
+    if moss_model or model in ('ltx2', 'wan22', 'zimage', 'fluxklein', 'qwenimage', 'qwenedit', 'qwen21', 'flux3','ref2va','minimax_h3','viggle','bfs','krea2','wamu'):
         # Keep the native disk-backed loader. Legacy low-VRAM mode disables it
         # and maps entire checkpoints through safetensors on Windows. This also
         # triggered a native access violation while loading Wan 2.2 in low mode.

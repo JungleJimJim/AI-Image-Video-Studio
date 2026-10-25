@@ -66,6 +66,8 @@ common = [(ROOT / "assets" / "manifest.json", "assets"), (ROOT / "assets" / "7zr
           (ROOT / 'assets' / 'avatar-sources.zip', 'assets'),
           (ROOT / 'assets' / 'avatar-NOTICES.txt', 'assets'),
           (ROOT / 'assets' / 'ref2va', 'assets/ref2va'),
+          (ROOT / 'assets' / 'wamu', 'assets/wamu'),
+          (ROOT / 'assets' / 'studio-wamu.js', 'assets'),
           (ROOT / 'assets' / 'minimax_h3', 'assets/minimax_h3'),
           (ROOT / 'assets' / 'viggle', 'assets/viggle'),
           (ROOT / 'assets' / 'engine_worker.py', 'assets'),

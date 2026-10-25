@@ -903,6 +903,8 @@ def make_handler(studio, shutdown):
                 return self.send_file(resource('studio-canvas.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-references.js':
                 return self.send_file(resource('studio-references.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-wamu.js':
+                return self.send_file(resource('studio-wamu.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-ref2va.js':
                 return self.send_file(resource('studio-ref2va.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-minimax.js':

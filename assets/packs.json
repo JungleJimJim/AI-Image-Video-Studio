@@ -1583,5 +1583,156 @@
     ],
     "license": "Apache-2.0",
     "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+  },
+  "singularity": {
+    "name": "MiniMax H3 \u00b7 Singularity V2 INT8",
+    "kind": "video",
+    "family": "minimax_h3",
+    "engine": "ref2va",
+    "description": "Singularity V2 pruned INT8 reference-to-video with generated audio and four-step Turbo. Reuses MiniMax encoders and VAEs. Dense attention only; experimental on 16 GB GPUs. Start with a short 768 \u00d7 512 clip. Substantial system RAM and paging required.",
+    "source": "https://huggingface.co/WarmBloodAban/Minimax-h3_Singularity",
+    "license": "Checkpoint Apache-2.0 per publisher; shared MiniMax components retain their upstream license; Turbo Apache-2.0",
+    "license_url": "https://huggingface.co/WarmBloodAban/Minimax-h3_Singularity",
+    "recommended_vram_gb": 24,
+    "experimental": true,
+    "defaults": {
+      "width": 768,
+      "height": 512,
+      "frames": 124,
+      "fps": 24,
+      "steps": 4,
+      "cfg": 1,
+      "vsa": false
+    },
+    "files": [
+      {
+        "label": "Singularity V2 \u00b7 pruned INT8",
+        "filename": "Minimax-h3_Singularity_ref2va_v2_pruned_int8.safetensors",
+        "folder": "diffusion_models",
+        "size": 20967647456,
+        "sha256": "d7637c2c35cd30facd9e93778c491f6d82f91c4a441aecbdb4c384a62a5f3d9f",
+        "url": "https://huggingface.co/WarmBloodAban/Minimax-h3_Singularity/resolve/1259cf16cd0b655ba691a32fb46a409142762972/Minimax-h3_Singularity_ref2va_v2_pruned_int8.safetensors"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "filename": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "folder": "text_encoders",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "size": 15687142551,
+        "sha256": "35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_video_vae_fp16.safetensors",
+        "filename": "minimax_h3_video_vae_fp16.safetensors",
+        "folder": "vae",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/vae/minimax_h3_video_vae_fp16.safetensors",
+        "size": 5207808496,
+        "sha256": "7c1f131492e7eddacaac9069a61b81bdd39de5cc96561e677c5eab1cdce5e522"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_audio_vae_fp32.safetensors",
+        "filename": "minimax_h3_audio_vae_fp32.safetensors",
+        "folder": "vae",
+        "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/vae/minimax_h3_audio_vae_fp32.safetensors",
+        "size": 605254808,
+        "sha256": "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48"
+      },
+      {
+        "label": "MiniMax H3 \u00b7 minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "filename": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "folder": "loras/studio/_ref2va_runtime",
+        "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/a29e57d195f80ead07c89f89e55ecf2911e893c5/minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+        "size": 1956193000,
+        "sha256": "5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c"
+      }
+    ],
+    "generation_references": 9
+  },
+  "wamu": {
+    "name": "WAMU \u00b7 Wan 2.2 I2V Lightning 14B",
+    "kind": "video",
+    "family": "wan22_14b",
+    "engine": "wamu",
+    "description": "Two-stage image-to-video Lightning merge. Original BF16 Diffusers high/low-noise shards: about 57 GB plus shared Wan encoder/VAE. Four-step default; silent video. Substantial system RAM, paging and disk required; 16 GB GPU inference is unverified.",
+    "source": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING",
+    "license": "Merge license not specified by publisher; shared Wan components retain their upstream terms.",
+    "license_url": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING",
+    "recommended_vram_gb": 24,
+    "experimental": true,
+    "defaults": {
+      "width": 832,
+      "height": 480,
+      "frames": 49,
+      "fps": 16,
+      "steps": 4,
+      "cfg": 1,
+      "shift": 3
+    },
+    "files": [
+      {
+        "label": "WAMU high noise \u00b7 diffusion_pytorch_model-00001-of-00003.safetensors",
+        "filename": "diffusion_pytorch_model-00001-of-00003.safetensors",
+        "folder": "diffusion_models/studio/wamu/high",
+        "size": 9969048744,
+        "sha256": "d21f81bff42f83fec684abb9ff2802d8c47bda0667c2a79b60363a1d1ef729c7",
+        "url": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING/resolve/4e7c4ac31d35d653c73df44990f3ecd01d5efd40/transformer/diffusion_pytorch_model-00001-of-00003.safetensors"
+      },
+      {
+        "label": "WAMU high noise \u00b7 diffusion_pytorch_model-00002-of-00003.safetensors",
+        "filename": "diffusion_pytorch_model-00002-of-00003.safetensors",
+        "folder": "diffusion_models/studio/wamu/high",
+        "size": 9891560008,
+        "sha256": "77e75efc21af9fddf3110bf88d86e0457e574bfab3cc8c135cd065d1037c20fd",
+        "url": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING/resolve/4e7c4ac31d35d653c73df44990f3ecd01d5efd40/transformer/diffusion_pytorch_model-00002-of-00003.safetensors"
+      },
+      {
+        "label": "WAMU high noise \u00b7 diffusion_pytorch_model-00003-of-00003.safetensors",
+        "filename": "diffusion_pytorch_model-00003-of-00003.safetensors",
+        "folder": "diffusion_models/studio/wamu/high",
+        "size": 8717306128,
+        "sha256": "73c1f30728770a2bac83d2361ef902a846da791040076dd93e36ed8c977cedfa",
+        "url": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING/resolve/4e7c4ac31d35d653c73df44990f3ecd01d5efd40/transformer/diffusion_pytorch_model-00003-of-00003.safetensors"
+      },
+      {
+        "label": "WAMU low noise \u00b7 diffusion_pytorch_model-00001-of-00003.safetensors",
+        "filename": "diffusion_pytorch_model-00001-of-00003.safetensors",
+        "folder": "diffusion_models/studio/wamu/low",
+        "size": 9969048744,
+        "sha256": "ea837e29e028e09f9a5d3f078333951c69ab2923940be2224d5276e288aa77fb",
+        "url": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING/resolve/4e7c4ac31d35d653c73df44990f3ecd01d5efd40/transformer_2/diffusion_pytorch_model-00001-of-00003.safetensors"
+      },
+      {
+        "label": "WAMU low noise \u00b7 diffusion_pytorch_model-00002-of-00003.safetensors",
+        "filename": "diffusion_pytorch_model-00002-of-00003.safetensors",
+        "folder": "diffusion_models/studio/wamu/low",
+        "size": 9891560008,
+        "sha256": "29d0fd386f28dd9489e8b15b9b7f81f2dc45807f30a6b237d817ac837596cfa5",
+        "url": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING/resolve/4e7c4ac31d35d653c73df44990f3ecd01d5efd40/transformer_2/diffusion_pytorch_model-00002-of-00003.safetensors"
+      },
+      {
+        "label": "WAMU low noise \u00b7 diffusion_pytorch_model-00003-of-00003.safetensors",
+        "filename": "diffusion_pytorch_model-00003-of-00003.safetensors",
+        "folder": "diffusion_models/studio/wamu/low",
+        "size": 8717306128,
+        "sha256": "b4647eaba83e21b305ea590cadc3a035d6b0477d8d326975e09e12e19acbcc1c",
+        "url": "https://huggingface.co/TestOrganizationPleaseIgnore/WAMU-Merge-VisualEffects_WAN2.2_I2V_LIGHTNING/resolve/4e7c4ac31d35d653c73df44990f3ecd01d5efd40/transformer_2/diffusion_pytorch_model-00003-of-00003.safetensors"
+      },
+      {
+        "label": "UMT5 text encoder (memory-saving FP8)",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "filename": "umt5_xxl_fp8_e4m3fn_scaled.safetensors",
+        "folder": "text_encoders",
+        "size": 6735906897,
+        "sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
+      },
+      {
+        "label": "Wan 2.1 VAE video decoder",
+        "url": "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/123acf1cc74bccbb9bfff8ac1ee72edc08c2341d/split_files/vae/wan_2.1_vae.safetensors",
+        "filename": "wan_2.1_vae.safetensors",
+        "folder": "vae",
+        "size": 253815318,
+        "sha256": "2fc39d31359a4b0a64f55876d8ff7fa8d780956ae2cb13463b0223e15148976b"
+      }
+    ]
   }
 }

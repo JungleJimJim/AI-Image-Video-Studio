@@ -115,7 +115,7 @@ paint.onpointerdown=e=>{if(!editorSource||$('etool').value!=='mask')return;paint
 $('brush-mode').onclick=()=>{erasing=!erasing;$('brush-mode').textContent=erasing?'Erase':'Paint'};$('clear-mask').onclick=resetMask;$('undo-mask').onclick=()=>{const previous=maskUndo.pop();if(!previous)return;[maskContext,paintContext].forEach((ctx,i)=>{const img=new Image();img.onload=()=>{ctx.globalCompositeOperation='source-over';ctx.clearRect(0,0,paint.width,paint.height);ctx.drawImage(img,0,0)};img.src=previous[i]})};
 function videoModelChanged(reset=true){const ltx=$('vmodel').value==='ltx2',wan13=$('vmodel').value==='wan13';if(wan13)$('vmode').value='text';$('vmode').querySelector('[value="image"]').disabled=wan13;const opts=ltx?[['768x512','Landscape · 768 × 512'],['512x768','Portrait · 512 × 768'],['512x512','Square · 512 × 512'],['512x320','Small · 512 × 320']]:[['832x480','Landscape · 832 × 480'],['480x832','Portrait · 480 × 832'],['512x512','Square · 512 × 512'],['512x288','Small · 512 × 288']];$('vshape').innerHTML=opts.concat([['custom','Custom dimensions']]).map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');if(reset){[$('vwidth').value,$('vheight').value]=opts[0][0].split('x');$('vsteps').value=ltx?8:30;$('vcfg').value=ltx?1:6;$('vfps').value=ltx?24:16;$('vshift').value=8;}$('vsteps').disabled=$('vcfg').disabled=$('vshift').disabled=$('vsampler').disabled=$('vscheduler').disabled=ltx;if(ltx){$('vsteps').value=8;$('vcfg').value=1;$('vsampler').value='euler';$('vscheduler').value='simple';}$('video-audio').hidden=!ltx;$('video-source-controls').hidden=$('vmode').value!=='image';$('vframecount').step=ltx?8:4;updateDuration();updateAvailability();renderLoraSummaries();}
 function syncVideoFrameControls(){
- const model=$('vmodel').value,minimax=['minimax_h3','ref2va'].includes(model),custom=$('vframes').value==='custom',input=$('vframecount');
+ const model=$('vmodel').value,minimax=['minimax_h3','ref2va','singularity'].includes(model),custom=$('vframes').value==='custom',input=$('vframecount');
  input.min=minimax?22:9;input.max=minimax?362:481;input.step=minimax?17:model==='ltx2'?8:4;
  input.disabled=!custom;$('v-custom-frames').hidden=!custom;
  if(!custom&&$('vframes').value)input.value=$('vframes').value;
@@ -123,13 +123,13 @@ function syncVideoFrameControls(){
 function updateDuration(){syncVideoFrameControls();const frames=$('vframes').value==='custom'?Number($('vframecount').value):Number($('vframes').value);$('duration').textContent=`${frames} frames / ${$('vfps').value} fps = ${(frames/Number($('vfps').value)).toFixed(2)} seconds${frames>121?' · Long clips use much more memory.':''}`;}
 function renderVideoInputHint(){
  const model=$('vmodel').value,image=$('vmode').value==='image';
- $('video-input-hint').textContent=model==='wan13'?'Text-only model. Choose Wan 2.2, LTX-2 or MiniMax H3 to use a starting image.':image?(model==='ref2va'?'Uses the selected image as an appearance reference; it does not lock the first frame.':'Uses the selected starting image.'):'Text → Video uses your description only. Switch to Image → Video to use a picture.';
+ $('video-input-hint').textContent=model==='wan13'?'Text-only model. Choose Wan 2.2, LTX-2 or MiniMax H3 to use a starting image.':image?(['ref2va','singularity'].includes(model)?'Uses the selected image as an appearance reference; it does not lock the first frame.':'Uses the selected starting image.'):'Text → Video uses your description only. Switch to Image → Video to use a picture.';
 }
 function videoAspectDimensions(image,model){
  const width=Number(image.width),height=Number(image.height);
  if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)return null;
- const step=model==='ltx2'?64:model==='wan13'?16:32,max=['minimax_h3','ref2va'].includes(model)?1344:1024;
- const budget=model==='minimax_h3'?960*544:['ltx2','ref2va'].includes(model)?768*512:832*480,ratio=width/height;
+ const step=model==='ltx2'?64:model==='wan13'?16:32,max=['minimax_h3','ref2va','singularity'].includes(model)?1344:1024;
+ const budget=model==='minimax_h3'?960*544:['ltx2','ref2va','singularity'].includes(model)?768*512:832*480,ratio=width/height;
  let best=null,score=Infinity;
  for(let w=Math.ceil(144/step)*step;w<=max;w+=step)for(let h=Math.ceil(144/step)*step;h<=max;h+=step){
   if(w*h>budget)continue;

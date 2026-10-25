@@ -1,5 +1,6 @@
 'use strict';
 Object.assign(help,{
+ singularity:['Singularity V2 INT8','Fine-tuned MiniMax H3 Ref2VA checkpoint by WarmBloodAban. Studio supports reference-image to video with optional generated audio, the recommended four-step Turbo adapter and up to nine image references. This is appearance conditioning, not a fixed first frame. The 21 GB checkpoint reuses installed MiniMax encoders and VAEs. Uses dense attention because the experimental VSA gates are unvalidated with this fine-tune. Local inference on 16 GB GPUs has not been verified. Describe the subject, action, setting, camera and visual style; keep prompts focused, preferably under 5,000 characters.'],
  ref2va:['Ref2VA VSA','Creates a new video using the identity/appearance of a reference image. In the prompt, refer to it as <Picture 1>. Uses MiniMax H3 Ref2VA, the four-step Turbo LoRA, and optional experimental VSA acceleration. Audio is generated from the prompt; this is separate from synchronizing an ElevenLabs recording in Talking Avatar. The author specifies a 24 GB NVIDIA GPU. Smaller GPUs are unverified, and the large encoder also needs substantial system RAM/paging capacity.'],
  ref2vaVsa:['VSA acceleration','Uses Kablex’s experimental sparse-attention patch and trained gates. Requires the isolated comfy-kitchen CUDA Sol-Attention backend. Turn it off for the dense four-step Turbo workflow if your GPU/kernel is incompatible; dense attention can use more time and memory.'],
  ref2vaSparsity:['VSA sparsity','Fraction of generated-video attention blocks skipped. The upstream four-step example uses 0.75. Higher values reduce attention work but may reduce quality. Reference-image, text and audio tokens stay dense. Ignored when VSA is disabled.'],
@@ -11,12 +12,14 @@ pages.video[1]='Generate video from text, animate an image, or use a reference c
 $('vmodel').insertAdjacentHTML('beforeend','<option value="ref2va">MiniMax H3 · Ref2VA VSA</option>');
 $('v-ready').insertAdjacentHTML('afterend',`<div id="ref2va-info" class="notice" hidden>Experimental · 24 GB NVIDIA GPU specified. Mention &lt;Picture 1&gt; in your prompt. ${q('ref2va')}</div>`);
 $('video-audio').insertAdjacentHTML('afterend',`<details id="ref2va-controls" hidden><summary>Ref2VA acceleration</summary><label class="check"><input type="checkbox" id="vvsa" checked>Use VSA acceleration ${q('ref2vaVsa')}</label>${f('vsparsity','VSA sparsity',num('vsparsity',.75,0,.95,.05),'ref2vaSparsity')}</details>`);
+$('vmodel').insertAdjacentHTML('beforeend','<option value="singularity">MiniMax H3 · Singularity V2 INT8</option>');
 const ordinaryFrames=$('vframes').innerHTML;
 let wasRef2va=false;
 const beforeRef2vaModel=videoModelChanged;
 videoModelChanged=function(reset=true){
- const selected=$('vmodel').value==='ref2va';
- $('ref2va-info').hidden=$('ref2va-controls').hidden=!selected;
+ const singularity=$('vmodel').value==='singularity',selected=['ref2va','singularity'].includes($('vmodel').value);
+ $('ref2va-info').hidden=!selected;$('ref2va-controls').hidden=!selected||singularity;
+ $('ref2va-info').innerHTML=singularity?'Singularity V2 INT8 · Reference-to-video with four-step Turbo and dense attention. Mention &lt;Picture 1&gt; in your prompt. Experimental on 16 GB GPUs. '+q('singularity'):'Experimental · 24 GB NVIDIA GPU specified. Mention &lt;Picture 1&gt; in your prompt. '+q('ref2va');
  $('vmode').querySelector('[value="text"]').disabled=selected;
  $('vmode').closest('.field').hidden=selected;
  $('vnegative').disabled=selected;$('vfps').disabled=selected;
@@ -29,18 +32,19 @@ videoModelChanged=function(reset=true){
  $('vshape').innerHTML=shapes.map(([value,label])=>`<option value="${value}">${label}</option>`).join('');
  $('vframes').innerHTML='<option value="124">124 frames · 5.17 seconds</option><option value="243">243 frames · 10.13 seconds</option><option value="362">362 frames · 15.08 seconds</option><option value="custom">Custom frame count</option>';
  $('vframecount').min=22;$('vframecount').max=362;$('vframecount').step=17;
- if(reset){$('vwidth').value=768;$('vheight').value=512;$('v-size').hidden=true;$('vframes').value='124';$('v-custom-frames').hidden=true;$('vvsa').checked=true;$('vsparsity').value=.75;}
- else if(!wasRef2va&&state?.settings.options?.model==='ref2va'){
+ if(reset){$('vwidth').value=768;$('vheight').value=512;$('v-size').hidden=true;$('vframes').value='124';$('v-custom-frames').hidden=true;$('vvsa').checked=!singularity;$('vsparsity').value=.75;}
+ else if(!wasRef2va&&state?.settings.options?.model===$('vmodel').value){
   const saved=state.settings.options;
   $('vvsa').checked=saved.vsa!==false;$('vsparsity').value=saved.sparsity??.75;
  }
+ if(singularity)$('vvsa').checked=false;
  $('vmode').value='image';$('vmode').querySelector('[value="image"]').disabled=false;
  $('video-source-controls').hidden=false;$('video-audio').hidden=false;
  for(const [key,value] of Object.entries({steps:4,cfg:1,fps:24,shift:12,sampler:'euler',scheduler:'simple'})){$('v'+key).value=value;$('v'+key).disabled=true;}
  $('vmemory').value='low';$('vsparsity').disabled=!$('vvsa').checked;wasRef2va=true;updateDuration();updateAvailability();renderLoraSummaries();
 };
 const beforeRef2vaOptions=generationOptions;
-generationOptions=function(prefix){const options=beforeRef2vaOptions(prefix);if(prefix==='v'&&options.model==='ref2va'){options.vsa=$('vvsa').checked;options.sparsity=Number($('vsparsity').value);}return options;};
+generationOptions=function(prefix){const options=beforeRef2vaOptions(prefix);if(prefix==='v'&&['ref2va','singularity'].includes(options.model)){options.vsa=options.model==='singularity'?false:$('vvsa').checked;options.sparsity=Number($('vsparsity').value);}return options;};
 $('vvsa').onchange=()=>{$('vsparsity').disabled=!$('vvsa').checked;};
 const beforeRef2vaPacks=renderPacks;
 renderPacks=function(){beforeRef2vaPacks();const card=document.querySelector('[data-uninstall="ref2va"]')?.closest('.pack');if(!card||card.querySelector('.ref2va-links'))return;const hint=[...card.querySelectorAll('small')].find(x=>x.textContent.startsWith('Compatible engine installs automatically'));if(hint)hint.textContent='Compatible engine and Windows attention kernels install automatically (about 75 MB).';const links=document.createElement('p');links.className='ref2va-links';links.innerHTML='<a href="https://github.com/Kablex/ComfyUI-Ref2VA-VSA" target="_blank" rel="noreferrer">Upstream workflow & requirements ↗</a><small>Experimental VSA · 24 GB NVIDIA GPU specified by author. Weights are optional; engine dependencies install separately without replacing existing generators.</small>';card.append(links);};

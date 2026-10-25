@@ -106,7 +106,7 @@ def patch_reader(module, opener=synchronous_file):
 
 def install(profile):
     """Attach after Comfy's normal DLL initialization, in either attention mode."""
-    if os.name != 'nt' or profile not in ('ref2va', 'minimax_h3', 'moss'):
+    if os.name != 'nt' or profile not in ('ref2va', 'minimax_h3', 'moss', 'wamu'):
         return False
     name = 'comfy.memory_management'
     if name in sys.modules:

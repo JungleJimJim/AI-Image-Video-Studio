@@ -17,6 +17,7 @@ def model_catalog():
     models = {'wan13': {'name': 'NSFW Wan 1.3B · E14'}} | {k:v for k,v in catalog().items() if v.get('kind')!='addon'}
     guidance = {
         'wan13': 'Use Wan 2.1 T2V 1.3B adapters compatible with E14. Wan 14B adapters do not fit.',
+        'wamu': 'Use Wan 2.2 I2V 14B LoRAs compatible with this Lightning merge. Each selected adapter is applied to both high- and low-noise stages. Stage-specific LoRAs are not supported here. Wan 5B, 1.3B and MiniMax adapters do not fit.',
         'wan22': 'Use Wan 2.2 TI2V 5B adapters. The 14B high/low-noise adapters do not fit this 5B model.',
         'ltx2': 'Use standard LTX-2 19B LoRAs compatible with the distilled checkpoint. IC-LoRAs and adapters for other LTX versions need different workflows.',
         'sdxl': 'Use SDXL adapters. This library is shared by the SDXL image models; each model remembers its own enabled selection. SD 1.5 and FLUX adapters do not fit.',
@@ -27,6 +28,7 @@ def model_catalog():
         'qwenimage': 'Use Qwen-Image adapters compatible with the 2512 image generator. Check the author’s base model and sampling recommendations.',
         'qwenedit': 'Use Qwen Image Edit adapters compatible with 2511. Control and acceleration adapters may require additional workflow changes.',
         'qwen21': 'Use Qwen-Image 2.1 adapters. The detail-enhancement pass includes Elusarca’s LoRA; extra selected adapters must also match Qwen 2.1. Qwen-Image-2512 and Edit-2511 adapters do not fit.',
+        'singularity': 'Use MiniMax H3 Ref2VA-compatible adapters. The recommended four-step Turbo LoRA is included. Extra adapters apply after Turbo. VSA gates are not validated for Singularity. Wan and FL2VA adapters do not fit.',
         'ref2va': 'Use MiniMax H3 Ref2VA-compatible adapters. The four-step Turbo LoRA and VSA gates install automatically. They are not interchangeable with Wan or FL2VA adapters.',
         'minimax_h3': 'Use MiniMax H3 FL2VA / T2VA-compatible adapters. Larry Turbo v1 and v4 install with the model and are selected in Video. Ref2VA and Wan adapters do not fit. Extra adapters apply after Turbo.',
         'viggle': 'Use Qwen Image 2.1 adapters compatible with Viggle six-step sampling. The built-in Turbo adapter stays at strength 1. Extra adapters may need different sampling recipes.',

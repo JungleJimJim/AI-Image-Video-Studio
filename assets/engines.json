@@ -177,5 +177,41 @@
         "sha256": "fa2da09c8ae68748baed7d38e1d4915c55f3fb098039192c004920d773de6dfc"
       }
     ]
+  },
+  "wamu": {
+    "name": "WAMU Wan 2.2 sharded engine",
+    "version": "0.41.0-wamu",
+    "revision": "c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+    "probe": "wamu",
+    "extension_revision": "studio-wamu-1",
+    "custom_nodes": [
+      {
+        "resource": "wamu",
+        "name": "studio_wamu"
+      }
+    ],
+    "archive": {
+      "label": "Separate Ref2VA engine",
+      "filename": "ComfyUI-ref2va-c9ea36b9.zip",
+      "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/c9ea36b9d2140c89b2ef84f93f428df474e72ba5",
+      "size": 13429471,
+      "sha256": "67144d41d4e852b2ccba806ac205864c4467acb3cdc0687695e30365da04bf7e"
+    },
+    "wheels": [
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+        "size": 280910,
+        "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03"
+      },
+      {
+        "label": "Ref2VA engine dependency \u00b7 comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "filename": "comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "url": "https://files.pythonhosted.org/packages/82/f1/3db1bbb097896f048ecc2bceaf29e5c8cf058f3580194433372ea4f80963/comfy_kitchen-0.2.38-cp312-abi3-win_amd64.whl",
+        "size": 61931193,
+        "sha256": "420364e48f5cad46c20948c668fe3befd8692a5f7baf25e8ddbd434ee3806e9c"
+      }
+    ]
   }
 }

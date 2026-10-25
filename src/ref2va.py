@@ -5,7 +5,7 @@ INTERNAL='studio/_ref2va_runtime/'
 def workflow(o,prefix):
     def node(kind,**inputs):return dict(class_type=kind,inputs=inputs)
     graph={
-        '1':node('UNETLoader',unet_name='minimax_h3_ref2va_pruned_int8_convrot.safetensors',weight_dtype='default'),
+        '1':node('UNETLoader',unet_name=('Minimax-h3_Singularity_ref2va_v2_pruned_int8.safetensors' if o.get('model')=='singularity' else 'minimax_h3_ref2va_pruned_int8_convrot.safetensors'),weight_dtype='default'),
         '2':node('CLIPLoader',clip_name='qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors',type='minimax',device='default'),
         '4':node('VAELoader',vae_name='minimax_h3_video_vae_fp16.safetensors'),
         '5':node('VAELoader',vae_name='minimax_h3_audio_vae_fp32.safetensors'),
