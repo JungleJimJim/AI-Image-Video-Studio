@@ -12,6 +12,8 @@ a Windows desktop app for n00bs that uses the most popular A.I. models to bring 
 | One-click downloading and installation of the top models and easy installation and managing of LoRaS. 
 | Some models can produce NSFW images or videos.
 
+Check [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio) to see some examples and download the program.
+
 Includes these models:
 | Model | Tools | Recommended starting settings |
 | --- | --- | --- |
