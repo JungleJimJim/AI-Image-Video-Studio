@@ -69,6 +69,10 @@ def validate_options(raw):
         if options['width']%32 or options['height']%32 or options['width']*options['height']>1344*768:
             raise ValueError('MiniMax H3 needs dimensions divisible by 32, up to 1344 × 768 pixels of area.')
         if options['frames']%17!=5:raise ValueError('MiniMax H3 needs 17n + 5 frames at 24 fps, such as 124, 243 or 362.')
+    from reference_images import validate_ids
+    refs=validate_ids(raw,'video_references',8 if ref2va else 0)
+    if options['source_image'] in refs:raise ValueError('The primary image and extra references must be different.')
+    if refs or 'video_references' in raw:options['video_references']=refs
     if ref2va:
         options['vsa']=raw.get('vsa',True)
         if not isinstance(options['vsa'],bool):raise ValueError('Choose whether to use VSA acceleration.')

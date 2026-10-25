@@ -23,6 +23,9 @@ def workflow(o,prefix):
         '143':node('LoraLoaderModelOnly',model=['1',0],lora_name=INTERNAL+'minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors',strength_model=1),
         '142':node('MiniMaxH3SigmaShift',model=['143',0],shift_video=12,shift_audio=3),
     }
+    for index,filename in enumerate(o.get('reference_files',[]),1):
+        key=str(50+index);graph[key]=node('LoadImage',image=filename)
+        graph['6']['inputs']['ref_images.ref_image_'+str(index)]=[key,0]
     from loras import apply_to_graph
     graph=apply_to_graph(graph,o,['143',0])
     if o['vsa']:

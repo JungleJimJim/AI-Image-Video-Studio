@@ -90,6 +90,18 @@ class CanvasTests(unittest.TestCase):
                 self.assertTrue(metadata_path(path).is_file());self.assertEqual(result['media_type'],'image')
                 if composite:self.assertEqual(result['canvas_project']['layers'][0]['source_id'],'a'*24)
 
+    def test_source_import_keeps_running_generation_and_queue_untouched(self):
+        with tempfile.TemporaryDirectory() as temp,patch('app.gpu_info',return_value={}):
+            studio=Studio(temp);studio.state.update(busy=True,stage='Rendering',progress=.4,latest_media={'id':'render-result'})
+            before=copy.deepcopy(studio.state);queue=copy.deepcopy(studio.queue.jobs)
+            path=Path(temp)/'Library/Images/source.png';path.write_bytes(b'fixture')
+            info=dict(id='e'*24,path=str(path),name='Source.png',width=512,height=512)
+            with patch('app.import_image',return_value=info) as importer,patch.object(studio.thumbnails,'get'),patch.object(studio.engine,'stop') as stop:
+                result=studio.source_image({'data':'mock'})
+            self.assertEqual(studio.state,before);self.assertEqual(studio.queue.jobs,queue);stop.assert_not_called()
+            self.assertEqual(result['kind'],'imported');self.assertEqual(result['id'],'e'*24)
+            self.assertFalse(importer.call_args.kwargs['preserve_alpha']);self.assertEqual(studio.revision,1)
+
     def test_mismatched_export_does_not_enter_library(self):
         with tempfile.TemporaryDirectory() as temp,patch('app.gpu_info',return_value={}):
             studio=Studio(temp);path=Path(temp)/'rejected.png';path.write_bytes(b'fixture')

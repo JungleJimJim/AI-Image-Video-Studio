@@ -169,7 +169,8 @@
         "sha256": "d64f3a68e1cc4f9f4e29b6e0da38a0204fe9a49f2d4053f0ec1fa1ca02f9c4b5",
         "url": "https://huggingface.co/Comfy-Org/flux2-dev/resolve/ed33133cd56476eac818c0943b6f9419b3e4a3a1/split_files/vae/flux2-vae.safetensors"
       }
-    ]
+    ],
+    "generation_references": 3
   },
   "qwenimage": {
     "name": "Qwen-Image-2512",
@@ -354,7 +355,8 @@
         "sha256": "868fe7b343cc8f3a19dbcfcafbc3d5f888802be3f89bd81b65b3621a066ce8f3",
         "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/vae/flux2-vae.safetensors"
       }
-    ]
+    ],
+    "generation_references": 10
   },
   "avatar_echo": {
     "name": "EchoMimicV3-Flash",
@@ -907,7 +909,8 @@
         "size": 1956193000,
         "sha256": "5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c"
       }
-    ]
+    ],
+    "generation_references": 9
   },
   "minimax_h3": {
     "name": "MiniMax H3 \u00b7 Turbo (Pepe104)",
@@ -1029,7 +1032,8 @@
         "size": 679604800,
         "sha256": "0c98591700346f9777051d4e6fa29aa94519abec0d85b1f1f672a2a3db8c94b3"
       }
-    ]
+    ],
+    "generation_references": 3
   },
   "bfs": {
     "name": "BFS \u00b7 Qwen 2.1 Head Swap v1.1",

@@ -73,6 +73,7 @@ common = [(ROOT / "assets" / "manifest.json", "assets"), (ROOT / "assets" / "7zr
           (ROOT / 'assets' / 'model_reader.py', 'assets'),
           (ROOT / 'assets' / 'studio-moss.js', 'assets'),
           (ROOT / 'assets' / 'studio-canvas.js', 'assets'),
+          (ROOT / 'assets' / 'studio-references.js', 'assets'),
           (ROOT / 'assets' / 'studio-logo.png', 'assets'),
           (ROOT / 'assets' / 'completion-ping.wav', 'assets'),
           *[(desktop_folder/name, 'assets/desktop') for name in

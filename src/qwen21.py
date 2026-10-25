@@ -21,6 +21,7 @@ def workflow(o,prefix):
     if o.get('input_file'):
         g['20']=node('LoadImage',image=o['input_file'])
         g['21']=node('ImageScale',image=['20',0],upscale_method='lanczos',width=o['width'],height=o['height'],crop='disabled')
+        if o.get('reference_generation'):g['21']=node('ImageScaleToTotalPixels',image=['20',0],upscale_method='lanczos',megapixels=1.0,resolution_steps=32)
         g['4']['inputs']['images.image_1']=['21',0]
         for index,file in enumerate(o.get('reference_files',[])):
             loaded,scaled=str(30+index),str(40+index)

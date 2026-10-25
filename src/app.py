@@ -167,6 +167,7 @@ class Studio:
             source = next((x for x in self.images if x['id']==options['source_image']), None)
             if not source or not Path(source['path']).is_file():
                 raise ValueError('Choose an existing image from the image library.')
+        video_refs=[self.find_media(key) for key in options.get('video_references',[])]
         last_source=None
         if options.get('last_image'):
             last_source=next((x for x in self.images if x['id']==options['last_image']),None)
@@ -177,6 +178,7 @@ class Studio:
             if source:
                 options['input_file'] = stage_image(self.root, source)
             if last_source:options['last_input_file']=stage_image(self.root,last_source)
+            if video_refs:options['reference_files']=[stage_image(self.root,x) for x in video_refs]
             with self.lock:
                 self.remember_loras(options['model'],options['loras'])
                 self.settings["options"] = {**options, "seed": raw.get("seed", "")}
@@ -208,9 +210,13 @@ class Studio:
             raise ValueError('That model needs a starting image. Use the Image Editor.')
         if not (install_ready(self.root) or runtime_ready(self.root)) or not pack_ready(self.root, options['model']):
             raise ValueError('Install the base runtime and selected image model in Settings first.')
+        image_refs=[self.find_media(key) for key in options.get('image_references',[])]
         moss_maps=moss.prepare(self,options) if moss.is_model(options['model']) else {}
         def job():
             if moss_maps:moss.stage(self,options,moss_maps)
+            if image_refs:
+                options['input_file']=stage_image(self.root,image_refs[0])
+                options['reference_files']=[stage_image(self.root,x) for x in image_refs[1:]]
             with self.lock:
                 self.remember_loras(options['model'],options['loras'])
                 self.settings['image_options'] = {**options, 'seed': raw.get('seed','')}
@@ -220,6 +226,7 @@ class Studio:
             info = dict(id=secrets.token_hex(12), path=str(file), name=file.name, kind='generated',
                         created=time.strftime('%Y-%m-%d %H:%M'), options=options, seconds=seconds,
                         width=options['width'], height=options['height'])
+            if image_refs:info.update(reference_ids=[x['id'] for x in image_refs],reference_names=[x['name'] for x in image_refs])
             atomic_json(metadata_path(file), {**info, 'workflow':workflow})
             self.thumbnails.get(info,'image')
             with self.lock:
@@ -256,18 +263,24 @@ class Studio:
 
     def canvas_image(self, data, composite=False):
         project=canvas_projects.validate(data.get('project',{})) if composite else None
-        info=import_image(self.root,data,lambda *_:None,preserve_alpha=not composite)
+        return self._library_import(data,'canvas_composite' if composite else 'canvas_source',not composite,project)
+
+    def source_image(self, data):
+        return self._library_import(data,'imported')
+
+    def _library_import(self, data, kind, preserve_alpha=False, project=None):
+        info=import_image(self.root,data,lambda *_:None,preserve_alpha=preserve_alpha)
         if project and (info['width'],info['height'])!=(project['width'],project['height']):
             Path(info['path']).unlink(missing_ok=True)
             raise ValueError('Exported image dimensions do not match the canvas.')
-        info.update(created=time.strftime('%Y-%m-%d %H:%M'),kind='canvas_composite' if composite else 'canvas_source')
+        info.update(created=time.strftime('%Y-%m-%d %H:%M'),kind=kind)
         if project:
             info['options']=dict(tool='canvas',width=project['width'],height=project['height'])
             info['canvas_project']=project
             info['reference_ids']=list(dict.fromkeys(x['source_id'] for x in project['layers'] if x['kind']=='image'))
         atomic_json(metadata_path(info['path']),info)
         self.thumbnails.get(info,'image')
-        # Canvas CPU work does not replace a running generator's progress/result.
+        # CPU imports do not replace a running generator's progress/result.
         with self.lock:
             atomic_json(self.root/'images.json',[*self.images,info]);self.images.append(info);self.revision+=1
         return {**info,'media_type':'image'}
@@ -833,6 +846,7 @@ def make_handler(studio, shutdown):
                         raw=studio.hydrate_queued(item)
                         identifiers=[raw.get('source_image'),raw.get('last_image'),raw.get('source_id'),raw.get('reference_id'),*raw.get('references',[])]
                         identifiers += [raw.get('moss',{}).get('color_id'),raw.get('moss',{}).get('depth_id')]
+                        identifiers += raw.get('image_references',[])+raw.get('video_references',[])
                         sources=[x for x in studio.images+studio.videos if x['id'] in identifiers]
                         return self.send_json({**item,'options':raw,'sources':sources})
                 except (ValueError,OSError) as error:return self.send_json({'error':str(error)},400)
@@ -887,6 +901,8 @@ def make_handler(studio, shutdown):
                 return self.send_file(resource('studio-moss.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-canvas.js':
                 return self.send_file(resource('studio-canvas.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-references.js':
+                return self.send_file(resource('studio-references.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-ref2va.js':
                 return self.send_file(resource('studio-ref2va.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-minimax.js':
@@ -964,7 +980,7 @@ def make_handler(studio, shutdown):
                 return self.send_json({"error": "Invalid origin"}, 403)
             try:
                 length = int(self.headers.get("Content-Length", "0"))
-                limit = 84*1024**2 if self.path=='/api/avatars/audio/import' else 36 * 1024**2 if self.path in ('/api/images/import','/api/images/edit','/api/queue/add','/api/queue/action','/api/canvas/import','/api/canvas/export') else 512*1024 if self.path in ('/api/canvas/project','/api/canvas/draft') else 100000
+                limit = 84*1024**2 if self.path=='/api/avatars/audio/import' else 36 * 1024**2 if self.path in ('/api/images/import','/api/images/import-source','/api/images/edit','/api/queue/add','/api/queue/action','/api/canvas/import','/api/canvas/export') else 512*1024 if self.path in ('/api/canvas/project','/api/canvas/draft') else 100000
                 if not 0 <= length <= limit:
                     raise ValueError("Request is too large.")
                 data = json.loads(self.rfile.read(length) or b"{}")
@@ -997,6 +1013,8 @@ def make_handler(studio, shutdown):
                     return self.send_json({'ok':True,'id':studio.enqueue('image',data,data.get('priority',5))})
                 elif self.path == '/api/images/import':
                     studio.import_image(data)
+                elif self.path == '/api/images/import-source':
+                    return self.send_json({'ok':True,'item':studio.source_image(data)})
                 elif self.path == '/api/images/edit':
                     return self.send_json({'ok':True,'id':studio.enqueue('edit',data,data.get('priority',5))})
                 elif self.path == '/api/queue/add':

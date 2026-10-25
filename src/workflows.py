@@ -118,10 +118,16 @@ def validate_image_options(raw):
     if o['model']=='viggle':o['steps']=6
     import moss
     if moss.is_model(o['model']):moss.validate(raw,o)
+    from reference_images import validate_ids
+    refs=validate_ids(raw,'image_references',pack.get('generation_references',0))
+    if refs or 'image_references' in raw:o['image_references']=refs
     return o
 
 
 def image_workflow(o, prefix):
+    if o.get('image_references'):
+        base={**o,'image_references':[],'reference_generation':True}
+        return edit_workflow(base,prefix)
     import moss
     if moss.is_model(o['model']):return moss.workflow(o,prefix)
     if o['model'] in ('viggle','bfs'):
@@ -215,6 +221,7 @@ def edit_workflow(o, prefix):
     g = image_workflow(o, prefix)
     g['20'] = node('LoadImage', image=o['input_file'])
     g['21'] = node('ImageScale', image=['20',0], upscale_method='lanczos', width=o['width'], height=o['height'], crop='disabled')
+    if o.get('reference_generation'):g['21']=node('ImageScaleToTotalPixels',image=['20',0],upscale_method='lanczos',megapixels=1.0,resolution_steps=1)
     source = ['21',0]
     vae = ['1',2] if family=='sdxl' else ['3',0]
     refs = [source]
@@ -264,6 +271,7 @@ def flux3_edit_workflow(o,prefix):
     g=image_workflow(o,prefix)
     g['20']=node('LoadImage',image=o['input_file'])
     g['21']=node('ImageScale',image=['20',0],upscale_method='lanczos',width=o['width'],height=o['height'],crop='disabled')
+    if o.get('reference_generation'):g['21']=node('ImageScaleToTotalPixels',image=['20',0],upscale_method='lanczos',megapixels=1.0,resolution_steps=1)
     refs={'images.image0':['21',0]}
     for index,filename in enumerate(o.get('reference_files',[])):
         loaded,scaled=str(30+index),str(50+index)
