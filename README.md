@@ -30,7 +30,8 @@ Includes these models:
 
 Need more models? Or don't understand how to use LoRaS? You can download the source code of this program or copy the link and feed it to Chatgpt or Claude and ask to include your github or huggingface link.
 
-Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest). The repository contains the application source and small setup assets; model weights download separately.
+Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest) The repository contains the application source and small setup assets; model weights download separately.
+If you'd like to support this project, you can make a donation through [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio). 
 
 ## Installation
 
