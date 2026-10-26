@@ -96,6 +96,7 @@ class Studio:
             base_status=file_status(self.root,base)
             base_info=dict(id='wan13',name='NSFW Wan 1.3B · E14',kind='video',family='wan13',
                 description='The original text-to-video model. Runtime software remains available if these weights are removed.',
+                vram_tier_gb=8, vram_note='8 GB VRAM is a conditional estimate with Low VRAM mode and CPU offloading. Start at 512 x 320 with 33 frames. Upstream reports 8.19 GB at 480p, so default/larger clips may exceed an 8 GB card; 16 GB recommended.',
                 ready=install_ready(self.root),size=sum(f['size'] for f in base),
                 remaining=sum(x['remaining'] for x in base_status),download_files=base_status)
             return {**self.state, "ready": install_ready(self.root), "gpu": self.gpu,

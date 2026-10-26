@@ -29,7 +29,9 @@
         "size": 6735906897,
         "sha256": "c3355d30191f1f066b26d93fba017ae9809dce6c627dda5f6a66eaa651204f68"
       }
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "ltx2": {
     "name": "LTX-2 \u00b7 Audio & Video",
@@ -53,7 +55,9 @@
         "sha256": "60216ce97c01c3a8753c2dfd0a89fc76e16fbe446d1a32ef8f1b528ac8bae466",
         "url": "https://huggingface.co/Comfy-Org/ltx-2/resolve/ccde4ba417d7900669fd56dd292a883cee11ff37/split_files/text_encoders/gemma_3_12B_it_fp8_scaled.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "juggernaut": {
     "name": "Juggernaut XL v9",
@@ -74,7 +78,9 @@
     "defaults": {
       "steps": 28,
       "cfg": 6
-    }
+    },
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB VRAM estimated; 16 GB gives more headroom. Use Low VRAM mode, one image at a time, and start at 768 px; large images and LoRAs need more memory."
   },
   "dreamshaper": {
     "name": "DreamShaper XL Turbo 2.1",
@@ -95,7 +101,9 @@
     "defaults": {
       "steps": 8,
       "cfg": 2
-    }
+    },
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB VRAM estimated; 16 GB gives more headroom. Use Low VRAM mode, one image at a time, and start at 768 px; large images and LoRAs need more memory."
   },
   "zimage": {
     "name": "Z-Image-Turbo",
@@ -132,7 +140,9 @@
         "sha256": "afc8e28272cd15db3919bacdb6918ce9c1ed22e96cb12c4d5ed0fba823529e38",
         "url": "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/6fc90a3b1b653e935a0d175e260736de25b84df5/split_files/vae/ae.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM recommended for this BF16 pack. Smaller cards may work with offloading, but 8 GB is not verified here."
   },
   "fluxklein": {
     "name": "FLUX.2 Klein 4B",
@@ -170,7 +180,9 @@
         "url": "https://huggingface.co/Comfy-Org/flux2-dev/resolve/ed33133cd56476eac818c0943b6f9419b3e4a3a1/split_files/vae/flux2-vae.safetensors"
       }
     ],
-    "generation_references": 3
+    "generation_references": 3,
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB VRAM estimated for this FP8 pack with Low VRAM mode and CPU offloading; 16 GB recommended for larger images or multiple references. Start at 768 px."
   },
   "qwenimage": {
     "name": "Qwen-Image-2512",
@@ -207,7 +219,9 @@
         "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
         "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/vae/qwen_image_vae.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "illustrious": {
     "name": "Illustrious XL 2.0",
@@ -228,7 +242,9 @@
         "sha256": "c2a1a3eaa13d4c107dc7e00c3fe830cab427aa026362740ea094745b3422a331",
         "url": "https://huggingface.co/OnomaAIResearch/Illustrious-XL-v2.0/resolve/69459c1fe6f46db41ab31e6114f05acc0e06bcaa/Illustrious-XL-v2.0.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB VRAM estimated; 16 GB gives more headroom. Use Low VRAM mode, one image at a time, and start at 768 px; large images and LoRAs need more memory."
   },
   "qwenedit": {
     "name": "Qwen Image Edit 2511",
@@ -265,7 +281,9 @@
         "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
         "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/vae/qwen_image_vae.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "qwen21": {
     "name": "Qwen-Image 2.1 \u00b7 Detail Enhancer",
@@ -312,7 +330,9 @@
         "sha256": "c1298f51eb090473f924314475952710a2f0322f1df65c0290f3e14997244f96"
       }
     ],
-    "license_url": "https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/Qwen/Qwen-Image-2.1/blob/main/LICENSE",
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "flux3": {
     "name": "FLUX 3 Image Klein \u00b7 INT8",
@@ -356,7 +376,9 @@
         "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/vae/flux2-vae.safetensors"
       }
     ],
-    "generation_references": 10
+    "generation_references": 10,
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "avatar_echo": {
     "name": "EchoMimicV3-Flash",
@@ -484,7 +506,9 @@
     ],
     "input_types": [
       "image"
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "avatar_soulx": {
     "name": "SoulX-FlashHead \u00b7 Lite & Pro",
@@ -612,7 +636,9 @@
     ],
     "input_types": [
       "image"
-    ]
+    ],
+    "vram_tier_gb": null,
+    "vram_note": "VRAM requirement varies between Lite and Pro; no verified minimum for this Studio pack. Upstream speed measurements use 24 GB RTX 4090 GPUs. 8 GB / 16 GB fit is not established."
   },
   "avatar_longcat": {
     "name": "LongCat-Video-Avatar 1.5 \u00b7 Q4",
@@ -669,7 +695,9 @@
     "input_types": [
       "image"
     ],
-    "checkpoint_source": "https://huggingface.co/vantagewithai/LongCat-Video-Avatar-1.5-GGUF-ComfyUI"
+    "checkpoint_source": "https://huggingface.co/vantagewithai/LongCat-Video-Avatar-1.5-GGUF-ComfyUI",
+    "vram_tier_gb": null,
+    "vram_note": "16 GB VRAM is experimental and unverified for this packaged workflow; no reliable minimum established. Substantial system RAM/paging required. Not listed as an 8 GB or 16 GB fit."
   },
   "avatar_infinite": {
     "name": "InfiniteTalk \u00b7 Q4",
@@ -734,7 +762,9 @@
     "input_types": [
       "image",
       "video"
-    ]
+    ],
+    "vram_tier_gb": null,
+    "vram_note": "16 GB VRAM is experimental and unverified for this packaged workflow; no reliable minimum established. Substantial system RAM/paging required. Not listed as an 8 GB or 16 GB fit."
   },
   "avatar_musetalk": {
     "name": "MuseTalk 1.5",
@@ -839,7 +869,9 @@
     "input_types": [
       "image",
       "video"
-    ]
+    ],
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB VRAM estimated for FP16 lip synchronization. Longer source videos also need more system RAM. This Studio workflow has not been benchmarked on an 8 GB card."
   },
   "ref2va": {
     "name": "MiniMax H3 \u00b7 Ref2VA VSA",
@@ -910,7 +942,9 @@
         "sha256": "5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c"
       }
     ],
-    "generation_references": 9
+    "generation_references": 9,
+    "vram_tier_gb": null,
+    "vram_note": "24 GB NVIDIA VRAM required by the author; smaller cards are unverified. Substantial system RAM is also required."
   },
   "minimax_h3": {
     "name": "MiniMax H3 \u00b7 Turbo (Pepe104)",
@@ -980,7 +1014,9 @@
         "size": 779849816,
         "sha256": "5f3a626cd72c93a8b9318d6760c510bc5092d2ab13aaba1f932c5bab07a416d3"
       }
-    ]
+    ],
+    "vram_tier_gb": null,
+    "vram_note": "16 GB VRAM is experimental and unverified for this packaged workflow; no reliable minimum established. Substantial system RAM/paging required. Not listed as an 8 GB or 16 GB fit."
   },
   "viggle": {
     "name": "Qwen Image 2.1 \u00b7 Viggle Turbo v0.3",
@@ -1033,7 +1069,9 @@
         "sha256": "0c98591700346f9777051d4e6fa29aa94519abec0d85b1f1f672a2a3db8c94b3"
       }
     ],
-    "generation_references": 3
+    "generation_references": 3,
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "bfs": {
     "name": "BFS \u00b7 Qwen 2.1 Head Swap v1.1",
@@ -1085,7 +1123,9 @@
         "size": 260096144,
         "sha256": "d1d748d5601077f3b6d05766f6823510e901970d916afa404a97e85dc92fa88e"
       }
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "realvisxl": {
     "name": "RealVisXL v5",
@@ -1109,7 +1149,9 @@
         "sha256": "912c9dc74f5855175c31a7993f863a043ac8dcc31732b324cd05d75cd7e16844",
         "url": "https://huggingface.co/NSFW-API/RealVisXL/resolve/5b6b1ce928ac1af84a9d68737d5c22c693f8aad6/realvisXL_v5.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB VRAM estimated; 16 GB gives more headroom. Use Low VRAM mode, one image at a time, and start at 768 px; large images and LoRAs need more memory."
   },
   "cyberrealistic": {
     "name": "CyberRealistic XL v1.1",
@@ -1133,7 +1175,9 @@
         "sha256": "e9337ae032d6a2d411702fc6acad76bfbdddeb1a697a62bfdb83881e949532c8",
         "url": "https://huggingface.co/NSFW-API/CyberRealism/resolve/21530760b1ff267c8074b6a40452b25d1b4d3988/cyberrealisticXL_v11VAE.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB VRAM estimated; 16 GB gives more headroom. Use Low VRAM mode, one image at a time, and start at 768 px; large images and LoRAs need more memory."
   },
   "krea2": {
     "name": "Krea 2 Turbo",
@@ -1175,7 +1219,9 @@
         "sha256": "a70580f0213e67967ee9c95f05bb400e8fb08307e017a924bf3441223e023d1f",
         "url": "https://huggingface.co/Comfy-Org/Qwen-Image_ComfyUI/resolve/1f12b17be14c89b026c51a91d67c32f84bb047bc/split_files/vae/qwen_image_vae.safetensors"
       }
-    ]
+    ],
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "moss_sft": {
     "name": "MOSS-Image SFT \u00b7 INT8",
@@ -1223,7 +1269,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "moss_sft_bf16": {
     "name": "MOSS-Image SFT \u00b7 BF16",
@@ -1271,7 +1319,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "Higher-memory BF16 option; no verified VRAM minimum for this pack. 16 GB requires heavy CPU offloading and is unverified. Prefer the INT8 variant on a 16 GB GPU."
   },
   "moss_base": {
     "name": "MOSS-Image Base \u00b7 INT8",
@@ -1319,7 +1369,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "moss_base_bf16": {
     "name": "MOSS-Image Base \u00b7 BF16",
@@ -1367,7 +1419,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "Higher-memory BF16 option; no verified VRAM minimum for this pack. 16 GB requires heavy CPU offloading and is unverified. Prefer the INT8 variant on a 16 GB GPU."
   },
   "kromoss": {
     "name": "Kromoss \u00b7 INT8",
@@ -1415,7 +1469,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": 16,
+    "vram_note": "16 GB VRAM suggested with CPU/RAM offloading. 8 GB support is not established for this packaged workflow."
   },
   "kromoss_bf16": {
     "name": "Kromoss \u00b7 BF16",
@@ -1463,7 +1519,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "Higher-memory BF16 option; no verified VRAM minimum for this pack. 16 GB requires heavy CPU offloading and is unverified. Prefer the INT8 variant on a 16 GB GPU."
   },
   "moss_encoder_w4a8": {
     "name": "MOSS text encoder \u00b7 W4A8",
@@ -1482,7 +1540,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "No independent VRAM minimum: this component runs with a MOSS base model. Its precision, output size and offloading determine total memory use; see the selected base model."
   },
   "moss_encoder_int8": {
     "name": "MOSS text encoder \u00b7 INT8",
@@ -1501,7 +1561,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "No independent VRAM minimum: this component runs with a MOSS base model. Its precision, output size and offloading determine total memory use; see the selected base model."
   },
   "moss_encoder_bf16": {
     "name": "MOSS text encoder \u00b7 BF16",
@@ -1520,7 +1582,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "No independent VRAM minimum: this component runs with a MOSS base model. Its precision, output size and offloading determine total memory use; see the selected base model."
   },
   "moss_vae_full": {
     "name": "MOSS full VAE",
@@ -1539,7 +1603,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "No independent VRAM minimum: this component runs with a MOSS base model. Its precision, output size and offloading determine total memory use; see the selected base model."
   },
   "moss_tools": {
     "name": "MOSS fast LoRAs & color/depth control",
@@ -1582,7 +1648,9 @@
       }
     ],
     "license": "Apache-2.0",
-    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE"
+    "license_url": "https://huggingface.co/OpenMOSS-Team/MOSS-Image-SFT/blob/main/LICENSE",
+    "vram_tier_gb": null,
+    "vram_note": "No independent VRAM minimum: this component runs with a MOSS base model. Its precision, output size and offloading determine total memory use; see the selected base model."
   },
   "singularity": {
     "name": "MiniMax H3 \u00b7 Singularity V2 INT8",
@@ -1646,7 +1714,9 @@
         "sha256": "5b9ab5ade15d0775676d01a907268a69a1468dc6033b3b0d3ded5502f3ebb84c"
       }
     ],
-    "generation_references": 9
+    "generation_references": 9,
+    "vram_tier_gb": null,
+    "vram_note": "16 GB VRAM is experimental and unverified for this packaged workflow; no reliable minimum established. Substantial system RAM/paging required. Not listed as an 8 GB or 16 GB fit."
   },
   "wamu": {
     "name": "WAMU \u00b7 Wan 2.2 I2V Lightning 14B",
@@ -1733,6 +1803,8 @@
         "size": 253815318,
         "sha256": "2fc39d31359a4b0a64f55876d8ff7fa8d780956ae2cb13463b0223e15148976b"
       }
-    ]
+    ],
+    "vram_tier_gb": null,
+    "vram_note": "16 GB VRAM is experimental and unverified for this packaged workflow; no reliable minimum established. Substantial system RAM/paging required. Not listed as an 8 GB or 16 GB fit."
   }
 }
