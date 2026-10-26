@@ -14,21 +14,7 @@ a Windows desktop app for n00bs that uses the most popular A.I. models to bring 
 
 Check [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio) to see some examples and download the program.
 
-Includes these models:
-| Model | Tools | Recommended starting settings |
-| --- | --- | --- |
-| Z-Image-Turbo | Images | 8 steps, CFG 1 |
-| FLUX.2 Klein 4B distilled FP8 | Images, instruction editing, multiple references | 4 steps, CFG 1 |
-| FLUX 3 Image Klein distilled INT8 | Images, instruction editing, up to ten reference images | 16 steps, CFG 1 |
-| Qwen-Image-2512 FP8 | Images and typography | 40 steps, CFG 4 |
-| Juggernaut XL v9 | Realistic images, redraw, masked editing | 28 steps, CFG 6 |
-| Illustrious XL 2.0 | Illustration/anime, redraw, masked editing | 28 steps, CFG 5 |
-| DreamShaper XL Turbo 2.1 | Fast images, redraw, masked editing | 8 steps, CFG 2 |
-| Qwen Image Edit 2511 FP8 mixed | Instruction editing, multiple references | 40 steps, CFG 3 |
-| NSFW Wan 1.3B E14 | Text to Video | 30 steps, CFG 6 |
-| Wan 2.2 TI2V 5B | Text or Image to Video | 30 steps, CFG 6 |
-| LTX-2 19B distilled FP8 | Text or Image to Video with optional audio | Fixed 8-step recipe, CFG 1 |
-| Qwen-Image 2.1 + Elusarca Detail Enhancer | Optional image enhancement | 25 steps, CFG 1, detail strength 1 |
+Includes image generation and editing models, text/image-to-video models, talking avatars and lip sync. See the [complete model list and VRAM guidance](#models) below, including SDXL, FLUX, Qwen, MOSS/Kromoss, Wan, LTX-2 and MiniMax H3.
 
 Need more models? Or don't understand how to use LoRaS? You can download the source code of this program or copy the link and feed it to Chatgpt or Claude and ask to include your github or huggingface link.
 
@@ -45,22 +31,65 @@ The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan
 
 ## Models
 
-| Model | Tools | Recommended starting settings |
-| --- | --- | --- |
-| Z-Image-Turbo | Images | 8 steps, CFG 1 |
-| FLUX.2 Klein 4B distilled FP8 | Images, instruction editing, multiple references | 4 steps, CFG 1 |
-| FLUX 3 Image Klein distilled INT8 | Images, instruction editing, up to ten reference images | 16 steps, CFG 1 |
-| Qwen-Image-2512 FP8 | Images and typography | 40 steps, CFG 4 |
-| Juggernaut XL v9 | Realistic images, redraw, masked editing | 28 steps, CFG 6 |
-| Illustrious XL 2.0 | Illustration/anime, redraw, masked editing | 28 steps, CFG 5 |
-| DreamShaper XL Turbo 2.1 | Fast images, redraw, masked editing | 8 steps, CFG 2 |
-| Qwen Image Edit 2511 FP8 mixed | Instruction editing, multiple references | 40 steps, CFG 3 |
-| NSFW Wan 1.3B E14 | Text to Video | 30 steps, CFG 6 |
-| Wan 2.2 TI2V 5B | Text or Image to Video | 30 steps, CFG 6 |
-| LTX-2 19B distilled FP8 | Text or Image to Video with optional audio | Fixed 8-step recipe, CFG 1 |
-| Qwen-Image 2.1 + Elusarca Detail Enhancer | Optional image enhancement | 25 steps, CFG 1, detail strength 1 |
+The current app offers **32 model packs** (including the original Wan 1.3B), plus optional components. Model weights download separately. Choose **Models → All models / 8 GB VRAM / 16 GB VRAM** to filter the catalog; the 16 GB view includes the lighter 8 GB candidates.
 
-The five requested image families are Z-Image, FLUX.2 Klein, Qwen-Image, Juggernaut XL and Illustrious XL. Qwen Image Edit is an additional dedicated editing model. Installing the new families and editor requires about **80 GB of unique downloads**, plus Juggernaut if missing. Models has per-pack installation state and storage estimates.
+**VRAM figures are estimates or recommendations for the exact packs used by Studio, not guaranteed minimums.** No Studio generation benchmark on an 8 GB GPU has been run. Use Low VRAM mode and start with small outputs; CPU offloading is slower and needs system RAM. Resolution, video length, reference images and LoRAs affect memory use. Download size is separate from VRAM. Unverified fits remain under All models. [VRAM sources and validation](docs/RELEASE-1.14.3.md).
+
+### Image generation and editing
+
+| Model | Tools | Starting settings | VRAM guidance |
+| --- | --- | --- | --- |
+| Z-Image-Turbo | Text to image | 8 steps, CFG 1 | 16 GB recommended (BF16) |
+| FLUX.2 Klein 4B | Images and instruction editing; up to three references | 4 steps, CFG 1 | 8 GB estimated (FP8/offloading); 16 GB for larger images/references |
+| FLUX 3 Image Klein · INT8 | Images and instruction editing; up to ten references | 16 steps, CFG 1 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| Qwen-Image-2512 | Images and typography | 40 steps, CFG 4 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| Juggernaut XL v9 | Images, redraw and masked editing | 28 steps, CFG 6 | 8 GB estimated; Low VRAM mode, one image at a time |
+| Illustrious XL 2.0 | Images, redraw and masked editing | 28 steps, CFG 5 | 8 GB estimated; Low VRAM mode, one image at a time |
+| DreamShaper XL Turbo 2.1 | Images, redraw and masked editing | 8 steps, CFG 2 | 8 GB estimated; Low VRAM mode, one image at a time |
+| RealVisXL v5 | Images, redraw and masked editing | 50 steps, CFG 6 | 8 GB estimated; Low VRAM mode, one image at a time |
+| CyberRealistic XL v1.1 | Images, redraw and masked editing | 30 steps, CFG 6 | 8 GB estimated; Low VRAM mode, one image at a time |
+| Krea 2 Turbo | Eight-step text to image | 8 steps, CFG 1 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| Qwen Image Edit 2511 | Instruction editing; up to three images | 40 steps, CFG 3 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| Qwen Image 2.1 · Viggle Turbo v0.3 | Six-step image generation/editing; up to three images | 6 steps, CFG 1 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| BFS · Qwen 2.1 Head Swap v1.1 | Image face/head replacement | 40 steps, CFG 1 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| Qwen-Image 2.1 · Detail Enhancer | Optional image detail enhancement | 25 steps, CFG 1 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| MOSS-Image SFT · INT8 | Text, tags, spatial layouts, masked editing and optional color/depth control | 50 steps, CFG 3 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| MOSS-Image SFT · BF16 | Text, tags, spatial layouts, masked editing and optional color/depth control | 50 steps, CFG 3 | Minimum unverified; 16 GB needs heavy offloading; prefer INT8 |
+| MOSS-Image Base · INT8 | Text, tags, spatial layouts, masked editing and optional color/depth control | 50 steps, CFG 3 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| MOSS-Image Base · BF16 | Text, tags, spatial layouts, masked editing and optional color/depth control | 50 steps, CFG 3 | Minimum unverified; 16 GB needs heavy offloading; prefer INT8 |
+| Kromoss · INT8 | Text, tags, spatial layouts, masked editing and optional color/depth control | 50 steps, CFG 3 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| Kromoss · BF16 | Text, tags, spatial layouts, masked editing and optional color/depth control | 50 steps, CFG 3 | Minimum unverified; 16 GB needs heavy offloading; prefer INT8 |
+
+### Video generation
+
+| Model | Tools | Starting settings | VRAM guidance |
+| --- | --- | --- | --- |
+| NSFW Wan 1.3B · E14 | Text to video | 30 steps, CFG 6 | 8 GB conditional; Low VRAM mode, small/short clips. 16 GB recommended |
+| Wan 2.2 · Image to Video | Text or image to video | 30 steps, CFG 6 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| LTX-2 · Audio & Video | Text or image to video; optional audio | Fixed 8-step recipe, CFG 1 | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| MiniMax H3 · Turbo (Pepe104) | Text / first-and-last-image to video with audio | 6 steps, CFG 1 | Minimum unverified; 16 GB experimental; substantial RAM/paging |
+| MiniMax H3 · Ref2VA VSA | Reference image to video; optional audio and experimental VSA | 4 steps, CFG 1 | 24 GB author requirement; smaller cards unverified |
+| MiniMax H3 · Singularity V2 INT8 | Reference image to video with audio; dense attention | 4 steps, CFG 1 | Minimum unverified; 16 GB experimental; substantial RAM/paging |
+| WAMU · Wan 2.2 I2V Lightning 14B | Two-stage image-to-video Lightning merge; silent video | 4 steps, CFG 1 | Minimum unverified; 16 GB experimental; substantial RAM/paging |
+
+### Talking avatars and lip sync
+
+| Model | Tools | Starting settings | VRAM guidance |
+| --- | --- | --- | --- |
+| EchoMimicV3-Flash | Portrait + recording to talking avatar | 8 steps | 16 GB suggested with CPU/RAM offloading; 8 GB unverified |
+| SoulX-FlashHead · Lite & Pro | Portrait + recording; Lite and Pro variants | Use the model defaults | Minimum unverified; Lite/Pro differ; upstream speed tests use 24 GB GPUs |
+| LongCat-Video-Avatar 1.5 · Q4 | Portrait + recording; Q4 base and distillation adapter | Use the model defaults | Minimum unverified; 16 GB experimental; substantial RAM/paging |
+| InfiniteTalk · Q4 | Portrait animation or video dubbing with a recording | Use the model defaults | Minimum unverified; 16 GB experimental; substantial RAM/paging |
+| MuseTalk 1.5 | Portrait/video lip sync with a recording | Use the model defaults | 8 GB estimated (FP16); longer videos also need system RAM |
+
+### Optional components and separate services
+
+- **MOSS text encoders:** W4A8, INT8 and BF16; **MOSS full VAE**; and **MOSS fast LoRAs & color/depth control**. These five component packs work with a MOSS/Kromoss base model and have no independent VRAM minimum. The selected precision and workflow determine memory use.
+- **FaceFusion 3.9.1:** separate video faceswap tool; install/repair it from Faceswap or Models. Its memory use depends on the selected processors and video settings.
+- **NVIDIA RTX video enhancement:** optional RTX VSR processing; requires a compatible NVIDIA RTX GPU and driver.
+- **Fish Speech S2-Pro / Drama 3:** Voice connects to a separately configured local Linux/WSL server; Studio does not install these as native Windows model packs. S2-Pro supports CPU and recommends 24 GB GPU memory. Drama 3 FP8 requires 48 GB; its INT4 weights alone are about 20.8 GB and do not fit a 16 GB GPU.
+
+Models shows each pack's installation state and download/storage estimate. Shared encoders and VAEs download only once. Model licenses and access requirements vary; review the terms linked in the app before installing.
 
 Windows 10/11 x64, an NVIDIA RTX GPU and a compatible current NVIDIA driver are required for generation. Large Qwen/LTX models use disk-backed loading and RAM offloading on 16 GB cards; sufficient Windows committed memory is still required. Workflow validation does not establish performance or guarantee that every resolution/duration fits your hardware. The app does not change Windows paging settings.
 
