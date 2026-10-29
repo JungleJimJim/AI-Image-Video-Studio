@@ -191,7 +191,7 @@ $('main-library').innerHTML=libraryControls(false);$('picker-library').innerHTML
 function thumbnails(container,items){
  if(container.thumbnailRun)clearTimeout(container.thumbnailRun.timer);
  const run={pending:new Map(),timer:null},records=new Map(items.map(x=>[x.id,x]));container.thumbnailRun=run;
- const active=()=>container.thumbnailRun===run&&container.isConnected&&(container.id==='lib-grid'?current==='library':container.id==='cv-library'?current==='canvas':$('library-dialog').open);
+ const active=()=>container.thumbnailRun===run&&container.isConnected&&(container.id==='workspace-recent'?!document.hidden&&!document.body.classList.contains('filmstrip-hidden')&&!document.body.classList.contains('workspace-focus'):container.id==='lib-grid'?current==='library':container.id==='cv-library'?current==='canvas':$('library-dialog').open);
  function schedule(delay=200){if(!run.timer&&run.pending.size&&active())run.timer=setTimeout(refresh,delay);}
  function display(img,item){
   if(item.thumbnail?.status==='unavailable'){img.classList.remove('thumb-pending');img.alt='Preview unavailable';return;}

@@ -255,6 +255,17 @@ class APITests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.studio.save_settings({"output": self.tmp.name})
 
+    def test_workspace_assets_are_served(self):
+        assets = Path(__file__).resolve().parents[1] / "assets"
+        for name, kind in (("studio-workspace.css", "text/css"), ("studio-workspace.js", "text/javascript")):
+            with urllib.request.urlopen(self.base + "/" + name) as response:
+                self.assertEqual(response.headers.get_content_type(), kind)
+                self.assertEqual(response.read(), (assets / name).read_bytes())
+        with urllib.request.urlopen(self.base + "/?session=" + self.studio.token) as response:
+            html = response.read().decode("utf-8")
+        self.assertIn('/studio-workspace.css', html)
+        self.assertIn('/studio-workspace.js', html)
+
     def test_all_options_have_help(self):
         html = (Path(__file__).resolve().parents[1] / "assets/index.html").read_text(encoding="utf-8")
         from html.parser import HTMLParser

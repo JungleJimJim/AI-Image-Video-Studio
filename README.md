@@ -21,6 +21,10 @@ Need more models? Or don't understand how to use LoRaS? You can download the sou
 Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest) The repository contains the application source and small setup assets; model weights download separately.
 If you'd like to support this project, you can make a donation through [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio). 
 
+## Canvas workspace in 1.15.0
+
+A Photoshop-inspired charcoal workspace puts the preview in the center and generation/edit properties on the right. The left tool rail and top tabs keep all existing tools available. A bottom **Recent media** strip opens Library items and filters images/videos. **Focus** expands the preview, **Properties width** adjusts the dock on larger windows, and **Reset workspace** restores the layout. Width and filmstrip preferences save locally. Canvas retains editable layers, project saving and export.
+
 ## Installation
 
 Easiest way: Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest).

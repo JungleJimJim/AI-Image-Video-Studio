@@ -914,6 +914,10 @@ def make_handler(studio, shutdown):
                 return self.send_file(resource('studio-qwen.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-voice.js':
                 return self.send_file(resource('studio-voice.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-workspace.js':
+                return self.send_file(resource('studio-workspace.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-workspace.css':
+                return self.send_file(resource('studio-workspace.css'), 'text/css; charset=utf-8')
             if url.path == '/studio.css':
                 return self.send_file(resource('studio.css'), 'text/css; charset=utf-8')
             if url.path == '/studio-logo.png':

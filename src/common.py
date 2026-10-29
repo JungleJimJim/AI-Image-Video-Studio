@@ -10,7 +10,7 @@ import time
 
 APP_NAME = "A.I. Image & Video Studio"
 APP_EXE = 'AIImageVideoStudio.exe'
-VERSION = "1.14.3"
+VERSION = "1.15.0"
 INSTALL_DIR_NAME = "AI Image & Video Studio"
 UNINSTALL_KEY = r'Software\Microsoft\Windows\CurrentVersion\Uninstall\WanVideoStudio'
 CREATE_NO_WINDOW = getattr(subprocess, "CREATE_NO_WINDOW", 0)
