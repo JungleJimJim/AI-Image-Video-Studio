@@ -11,7 +11,7 @@ for(const id of ['image-viewer','image-viewer-space','image-viewer-picture','ima
   showModal(){this.open=true;},close(){this.open=false;this.onclose?.();}};
 }
 nodes['image-viewer-picture'].naturalWidth=1000;nodes['image-viewer-picture'].naturalHeight=800;
-const context={$:id=>nodes[id],window:{chrome:{webview:{postMessage:m=>messages.push(m)}}},
+const context={mediaTitle:item=>item.name,$:id=>nodes[id],window:{chrome:{webview:{postMessage:m=>messages.push(m)}}},
  document:{addEventListener:(name,callback)=>{handlers[name]=callback;},fullscreenElement:null},
  ResizeObserver:class{constructor(callback){}observe(){}},notify:()=>{},mediaURL:()=>'/image/fixture'};
 vm.createContext(context);vm.runInContext(code,context);

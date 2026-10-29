@@ -30,6 +30,8 @@ from job_queue import JobQueue, ACTIVE
 import enhancements
 import avatars
 import voices
+import local_voices
+import prompt_enhancer
 from updates import UpdateManager
 from model_removal import removal_plan, uninstall as uninstall_model
 from media_storage import media_folder, migrate_library, metadata_path, migrate_metadata
@@ -38,12 +40,14 @@ import attention_support
 import video_faceswap
 import moss
 import canvas_projects
+import library_actions
 
 
 class Studio:
     def __init__(self, root):
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
+        trash_warnings = library_actions.recover(self.root)
         self.token = secrets.token_urlsafe(32)
         self.settings = migrate_library(self.root, load_json(self.root / "settings.json",
             {"output": str(self.root / "Library"), "options": DEFAULTS.copy()}))
@@ -59,7 +63,7 @@ class Studio:
                 self.settings['model_loras'].setdefault(saved['model'],saved['loras'])
         self.gpu = gpu_info()
         self.state = {"busy": False, "stage": "Ready" if install_ready(self.root) else "Setup needed", "progress": 0, "error": "", "result": None}
-        self.events = []
+        self.events = list(trash_warnings)
         self.lock = threading.RLock()
         self.cancel = threading.Event()
         self.engine = Engine(self.root, self.report)
@@ -74,8 +78,53 @@ class Studio:
         self.revision = 0
         self.queue = JobQueue(self.root)
         self.closing = False
+        self.library_exports = {}
+        self.library_exporting = set()
+        self.library_export_active = False
         self.removing_model = None
         self.updates = UpdateManager(self.root)
+        self.prompts = prompt_enhancer.PromptEnhancer(self.root)
+
+    def change_library(self, data, restore=False):
+        with self.lock:
+            if self.state['busy']:
+                raise ValueError('Finish the current operation before changing Library files.')
+            if restore:
+                result = library_actions.restore(self.root, self.images, self.videos, data.get('batch'))
+            else:
+                if data.get('confirmed') is not True:
+                    raise ValueError('Confirm moving the selected files to Studio Trash.')
+                items = library_actions.selected(self.images, self.videos, data.get('ids'))
+                ids = {x['id'] for x in items}
+                paths = {x['path'] for x in items}
+                if ids & self.library_exporting:
+                    raise ValueError('Wait for the export containing these files to finish.')
+                if any(library_actions.references(job, ids, paths) for job in self.queue.jobs if job.get('status') in ACTIVE):
+                    raise ValueError('Some selected media is used by queued jobs. Remove those jobs before deleting their sources.')
+                result = library_actions.trash(self.root, self.images, self.videos, data.get('ids'))
+                for key in ('latest_media', 'image_result', 'result'):
+                    if (self.state.get(key) or {}).get('id') in ids:
+                        self.state[key] = None
+            self.images, self.videos = result.pop('images'), result.pop('videos')
+            self.revision += 1
+            return dict(ok=True, **result)
+
+    def export_library(self, data):
+        with self.lock:
+            if self.library_export_active:
+                raise ValueError('Another Library export is being prepared. Wait for it to finish.')
+            items = library_actions.selected(self.images, self.videos, data.get('ids'))
+            self.library_export_active = True
+            self.library_exporting = {x['id'] for x in items}
+        try:
+            result = library_actions.export_zip(self.root, items)
+            with self.lock:
+                self.library_exports[result['id']] = result
+            return {key: result[key] for key in ('id', 'name', 'count')}
+        finally:
+            with self.lock:
+                self.library_export_active = False
+                self.library_exporting.clear()
 
     def report(self, message, progress):
         with self.lock:
@@ -106,7 +155,8 @@ class Studio:
                     'lora_models': list(lora_models().values()),
                     'packs': pack_inventory(self.root), 'images': self.images[-60:][::-1],
                     'runtime_ready': runtime_ready(self.root), 'queue': self.queue.snapshot(),
-                    'recordings': self.recordings,
+                    'recordings': self.recordings, 'local_voices':local_voices.inventory(self.root),
+                    'prompt_enhancer':self.prompts.snapshot(),
                     'enhancers': enhancements.inventory(self.root),
                     'video_faceswap':video_faceswap.inventory(self.root),
                     'updates': self.updates.snapshot(),
@@ -647,7 +697,7 @@ class Studio:
 
     def install_update(self, ticket, shutdown):
         with self.lock:
-            if self.state['busy']:raise ValueError('Finish or cancel the current operation before installing an update.')
+            if self.state['busy'] or self.prompts.snapshot()['busy']:raise ValueError('Finish or cancel the current operation before installing an update.')
             info=self.updates.snapshot()
             if not info.get('can_install'):raise ValueError(info.get('install_reason'))
             if not isinstance(ticket,str) or not info.get('ticket') or not secrets.compare_digest(ticket,info['ticket']):
@@ -815,6 +865,17 @@ def make_handler(studio, shutdown):
                     ids={x['source_id'] for x in (project or {}).get('layers',[]) if x['kind']=='image'}
                     return self.send_json({'project':project,'sources':[{**x,'media_type':'image'} for x in list(studio.images) if x['id'] in ids]})
                 except (ValueError,OSError) as error:return self.send_json({'error':str(error)},400)
+            if url.path == '/api/library/trash':
+                if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
+                with studio.lock:return self.send_json({'items':library_actions.trash_list(studio.root)})
+            if url.path.startswith('/library-export/'):
+                if urllib.parse.parse_qs(url.query).get('token',[''])[0] != studio.token:
+                    return self.send_json({'error':'Unauthorized'},403)
+                identifier = url.path.removeprefix('/library-export/')
+                with studio.lock:export = studio.library_exports.get(identifier)
+                if not export or not export['path'].is_file():
+                    return self.send_json({'error':'Export expired. Prepare it again from Library.'},404)
+                return self.send_file(export['path'], 'application/zip', ranges=True, download_name=export['name'])
             if url.path.startswith('/api/library/'):
                 if not self.authorized():return self.send_json({'error':'Unauthorized'},403)
                 try:
@@ -890,6 +951,8 @@ def make_handler(studio, shutdown):
                 return self.send_file(Path(record['path']),'audio/wav',ranges=True)
             if url.path == '/studio.js':
                 return self.send_file(resource('studio.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-prompt-enhancer.js':
+                return self.send_file(resource('studio-prompt-enhancer.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-tools.js':
                 return self.send_file(resource('studio-tools.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-updates.js':
@@ -914,6 +977,8 @@ def make_handler(studio, shutdown):
                 return self.send_file(resource('studio-qwen.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-voice.js':
                 return self.send_file(resource('studio-voice.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-library-viewer.js':
+                return self.send_file(resource('studio-library-viewer.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-workspace.js':
                 return self.send_file(resource('studio-workspace.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-workspace.css':
@@ -937,7 +1002,7 @@ def make_handler(studio, shutdown):
                 return self.wfile.write(body)
             return self.send_json({"error": "Not found"}, 404)
 
-        def send_file(self, path, content_type, ranges=False, cache_key=None, immutable=False):
+        def send_file(self, path, content_type, ranges=False, cache_key=None, immutable=False, download_name=None):
             if cache_key and self.headers.get('If-None-Match')=='"'+cache_key+'"':
                 self.send_response(304)
                 self.send_header('ETag','"'+cache_key+'"')
@@ -960,6 +1025,8 @@ def make_handler(studio, shutdown):
             self.send_response(206 if partial else 200)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(end - start + 1))
+            if download_name:
+                self.send_header("Content-Disposition", 'attachment; filename="' + download_name + '"')
             self.send_header("Accept-Ranges", "bytes")
             if cache_key:
                 self.send_header('ETag','"'+cache_key+'"')
@@ -1005,8 +1072,18 @@ def make_handler(studio, shutdown):
                     return self.send_json({'ok':True,'id':studio.enqueue('video',data,data.get('priority',5))})
                 elif self.path == '/api/avatars/audio/import':
                     studio.import_recording(data)
+                elif self.path in ('/api/prompts/install','/api/prompts/enhance'):
+                    if studio.closing:raise ValueError('The Studio is closing.')
+                    return self.send_json(studio.prompts.execute(self.path.rsplit('/',1)[-1],data))
+                elif self.path == '/api/prompts/cancel':
+                    studio.prompts.cancel_current(data.get('id'))
+                    return self.send_json({'ok':True})
+                elif self.path == '/api/voice/install':
+                    model = data.get('model')
+                    if model not in local_voices.catalog():raise ValueError('Unknown local voice model.')
+                    studio.run_job(lambda:local_voices.install(studio.root,model,studio.report,studio.cancel))
                 elif self.path == '/api/voice/check':
-                    return self.send_json(voices.check(data))
+                    return self.send_json(voices.check(data,studio.root))
                 elif self.path == '/api/attention/check':
                     studio.check_attention(data.get('enable',False))
                 elif self.path == '/api/voice/settings':
@@ -1105,6 +1182,12 @@ def make_handler(studio, shutdown):
                     if not play_completion_ping():raise ValueError('Windows could not play the ping. Check your audio output and volume.')
                 elif self.path == "/api/pick-folder":
                     return self.send_json({"path": pick_folder(studio.settings["output"])})
+                elif self.path == '/api/library/delete':
+                    return self.send_json(studio.change_library(data))
+                elif self.path == '/api/library/restore':
+                    return self.send_json(studio.change_library(data,restore=True))
+                elif self.path == '/api/library/export':
+                    return self.send_json(studio.export_library(data))
                 elif self.path == '/api/library/open-folder':
                     studio.open_library_folder(data.get('id'))
                 elif self.path == "/api/open-folder":
@@ -1187,6 +1270,7 @@ def main():
         with studio.lock:
             studio.closing=True;studio.queue.save()
         studio.cancel.set()
+        studio.prompts.close()
         studio.engine.cancel.set()
         if studio.worker and studio.worker.is_alive():
             studio.worker.join(timeout=15)
@@ -1200,6 +1284,7 @@ def main():
     instance_data = {"base": base, "url": url, "token": studio.token, "mode": "headless" if headless else "desktop"}
     atomic_json(instance_path, instance_data)
     atexit.register(studio.engine.stop)
+    atexit.register(studio.prompts.close)
     host = None
     server_thread = None
     try:
@@ -1231,6 +1316,7 @@ def main():
         studio.resources.stop.set()
         studio.thumbnails.stop.set()
         studio.cancel.set()
+        studio.prompts.close()
         studio.engine.cancel.set()
         if studio.worker and studio.worker.is_alive():
             studio.worker.join(timeout=15)

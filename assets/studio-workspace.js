@@ -37,6 +37,49 @@
  document.querySelector('.status').before(filmstrip);
  const preferenceKey='studio.canvas-workspace.v1';let prefs={width:340,filmstrip:true},focus=false,recentType='all',request=0,revision,loading=false;
  try{const saved=JSON.parse(localStorage.getItem(preferenceKey)||'null');if(saved){if(Number.isFinite(saved.width))prefs.width=Math.max(280,Math.min(460,saved.width));prefs.filmstrip=saved.filmstrip!==false;}}catch{}
+ let mediaDrag=null,refreshAfterMediaDrag=false,ignoreMediaClickUntil=0;const recentMedia=new Map();
+ function clearMediaDrop(){for(const page of main.querySelectorAll('.workspace-media-drop')){page.classList.remove('workspace-media-drop','workspace-media-drop-invalid');delete page.dataset.mediaDropLabel;}}
+ function finishMediaDrag(){mediaDrag=null;ignoreMediaClickUntil=performance.now()+400;clearMediaDrop();body.classList.remove('studio-media-dragging');if(refreshAfterMediaDrag){refreshAfterMediaDrag=false;refreshRecent();}}
+ function mediaDropPlan(item,target){
+  const video=item.media_type==='video',imageOnly=label=>({error:label+' accepts images. Choose a Library video frame, or use Upscale, Talking Avatar or Faceswap for this video.'});
+  if(current==='editor')return video?imageOnly('Image Editor'):{action:target.closest('#reference-panel')?'reference':'editor',label:target.closest('#reference-panel')?'Add reference image':'Load image in Image Editor'};
+  if(current==='upscale')return {action:'upscale',label:'Load '+(video?'video':'image')+' for upscaling'};
+  if(current==='avatar')return {action:'avatar',label:'Load '+(video?'video':'image')+' in Talking Avatar'};
+  if(current==='canvas')return video?imageOnly('Canvas'):{action:'canvas',label:'Add image as a Canvas layer'};
+  if(current==='faceswap'){
+   const action=video?'face-video':$('face-media-mode')?.value==='video'?'face-video-reference':target.closest('#face-reference')?'face-reference':'face-target';
+   return {action,label:video?'Load target video for Faceswap':action.includes('reference')?'Load reference face':'Load target image for Faceswap'};
+  }
+  if(current==='video')return {action:video?'preview-video':target.closest('#v-generation-references')?'generation-reference:v':target.closest('#minimax-end-controls')?'minimax-end':'video',label:video?'Preview video':'Load image for video generation'};
+  if(current==='images')return video?imageOnly('Images'):{action:typeof generationRefLimit==='function'&&generationRefLimit('i')?'generation-reference:i':'preview-image',label:typeof generationRefLimit==='function'&&generationRefLimit('i')?'Add image reference':'Preview image'};
+  if(current==='library')return {action:'details',label:'Open Library item'};
+  return {error:'Choose Image Editor, Upscale, Canvas, Video, Faceswap or Talking Avatar to load this media.'};
+ }
+ $('workspace-recent').addEventListener('dragstart',event=>{
+  const button=event.target.closest('.filmstrip-item'),item=button&&recentMedia.get(button.dataset.mediaKey);if(!item||!event.dataTransfer)return;
+  mediaDrag=item;event.dataTransfer.setData('application/x-studio-media',JSON.stringify({id:item.id,media_type:item.media_type}));event.dataTransfer.effectAllowed='copy';body.classList.add('studio-media-dragging');
+ });
+ document.addEventListener('dragend',()=>{if(mediaDrag)finishMediaDrag();});
+ main.addEventListener('dragover',event=>{
+  if(!mediaDrag||!Array.from(event.dataTransfer?.types||[]).includes('application/x-studio-media'))return;
+  event.preventDefault();event.stopPropagation();const page=$('page-'+current),plan=mediaDropPlan(mediaDrag,event.target);
+  if(!page.classList.contains('workspace-media-drop')){clearMediaDrop();page.classList.add('workspace-media-drop');}
+  page.classList.toggle('workspace-media-drop-invalid',!!plan.error);const label=plan.error||plan.label;if(page.dataset.mediaDropLabel!==label)page.dataset.mediaDropLabel=label;event.dataTransfer.dropEffect=plan.error?'none':'copy';
+ },true);
+ main.addEventListener('dragleave',event=>{const r=main.getBoundingClientRect();if(!main.contains(event.relatedTarget)&&(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom))clearMediaDrop();});
+ main.addEventListener('drop',async event=>{
+  if(!mediaDrag||!Array.from(event.dataTransfer?.types||[]).includes('application/x-studio-media'))return;
+  event.preventDefault();event.stopPropagation();const item=mediaDrag,plan=mediaDropPlan(item,event.target),point=current==='canvas'&&event.target.closest('#cv-viewport')?cvPoint(event):undefined;
+  try{
+   const payload=JSON.parse(event.dataTransfer.getData('application/x-studio-media'));if(payload.id!==item.id||payload.media_type!==item.media_type)throw Error('Drag this media from the Studio filmstrip again.');
+   finishMediaDrag();if(plan.error){notify(plan.error);return;}
+   if(plan.action==='canvas')await cvAdd(item,point);
+   else if(plan.action==='upscale')setEnhancementSource(item,item.media_type==='video'?'video':'image');
+   else if(plan.action==='preview-video'||plan.action==='preview-image')showResult(item,plan.action==='preview-video'?'video':'image');
+   else if(plan.action==='details')openMedia(item);
+   else sendImage(item,plan.action);
+  }catch(error){finishMediaDrag();notify(error.message);}
+ },true);
  function save(){try{localStorage.setItem(preferenceKey,JSON.stringify(prefs));}catch{}}
  function refit(){requestAnimationFrame(()=>{fitCanvas();if(current==='canvas'&&typeof cvFit==='function')cvFit();});}
  function layout(){body.classList.toggle('workspace-focus',focus);body.classList.toggle('filmstrip-hidden',!prefs.filmstrip);body.style.setProperty('--dock-width',prefs.width+'px');$('workspace-focus').setAttribute('aria-pressed',String(focus));$('workspace-filmstrip-toggle').setAttribute('aria-pressed',String(prefs.filmstrip));$('workspace-dock-width').value=prefs.width;refit();}
@@ -48,13 +91,14 @@
  $('workspace-dock-width').oninput=event=>{prefs.width=Number(event.target.value);layout();save();};
  $('workspace-reset').onclick=()=>{prefs={width:340,filmstrip:true};focus=false;save();layout();refreshRecent();};
  async function refreshRecent(){
-  if(!prefs.filmstrip||focus||document.hidden)return;const serial=++request;loading=true;
+  if(mediaDrag){refreshAfterMediaDrag=true;return;}if(!prefs.filmstrip||focus||document.hidden)return;const serial=++request;loading=true;
   const grid=$('workspace-recent');
   try{
-   const result=await api(`/api/library?page=0&count=16&type=${recentType}&search=`);if(serial!==request)return;
-   const items=result.items||[];
-   grid.innerHTML=items.length?items.map(item=>`<button type="button" class="filmstrip-item" title="Open ${esc(item.name)}" aria-label="Open ${esc(item.name)}"><img data-thumbnail-id="${esc(item.id)}" data-thumb="${thumbURL(item)}" alt="${esc(item.name)}" loading="lazy">${item.media_type==='video'?'<span class="filmstrip-video">VIDEO</span>':''}<span>${esc(item.name)}</span></button>`).join(''):'<span class="filmstrip-empty">No matching media yet. Generate or import media to build your Library.</span>';
-   grid.querySelectorAll('.filmstrip-item').forEach((button,index)=>button.onclick=()=>openMedia(items[index]));
+   const mediaType=recentType;
+   const result=await api(`/api/library?page=0&count=16&type=${mediaType}&search=`);if(serial!==request)return;
+   if(mediaDrag){refreshAfterMediaDrag=true;return;}const items=result.items||[];recentMedia.clear();for(const item of items)recentMedia.set(item.id,item);
+   grid.innerHTML=items.length?items.map(item=>`<button type="button" class="filmstrip-item" draggable="true" title="Open ${esc(mediaTitle(item))} · Drag into the current tool" aria-label="Open ${esc(mediaTitle(item))}"><img draggable="false" data-thumbnail-id="${esc(item.id)}" data-thumb="${thumbURL(item)}" alt="${esc(mediaTitle(item))}" loading="lazy">${item.media_type==='video'?'<span class="filmstrip-video">VIDEO</span>':''}<span>${esc(mediaTitle(item))}</span></button>`).join(''):'<span class="filmstrip-empty">No matching media yet. Generate or import media to build your Library.</span>';
+   grid.querySelectorAll('.filmstrip-item').forEach((button,index)=>{button.dataset.mediaKey=items[index].id;button.onclick=()=>{if(performance.now()<ignoreMediaClickUntil)return;openMedia(items[index],{items,total:result.total,page:0,count:16,type:mediaType,search:''});};});
    thumbnails(grid,items);$('workspace-recent-count').textContent=`${result.total??items.length} items`;
   }catch(error){if(serial===request){grid.innerHTML='<span class="filmstrip-empty">Library unavailable. Use Refresh to try again.</span>';$('workspace-recent-count').textContent='';}}
   finally{if(serial===request)loading=false;}
@@ -62,6 +106,7 @@
  filmstrip.querySelectorAll('[data-recent-type]').forEach(button=>button.onclick=()=>{recentType=button.dataset.recentType;filmstrip.querySelectorAll('[data-recent-type]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));refreshRecent();});
  $('workspace-recent-refresh').onclick=refreshRecent;
  function checkRecent(){if(state&&state.library_revision!==revision&&!loading&&prefs.filmstrip&&!focus&&!document.hidden){revision=state.library_revision;refreshRecent();}}
+ window.addEventListener('studio-library-changed',refreshRecent);
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshRecent();});setInterval(checkRecent,2500);
  layout();syncPage();refreshRecent();
 })();

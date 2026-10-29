@@ -2,15 +2,16 @@
 
 # A.I. Image & Video Studio
 
-a Windows desktop app for n00bs that uses the most popular A.I. models to bring you:
-| --- |
-| Local text-to-image generation
-| Local image editing
-| Local Text-to-video generation
-| Local Image-to-video generation
-| Local Talking avatar & Lipsync generation
-| One-click downloading and installation of the top models and easy installation and managing of LoRaS. 
-| Some models can produce NSFW images or videos.
+A Windows desktop app for n00bs, with local AI tools for:
+
+- Text-to-image generation and image editing.
+- Text-to-video and image-to-video generation.
+- Talking avatars, lip sync and speech generation.
+- AI prompt enhancement with editable drafts.
+- Image/video upscaling, a layered Canvas and Library management.
+- One-click model downloads and LoRA installation and management.
+
+Some models can produce NSFW images or videos.
 
 Check [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio) to see some examples and download the program.
 
@@ -19,7 +20,44 @@ Includes image generation and editing models, text/image-to-video models, talkin
 Need more models? Or don't understand how to use LoRaS? You can download the source code of this program or copy the link and feed it to Chatgpt or Claude and ask to include your github or huggingface link.
 
 Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest) The repository contains the application source and small setup assets; model weights download separately.
-If you'd like to support this project, you can make a donation through [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio). 
+If you'd like to support this project, you can make a donation through [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio).
+
+## Library, workspace and local AI tools in 1.15.1
+
+Library detail views close when clicking outside and have Previous/Next controls. Select multiple images/videos across pages to export original files as a ZIP or move them to **Studio Trash**, with confirmation and restoration. Titles show the first five prompt words while creation-date sorting and physical filenames remain unchanged.
+
+Drag images and videos from the bottom Recent media strip into the current compatible tool to select a source, add a Canvas layer or load a preview. Upscale uses the Library picker and selected-source label without a duplicate dropdown. Enhance after generation starts unchecked in Images, Image Editor and Video.
+
+**Enhance prompt with AI** offers local CPU rewriting with Qwen2.5 1.5B Instruct Q4_K_M: refine the wording or add visual detail, review/edit the draft and explicitly apply it. Your original stays intact until Apply; a draft cannot replace a newer manual edit. The optional model/runtime download is about 1.1 GB and uses no dedicated VRAM. Prompt rewriting runs independently of image/video processing.
+
+**Models** also offers **Kokoro-82M** (English preset voices on CPU) and **Qwen3-TTS 0.6B Base** (voice cloning on FP16 CUDA or CPU). Choose **Local · Kokoro / Qwen3-TTS** in Voice. Qwen uses a 0.1–15 second reference recording; a matching transcript is optional. Its 8 GB fit is estimated and unbenchmarked in Studio; 16 GB gives more headroom. These optional packs install isolated dependencies and verified weights. Existing Fish/SGLang connections remain available. [Details and validation](docs/RELEASE-1.15.1.md).
+
+### Using the new tools
+
+**AI prompt enhancer:** install **AI prompt enhancer** from Models, then click **Enhance prompt with AI** below a prompt in Images, Image Editor, Video, Faceswap or Talking Avatar. Choose **Refine wording** or **Add visual detail**, review/edit the draft and click **Apply prompt**. Applying a draft does not start generation. The model runs locally on CPU and closes its process after each rewrite. Its roughly 2 GB system RAM requirement is an estimate; output quality and speed have not been benchmarked in Studio.
+
+**Local voices:** install the desired pack in Models, open Voice and select **Local · Kokoro / Qwen3-TTS**.
+
+| Voice pack | How to use it | Hardware guidance |
+| --- | --- | --- |
+| Kokoro-82M | Choose one of 11 English presets, adjust speed, enter the words and add speech to the queue. | CPU; no dedicated VRAM required. |
+| Qwen3-TTS 0.6B Base | Import/select a 0.1–15 second voice recording, optionally enter its matching transcript, choose the language and add speech to the queue. | FP16 NVIDIA CUDA or CPU. 8 GB fit is estimated; 16 GB gives more headroom. |
+
+Voice results appear in **Voice → Recordings** and can be sent to Talking Avatar. Model downloads need additional disk space for their isolated runtimes. Qwen uses the official FP16 checkpoint, with CUDA-enabled PyTorch; it is distinct from community GGUF voice runtimes. Speech quality and VRAM use have not been benchmarked in Studio.
+
+**Filmstrip drag-and-drop:** drag a thumbnail from the bottom Recent media strip into the current tool. A highlighted area explains what the drop will do. Dropping media selects a source, reference or preview; it does not queue generation.
+
+| Current tool | Image drop | Video drop |
+| --- | --- | --- |
+| Image Editor | Load the starting image; drop in Reference images to add a reference. | Use a Library video frame as an image instead. |
+| Upscale | Select the image to enhance. | Select the video to enhance. |
+| Canvas | Add an editable image layer. | Use a Library video frame instead. |
+| Video | Select the starting image; reference/end-image areas retain their specific roles. | Load a video preview; the generation source remains an image. |
+| Faceswap | Select a target image or drop in the reference area to choose a face. | Select the target video. |
+| Talking Avatar | Select the starting image. | Select the starting video with a compatible avatar model. |
+| Images | Add a reference when the selected model supports it; otherwise load a preview. | Use Video or another compatible tool. |
+
+**Library management:** use Previous/Next in the detailed view, or click its backdrop to close it. Select multiple images/videos across pages to export a ZIP of the original files or move them to Studio Trash. Open **Library → Trash** to restore them. Trash retains the files on disk. Display titles use the first five prompt words, falling back to the filename; Library stays ordered by creation date, newest first.
 
 ## Canvas workspace in 1.15.0
 
@@ -35,7 +73,7 @@ The installer downloads the portable Python/PyTorch/ComfyUI runtime and NSFW Wan
 
 ## Models
 
-The current app offers **32 model packs** (including the original Wan 1.3B), plus optional components. Model weights download separately. Choose **Models → All models / 8 GB VRAM / 16 GB VRAM** to filter the catalog; the 16 GB view includes the lighter 8 GB candidates.
+The current app offers **32 image/video/avatar model packs** (including the original Wan 1.3B), plus **two local voice packs**, a **CPU prompt-enhancer pack**, and optional components. Model weights download separately. Choose **Models → All models / 8 GB VRAM / 16 GB VRAM** to filter the catalog; the 16 GB view includes the lighter 8 GB candidates.
 
 **VRAM figures are estimates or recommendations for the exact packs used by Studio, not guaranteed minimums.** No Studio generation benchmark on an 8 GB GPU has been run. Use Low VRAM mode and start with small outputs; CPU offloading is slower and needs system RAM. Resolution, video length, reference images and LoRAs affect memory use. Download size is separate from VRAM. Unverified fits remain under All models. [VRAM sources and validation](docs/RELEASE-1.14.3.md).
 
@@ -158,7 +196,7 @@ Pause lets the current job finish. Cancel stops a waiting job or requests interr
 
 ## Optional enhancement
 
-**Upscale** takes an existing library image or video and saves a separate enhanced entry. The library preview has an **Upscale / enhance** button. Alternatively, enable **Enhance after generation** in Images, Image Editor or Video. Configure its options on Upscale; each queued job captures a copy. A failed or cancelled enhancement leaves the original available.
+**Upscale** takes an existing library image or video and saves a separate enhanced entry. The library preview has an **Upscale / enhance** button. Alternatively, enable **Enhance after generation** in Images, Image Editor or Video; it starts unchecked when Studio opens. Configure its options on Upscale; each queued job captures a copy. A failed or cancelled enhancement leaves the original available.
 
 The requested [Elusarca Qwen 2.1 Detail Enhancer](https://civitai.com/models/2956730/elusarcas-qwen-21-detail-enhancer) is a LoRA for Qwen-Image 2.1. Install its pack in Models: approximately **17.4 GB** of separate downloads, including the author's hash-matched adapter from Hugging Face. It uses instruction-conditioned generative enhancement, so fine details may change. The result is capped at roughly four megapixels and 4096 pixels per axis. Qwen 2.1 has its own **Qwen Research License**; check the terms linked in Models. Its LoRA target is distinct from Qwen 2512 and Qwen Edit 2511. The built-in detail adapter plus up to seven additional compatible adapters can be used.
 
@@ -168,9 +206,9 @@ New enhancement workflows have been validated without loading weights. Actual Qw
 
 ## Validation and source
 
-See **outputs/VALIDATION.md** for exact checks and limitations. AI generation tests require explicit user permission. Source packages exclude downloaded weights, personal media, profiles and credentials.
+Version 1.15.1 passed **328 Python tests** and the Library, filmstrip drag-and-drop, prompt-enhancer and existing workspace/model UI regression checks. Prompt-model replies are mocked in tests; installed runtime/import checks do not generate AI output. See the [1.15.1 release notes](docs/RELEASE-1.15.1.md) for details and **outputs/VALIDATION.md** for historical validation records. AI generation tests require explicit user permission. Source packages exclude downloaded weights, personal media, profiles and credentials.
 
-Build with Python plus **requirements-build.txt**, then run **python build.py** and **python package_source.py**. Exact file revisions/sizes/hashes are in **assets/manifest.json**, **assets/packs.json**, **assets/enhancers.json** and **assets/engines.json**. See **outputs/THIRD-PARTY.txt** for upstream terms. The Windows installer is unsigned.
+Build with Python plus **requirements-build.txt**, then run **python build.py** and **python package_source.py**. Exact file revisions/sizes/hashes are in **assets/manifest.json**, **assets/packs.json**, **assets/enhancers.json**, **assets/engines.json**, **assets/local-voices.json** and **assets/prompt-enhancer.json**. See **outputs/THIRD-PARTY.txt** for upstream terms. The Windows installer is unsigned.
 
 For a Windows source build:
 
@@ -183,7 +221,7 @@ python build.py
 python package_source.py
 ```
 
-The build downloads the pinned Microsoft WebView2 SDK if it is absent and compiles the native host using the Windows .NET Framework compiler. The automated tests do not generate AI images or videos.
+The build downloads the pinned Microsoft WebView2 SDK if it is absent and compiles the native host using the Windows .NET Framework compiler. The automated tests do not generate AI images, videos, speech or prompt rewrites.
 
 The app's original source code uses the [MIT license](LICENSE). Third-party components and model weights retain their upstream licenses; see [third-party notices](outputs/THIRD-PARTY.txt).
 
@@ -196,4 +234,3 @@ Open **Settings → Check for updates** to check the public GitHub repository fo
 Settings, downloaded models, LoRAs, library media and queued jobs remain in their existing data folder. Installation is blocked during active processing; checking is allowed. The queue pauses for installation and reopens paused until you choose Resume queue. Updates never start inference, reinstall models or change the selected data folder. Program Files installations can require a Windows administrator prompt. Temporary application-copy failures restore the previous binaries. A failed download can be retried from Settings; its partial file is resumable.
 
 The installed version appears directly below the logo. **About**, at the bottom right of Settings on wide windows, credits Codex in collaboration with Jungle Jim and links to the requested 3D models, Blender add-ons, software, VFX and source code. Models sits between Library and LoRAs.
-

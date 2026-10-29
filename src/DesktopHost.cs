@@ -150,8 +150,9 @@ internal sealed class StudioWindow : Form
         using (SaveFileDialog dialog = new SaveFileDialog())
         {
             bool image = Path.GetExtension(args.ResultFilePath).Equals(".png", StringComparison.OrdinalIgnoreCase);
-            dialog.Title = image ? "Save an image copy" : "Save a video copy";
-            dialog.Filter = image ? "PNG image (*.png)|*.png" : "MP4 video (*.mp4)|*.mp4";
+            bool archive = Path.GetExtension(args.ResultFilePath).Equals(".zip", StringComparison.OrdinalIgnoreCase);
+            dialog.Title = archive ? "Export Library media" : image ? "Save an image copy" : "Save a video copy";
+            dialog.Filter = archive ? "ZIP archive (*.zip)|*.zip" : image ? "PNG image (*.png)|*.png" : "MP4 video (*.mp4)|*.mp4";
             dialog.FileName = Path.GetFileName(args.ResultFilePath);
             dialog.AddExtension = true;
             if (dialog.ShowDialog(this) == DialogResult.OK) args.ResultFilePath = dialog.FileName;

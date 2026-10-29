@@ -217,7 +217,7 @@ def explain_engine_error(detail):
     if 'out of memory' in detail.lower():
         return detail + '\nTry Quick preview or a shorter clip, and close other GPU applications.'
     if 'access violation' in detail.lower():
-        return ('The local video engine crashed while accessing model memory (Windows access violation). '
+        return ('The local generation engine crashed while accessing model memory (Windows access violation). '
                 'Wan 2.2 now uses the native disk-backed loader instead of the legacy low-VRAM loader. '
                 'Check that the model drive is connected. Open logs/engine.log for the crash details.')
     return detail
@@ -245,7 +245,7 @@ class Engine:
                 return json.load(response)
         except urllib.error.HTTPError as error:
             detail = error.read().decode("utf-8", errors="replace")
-            raise RuntimeError(f"Video engine rejected the request: {detail[:4000]}") from None
+            raise RuntimeError(f"Generation engine rejected the request: {detail[:4000]}") from None
 
     def raise_if_failed(self, inspect_log=False):
         process = self.process
@@ -265,7 +265,7 @@ class Engine:
         if code is None:
             self.stop()
         message = explain_engine_error(detail)
-        reason = 'The local video engine crashed.\n' if fatal else f'The local video engine stopped unexpectedly (exit code {code}).\n'
+        reason = 'The local generation engine crashed.\n' if fatal else f'The local generation engine stopped unexpectedly (exit code {code}).\n'
         raise RuntimeError(reason + message[-4000:])
 
     def wait_for_history(self, prompt_id):
@@ -288,10 +288,10 @@ class Engine:
                 self.raise_if_failed(inspect_log=True)
                 if time.monotonic() >= deadline:
                     self.stop()
-                    raise RuntimeError('The local video engine did not respond for two minutes. '
+                    raise RuntimeError('The local generation engine did not respond for two minutes. '
                         'Its job has been stopped to prevent an untracked background render. '
                         'Open logs/engine.log for details, then retry.') from error
-                self.report('Waiting for the local video engine to respond. Model loading can temporarily delay updates…', None)
+                self.report('Waiting for the local generation engine to respond. Model loading can temporarily delay updates…', None)
                 self.cancel.wait(.8)
 
     def stop(self):
@@ -322,7 +322,7 @@ class Engine:
         self.log_handle = log.open("w", encoding="utf-8")
         self.attention_session=secrets.token_hex(12)
         command = engine_command(self.root, self.port, output, memory, model,self.attention,self.attention_session)
-        self.report("Starting the local video engine…", None)
+        self.report("Starting the local generation engine…", None)
         self.process = subprocess.Popen(command, cwd=comfy_root(self.root), stdout=self.log_handle,
                                         stderr=subprocess.STDOUT, creationflags=CREATE_NO_WINDOW)
         deadline = time.monotonic() + 240
@@ -331,15 +331,15 @@ class Engine:
                 self.stop()
                 raise Cancelled("Generation cancelled.")
             if self.process.poll() is not None:
-                raise RuntimeError("The video engine could not start.\n" + log.read_text(encoding="utf-8", errors="replace")[-4000:])
+                raise RuntimeError("The generation engine could not start.\n" + log.read_text(encoding="utf-8", errors="replace")[-4000:])
             try:
                 self.request("/system_stats", timeout=2)
-                self.report("Video engine ready. Preparing the model…", None)
+                self.report("Generation engine ready. Preparing the model…", None)
                 return
             except (OSError, RuntimeError, ValueError):
                 self.cancel.wait(.5)
         self.stop()
-        raise RuntimeError("Video engine startup took too long. Open logs/engine.log for details.")
+        raise RuntimeError("Generation engine startup took too long. Open logs/engine.log for details.")
 
     def generate(self, options, output, kind='video'):
         try:

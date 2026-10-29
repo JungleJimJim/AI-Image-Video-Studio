@@ -1,0 +1,22 @@
+{
+  "version": "qwen25-1p5b-q4km-b11986",
+  "name": "Local AI prompt enhancer",
+  "model_name": "Qwen2.5 1.5B Instruct \u00b7 Q4_K_M",
+  "source": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF",
+  "runtime_source": "https://github.com/ggml-org/llama.cpp/releases/tag/b11986",
+  "license": "Apache-2.0 model; MIT llama.cpp runtime",
+  "runtime": {
+    "filename": "llama-cpu.zip",
+    "url": "https://github.com/ggml-org/llama.cpp/releases/download/b11986/llama-b11986-bin-win-cpu-x64.zip",
+    "size": 24409241,
+    "sha256": "68ebf060fa96e0a1cc699426943e38e57f323e53acd693c7fbb7ce91d75987cf",
+    "label": "Prompt AI CPU runtime"
+  },
+  "model": {
+    "filename": "qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    "url": "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/91cad51170dc346986eccefdc2dd33a9da36ead9/qwen2.5-1.5b-instruct-q4_k_m.gguf",
+    "size": 1117320736,
+    "sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "label": "Prompt AI Qwen2.5 1.5B"
+  }
+}

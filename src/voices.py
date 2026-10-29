@@ -3,9 +3,11 @@ import base64,json,math,os,secrets,subprocess,time,urllib.parse,urllib.request
 from pathlib import Path
 from common import CREATE_NO_WINDOW,atomic_json,resource,runtime_python
 from downloads import Cancelled
+import local_voices
 
 def connection(raw):
     protocol=raw.get('protocol','fish')
+    if protocol=='local':return local_voices.validate(raw)
     if protocol not in ('fish','sglang'):raise ValueError('Choose Fish Speech API or SGLang-Omni.')
     endpoint=raw.get('endpoint','http://127.0.0.1:8080' if protocol=='fish' else 'http://127.0.0.1:8000')
     try:
@@ -25,7 +27,10 @@ def validate_options(raw):
         if not isinstance(value,str) or len(value)>limit:raise ValueError(f'Use valid {key.replace("_"," ")} text under {limit} characters.')
         o[key]=value.strip()
     if not o['text']:raise ValueError('Enter the words to speak first.')
-    if o['reference_id'] and not o['transcript']:raise ValueError('Enter the exact transcript of the reference recording.')
+    if o['protocol']=='local' and o['model']=='kokoro':o['reference_id']='';o['transcript']=''
+    if o['protocol']=='local' and o['model']=='qwen_tts' and not o['reference_id']:raise ValueError('Choose a short reference recording for Qwen voice cloning.')
+    if o['protocol']=='local' and len(o['text'])>(4000 if o['model']=='kokoro' else 2000):raise ValueError('Use a shorter local speech script (Kokoro: 4000 characters; Qwen: 2000).')
+    if o['protocol']!='local' and o['reference_id'] and not o['transcript']:raise ValueError('Enter the exact transcript of the reference recording.')
     for key,default,low,high in [('temperature',.7,.1,1),('top_p',.7,.1,1)]:
         try:
             value=float(raw.get(key,default))
@@ -43,7 +48,10 @@ def validate_options(raw):
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self,*args,**kwargs):raise ValueError('Voice server redirects are not allowed. Check its local address.')
 
-def check(raw):
+def check(raw,root=None):
+    if raw.get('protocol')=='local':
+        if root is None:raise ValueError('A Studio data folder is required for local voices.')
+        return local_voices.check(root,raw)
     o=connection(raw);route='/v1/tts/defaults' if o['protocol']=='fish' else '/v1/models'
     opener=urllib.request.build_opener(urllib.request.ProxyHandler({}),NoRedirect())
     try:
@@ -65,6 +73,7 @@ def payload(o,reference=None):
     return '/v1/audio/speech',data
 
 def generate(root,o,recording,report,cancel):
+    if o.get('protocol')=='local':return local_voices.generate(root,o,recording,report,cancel)
     if not runtime_python(root).is_file():raise ValueError('Install the base runtime in Settings before generating speech.')
     check(o)
     reference=None

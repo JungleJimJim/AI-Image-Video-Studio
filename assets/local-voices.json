@@ -1,0 +1,123 @@
+{
+  "kokoro": {
+    "name": "Kokoro-82M \u00b7 English voices (CPU)",
+    "version": "1.0-onnx-0.6.1",
+    "source": "https://huggingface.co/hexgrad/Kokoro-82M",
+    "license": "Apache-2.0 weights; MIT runtime",
+    "requirements": [
+      "kokoro-onnx==0.6.1",
+      "soundfile==0.13.1"
+    ],
+    "vram_tier_gb": 8,
+    "vram_note": "CPU inference: no dedicated VRAM required. Leaves GPU memory available for images and video.",
+    "files": [
+      {
+        "filename": "kokoro-v1.0.onnx",
+        "url": "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/kokoro-v1.0.onnx",
+        "size": 325505369,
+        "sha256": "beb0d1848dee9a49da392cc3df26958d46cfa35d321edf434f52949153f0df3a",
+        "label": "Kokoro kokoro-v1.0.onnx"
+      },
+      {
+        "filename": "voices-v1.0.bin",
+        "url": "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/voices-v1.0.bin",
+        "size": 28214398,
+        "sha256": "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d",
+        "label": "Kokoro voices-v1.0.bin"
+      }
+    ]
+  },
+  "qwen_tts": {
+    "name": "Qwen3-TTS 0.6B \u00b7 Voice clone (FP16)",
+    "version": "0.6b-5d83992436ea-cu128",
+    "source": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base",
+    "license": "Apache-2.0",
+    "requirements": [
+      "qwen-tts==0.1.1",
+      "torch==2.9.1+cu128",
+      "torchaudio==2.9.1+cu128"
+    ],
+    "vram_tier_gb": 8,
+    "vram_note": "8 GB estimated for one short FP16 job; 16 GB offers more headroom. CPU mode available but slow. Studio VRAM/inference not benchmarked.",
+    "files": [
+      {
+        "filename": "config.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/config.json",
+        "size": 4494,
+        "sha256": "2e714c787c8edb98b05432685cddb634add2de4d4e645f653d68251ef72ba011",
+        "label": "Qwen3-TTS config.json"
+      },
+      {
+        "filename": "generation_config.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/generation_config.json",
+        "size": 245,
+        "sha256": "f1b90b4513f3b34c62851049e2492d7b4c5940daf1276f89c82b8ef04127f3aa",
+        "label": "Qwen3-TTS generation_config.json"
+      },
+      {
+        "filename": "merges.txt",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/merges.txt",
+        "size": 1671839,
+        "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+        "label": "Qwen3-TTS merges.txt"
+      },
+      {
+        "filename": "model.safetensors",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/model.safetensors",
+        "size": 1829344272,
+        "sha256": "180b3b10eb1c9f1b4db7806d5475bae3071c0243c299d49926bab1da3b6946f6",
+        "label": "Qwen3-TTS model.safetensors"
+      },
+      {
+        "filename": "preprocessor_config.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/preprocessor_config.json",
+        "size": 127,
+        "sha256": "efdde1022ea9d76928bf7a9cd53139138f5ba2e466e837f08f6105ab1af1c119",
+        "label": "Qwen3-TTS preprocessor_config.json"
+      },
+      {
+        "filename": "speech_tokenizer/config.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/speech_tokenizer/config.json",
+        "size": 2336,
+        "sha256": "ee65bb901c876664ab8707c487157aa1a6ee57c65969b28fb5ec9dc211e68167",
+        "label": "Qwen3-TTS speech_tokenizer/config.json"
+      },
+      {
+        "filename": "speech_tokenizer/configuration.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/speech_tokenizer/configuration.json",
+        "size": 76,
+        "sha256": "6bc26d64eb5024b4d1dab5a52371958b429256d6c9d59787f1f5294a54e0cebd",
+        "label": "Qwen3-TTS speech_tokenizer/configuration.json"
+      },
+      {
+        "filename": "speech_tokenizer/model.safetensors",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/speech_tokenizer/model.safetensors",
+        "size": 682293092,
+        "sha256": "836b7b357f5ea43e889936a3709af68dfe3751881acefe4ecf0dbd30ba571258",
+        "label": "Qwen3-TTS speech_tokenizer/model.safetensors"
+      },
+      {
+        "filename": "speech_tokenizer/preprocessor_config.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/speech_tokenizer/preprocessor_config.json",
+        "size": 234,
+        "sha256": "fcb3805e597e786d4067706e602f6688524640f8d3396790e2e09b5942fcbdfb",
+        "label": "Qwen3-TTS speech_tokenizer/preprocessor_config.json"
+      },
+      {
+        "filename": "tokenizer_config.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/tokenizer_config.json",
+        "size": 7344,
+        "sha256": "dc3c31c3bdaedd5016382bb3cbe07323026775ad51f5a4fb564505992ae4a670",
+        "label": "Qwen3-TTS tokenizer_config.json"
+      },
+      {
+        "filename": "vocab.json",
+        "url": "https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-Base/resolve/5d83992436eae1d760afd27aff78a71d676296fc/vocab.json",
+        "size": 2776833,
+        "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+        "label": "Qwen3-TTS vocab.json"
+      }
+    ],
+    "extra_index": "https://download.pytorch.org/whl/cu128"
+  }
+}
