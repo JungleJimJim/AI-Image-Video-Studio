@@ -22,6 +22,10 @@ Need more models? Or don't understand how to use LoRaS? You can download the sou
 Download the Windows installer from [GitHub Releases](https://github.com/JungleJimJim/AI-Image-Video-Studio/releases/latest) The repository contains the application source and small setup assets; model weights download separately.
 If you'd like to support this project, you can make a donation through [Gumroad](https://backgroundpeople.gumroad.com/l/AI-image-video-studio).
 
+## Models controls in 1.15.2
+
+The **Install selected models** toolbar stays visible at the top of Models while you scroll through the catalog. Its selection controls and download estimate remain together, including on narrower windows.
+
 ## Library, workspace and local AI tools in 1.15.1
 
 Library detail views close when clicking outside and have Previous/Next controls. Select multiple images/videos across pages to export original files as a ZIP or move them to **Studio Trash**, with confirmation and restoration. Titles show the first five prompt words while creation-date sorting and physical filenames remain unchanged.

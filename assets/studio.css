@@ -44,3 +44,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}.preview,.controls,.panel,.libr
 .generation-reference-panel{border:1px solid #31546c;border-radius:7px;padding:12px;margin:12px 0;background:#10202e66}.generation-reference-panel h3{margin-bottom:7px}.generation-reference-panel>.row{margin:8px 0}.generation-reference-panel .source-chip strong{font-size:11px;color:var(--cyan)}
 
 .vram-filters{margin-top:16px}.vram-filters button[aria-pressed="true"]{color:var(--cyan);background:#142738;border-color:var(--cyan)}.vram-description{border-left:2px solid var(--violet);padding-left:10px;font-size:12px}#vram-count{margin:0 0 12px}
+/* Keep installation actions within reach while the Models panel scrolls. */
+#page-models .panel{padding-top:0}
+#page-models .models-actions{position:sticky;top:0;z-index:2;margin:0 -20px;padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line);box-shadow:0 4px 12px #0003}
+#install-selected{flex:none}#download-estimate{min-width:0;overflow-wrap:anywhere}
