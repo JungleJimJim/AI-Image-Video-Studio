@@ -6,10 +6,13 @@ A Windows desktop app for n00bs, with local AI tools for:
 
 - Text-to-image generation and image editing.
 - Text-to-video and image-to-video generation.
+- Drawing Canvas
 - Talking avatars, lip sync and speech generation.
 - AI prompt enhancement with editable drafts.
 - Image/video upscaling, a layered Canvas and Library management.
 - One-click model downloads and LoRA installation and management.
+- Motion transfer from video
+- Object Swap for video
 
 Some models can produce NSFW images or videos.
 
