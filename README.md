@@ -1,4 +1,4 @@
-![A.I. Image & Video Studio Talking Avatar interface](https://github.com/JungleJimJim/AI-Image-Video-Studio/blob/main/Screenshot%202026-10-29%20211917.png?raw=true))](https://github.com/JungleJimJim/AI-Image-Video-Studio/blob/main/Screenshot%202026-10-29%20211917.png?raw=true)
+![A.I. Image & Video Studio Talking Avatar interface](https://github.com/JungleJimJim/AI-Image-Video-Studio/blob/main/Screenshot%202026-10-29%20211917.png?raw=true)
 
 # A.I. Image & Video Studio
 
