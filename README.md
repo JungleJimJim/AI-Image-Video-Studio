@@ -6,6 +6,7 @@ A Windows desktop app for n00bs, with local AI tools for:
 
 - Text-to-image generation and image editing.
 - Text-to-video and image-to-video generation.
+- Prompt Enhancer
 - Drawing Canvas
 - Talking avatars, lip sync and speech generation.
 - AI prompt enhancement with editable drafts.
