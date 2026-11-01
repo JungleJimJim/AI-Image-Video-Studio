@@ -1,0 +1,282 @@
+{
+  "repository": "https://github.com/D3voz/openjutsu",
+  "revision": "7fe118bb5a61fcfac0148e1bfea3dd29884dbf26",
+  "archive": {
+    "label": "OpenJutsu full app source",
+    "filename": "openjutsu-7fe118bb.zip",
+    "url": "https://codeload.github.com/D3voz/openjutsu/zip/7fe118bb5a61fcfac0148e1bfea3dd29884dbf26",
+    "size": 10448314,
+    "sha256": "a6a67ece23645b010adc74583ffa19572629942ca0f249df63133bf1ead78d41"
+  },
+  "node": {
+    "label": "Isolated Node.js runtime",
+    "filename": "node-v24.18.0-win-x64.zip",
+    "url": "https://nodejs.org/dist/v24.18.0/node-v24.18.0-win-x64.zip",
+    "size": 37176245,
+    "sha256": "0ae68406b42d7725661da979b1403ec9926da205c6770827f33aac9d8f26e821"
+  },
+  "wheels": [
+    {
+      "filename": "aiohappyeyeballs-2.7.1-py3-none-any.whl",
+      "size": 15038,
+      "sha256": "9243213661e29250eb41368e5daa826fc017156c3b8a11440826b2e3ed376472",
+      "url": "https://files.pythonhosted.org/packages/71/43/1947f06babed6b3f1d7f38b0c767f52df66bfb2bc10b468c4a7de9eceff2/aiohappyeyeballs-2.7.1-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 aiohappyeyeballs-2.7.1-py3-none-any.whl"
+    },
+    {
+      "filename": "aiohttp-3.14.5-cp313-cp313-win_amd64.whl",
+      "size": 505985,
+      "sha256": "d05e94cdfe0d15d0206f970722d2554780ce562787b21b218b275447f8751319",
+      "url": "https://files.pythonhosted.org/packages/8d/d0/8eca2c65aa467320990d78fb2005f38ed3588944280c39ff9deb6423fef1/aiohttp-3.14.5-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 aiohttp-3.14.5-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "aiosignal-1.4.0-py3-none-any.whl",
+      "size": 7490,
+      "sha256": "053243f8b92b990551949e63930a839ff0cf0b0ebbe0597b0f3fb19e1a0fe82e",
+      "url": "https://files.pythonhosted.org/packages/fb/76/641ae371508676492379f16e2fa48f4e2c11741bd63c48be4b12a6b09cba/aiosignal-1.4.0-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 aiosignal-1.4.0-py3-none-any.whl"
+    },
+    {
+      "filename": "annotated_types-0.8.0-py3-none-any.whl",
+      "size": 13427,
+      "sha256": "f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0",
+      "url": "https://files.pythonhosted.org/packages/99/91/8acff4f5e50511b911bbccb72b8628a49c68ce14148cd9f6431094859a90/annotated_types-0.8.0-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 annotated_types-0.8.0-py3-none-any.whl"
+    },
+    {
+      "filename": "attrs-26.1.0-py3-none-any.whl",
+      "size": 67548,
+      "sha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309",
+      "url": "https://files.pythonhosted.org/packages/64/b4/17d4b0b2a2dc85a6df63d1157e028ed19f90d4cd97c36717afef2bc2f395/attrs-26.1.0-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 attrs-26.1.0-py3-none-any.whl"
+    },
+    {
+      "filename": "blake3-1.0.11-cp313-cp313-win_amd64.whl",
+      "size": 217885,
+      "sha256": "a7ff972740c02b3abc89048f27b90bc875412df04d7432d5e7ae64486ad43315",
+      "url": "https://files.pythonhosted.org/packages/8d/4e/5887683437805ce26bbfd9bcc16c6dadcf4b31941779cb8e9f37b1b072f4/blake3-1.0.11-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 blake3-1.0.11-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "comfy_api_proxy-0.1.6-py3-none-any.whl",
+      "size": 59020,
+      "sha256": "1ea405f1a4dc5886d06d630bc1de57fd8754062776ace797e66969636ca941c6",
+      "url": "https://files.pythonhosted.org/packages/98/5a/d1c0dd440ffe8277ffabd6900efe01e61716f500223e9c34f45cdc82ac98/comfy_api_proxy-0.1.6-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 comfy_api_proxy-0.1.6-py3-none-any.whl"
+    },
+    {
+      "filename": "frozenlist-1.8.0-cp313-cp313-win_amd64.whl",
+      "size": 43882,
+      "sha256": "878be833caa6a3821caf85eb39c5ba92d28e85df26d57afb06b35b2efd937231",
+      "url": "https://files.pythonhosted.org/packages/d8/cf/174c91dbc9cc49bc7b7aab74d8b734e974d1faa8f191c74af9b7e80848e6/frozenlist-1.8.0-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 frozenlist-1.8.0-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "idna-3.20-py3-none-any.whl",
+      "size": 69583,
+      "sha256": "ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c",
+      "url": "https://files.pythonhosted.org/packages/58/a2/bb081bab032533a855d44de1d56f8e8426114ff1ba5d1f07a438a0a654f8/idna-3.20-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 idna-3.20-py3-none-any.whl"
+    },
+    {
+      "filename": "multidict-7.2.1-cp313-cp313-win_amd64.whl",
+      "size": 95078,
+      "sha256": "ce0f884408938fbd72e764031d0e23a8f5e438a7bf73641089c7a6465cb84456",
+      "url": "https://files.pythonhosted.org/packages/74/6b/3f90a565e6eb94266d197d91cca5833b34ab89768a24f7f07b29bc186e09/multidict-7.2.1-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 multidict-7.2.1-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "propcache-0.5.4-cp313-cp313-win_amd64.whl",
+      "size": 45342,
+      "sha256": "0c889f6fa84957bc7e8b4eab71fd16a0455068d5045e3aa40c733071d2b2fd77",
+      "url": "https://files.pythonhosted.org/packages/01/bc/e0a7b84af04ec02d73a48aa71f091e1e4a2107e3074b7ce12195b66901f4/propcache-0.5.4-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 propcache-0.5.4-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "pydantic-2.14.2-py3-none-any.whl",
+      "size": 490403,
+      "sha256": "7efbf7507b937931cd32a5755acb00ea1cf5ccb1d4e8067a5850d5069e382118",
+      "url": "https://files.pythonhosted.org/packages/97/01/c71a71258b58659c72504e5fd65b451f6e36e34dc931d0b237ded213c814/pydantic-2.14.2-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 pydantic-2.14.2-py3-none-any.whl"
+    },
+    {
+      "filename": "pydantic_core-2.50.2-cp313-cp313-win_amd64.whl",
+      "size": 2250556,
+      "sha256": "e5c801bdf3cc92274b8fc2c7023c8751e5ae81260c009ac558ff55ce712a2d45",
+      "url": "https://files.pythonhosted.org/packages/6f/dd/14eeec394ec1422f9c4e9743cd746f4502232a7c65eb235d1a03729d94ab/pydantic_core-2.50.2-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 pydantic_core-2.50.2-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "pyyaml-6.0.3-cp313-cp313-win_amd64.whl",
+      "size": 154090,
+      "sha256": "79005a0d97d5ddabfeeea4cf676af11e647e41d81c9a7722a193022accdb6b7c",
+      "url": "https://files.pythonhosted.org/packages/97/c9/39d5b874e8b28845e4ec2202b5da735d0199dbe5b8fb85f91398814a9a46/pyyaml-6.0.3-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 pyyaml-6.0.3-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "typing_extensions-4.16.0-py3-none-any.whl",
+      "size": 45571,
+      "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+      "url": "https://files.pythonhosted.org/packages/49/d3/b8441a820a491ddfc024b0b0cf0393375b75ea13866d9c66727e54c2fc80/typing_extensions-4.16.0-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 typing_extensions-4.16.0-py3-none-any.whl"
+    },
+    {
+      "filename": "typing_inspection-0.4.4-py3-none-any.whl",
+      "size": 14750,
+      "sha256": "65b8397ba37ccbce054456aaccddfc91e6e3083c92824df348d96ca832f3f147",
+      "url": "https://files.pythonhosted.org/packages/67/81/4add07e5172b7ac40d8ed5ff580409a7801a4fe26d529bdd915401dabfbe/typing_inspection-0.4.4-py3-none-any.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 typing_inspection-0.4.4-py3-none-any.whl"
+    },
+    {
+      "filename": "yarl-1.25.1-cp313-cp313-win_amd64.whl",
+      "size": 101945,
+      "sha256": "1f51020b2eb8a003c84925638ec63c21a750a4bddd3a22ec8eac6a742dadf1b9",
+      "url": "https://files.pythonhosted.org/packages/3a/8f/4db01cef62caff0d7a4593ed694fb8a41a27a11158cab80d290221f13e57/yarl-1.25.1-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu isolated proxy \u00b7 yarl-1.25.1-cp313-cp313-win_amd64.whl"
+    }
+  ],
+  "node_groups": [
+    {
+      "name": "ComfyUI 0.41.2 or newer",
+      "url": "https://github.com/Comfy-Org/ComfyUI",
+      "nodes": [
+        "SAM3_VideoTrack",
+        "SAM3_TrackToMask",
+        "TextGenerate",
+        "MiniMaxH3ReferenceToVideo",
+        "MiniMaxH3SigmaShift",
+        "MiniMaxH3FunControlNetApply"
+      ]
+    },
+    {
+      "name": "ComfyUI-Spectrum-MiniMax-H3",
+      "url": "https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3",
+      "nodes": [
+        "SpectrumApplyMiniMaxH3"
+      ]
+    },
+    {
+      "name": "ComfyUI-MiniMaxH3-Context-Loop (0.7.3+)",
+      "url": "https://github.com/ethanfel/ComfyUI-MiniMaxH3-Context-Loop",
+      "nodes": [
+        "MiniMaxH3GenerationProfile",
+        "MiniMaxH3SourceTimeline",
+        "MiniMaxH3ChainPlanModern",
+        "MiniMaxH3ChainLoopStart",
+        "MiniMaxH3ChainCurrent",
+        "MiniMaxH3ChainContext",
+        "MiniMaxH3ChainSegmentSave",
+        "MiniMaxH3ChainReview",
+        "MiniMaxH3ChainLoopEnd",
+        "MiniMaxH3ChainAssemble",
+        "MiniMaxH3ContexLoopMaskSlice",
+        "MiniMaxH3ContexMaskedTarget",
+        "MiniMaxH3ContexMaskGridPreview",
+        "MiniMaxH3LoopTrim"
+      ]
+    },
+    {
+      "name": "comfyui-h3-oneclick-swap",
+      "url": "https://github.com/D3voz/comfyui-h3-oneclick-swap",
+      "nodes": [
+        "H3OneClickSwapPlan",
+        "H3AdvancedSwapPlan",
+        "H3ObjectSwapPlan",
+        "H3ObjectPlacementMask",
+        "H3AddFitCheck",
+        "H3AddMovingArea",
+        "H3PaintedEditArea",
+        "H3SoundtrackOrSilence",
+        "H3SourceSlice",
+        "H3PeopleMask",
+        "H3GreyMannequins",
+        "H3ClipShots",
+        "H3FillShots",
+        "H3TrackCrops",
+        "H3TrackRoles",
+        "H3RoleMask",
+        "H3SubjectPrompt",
+        "H3MontagePeople",
+        "H3MontageTracks",
+        "H3MontagePicks",
+        "H3MontagePlan",
+        "H3MontagePass",
+        "H3FaceChunks",
+        "H3FaceJoin"
+      ]
+    },
+    {
+      "name": "ComfyUI-Fantastic-MiniMaxH3-PromptBuilder",
+      "url": "https://github.com/Adudeguyman/ComfyUI-Fantastic-MiniMaxH3-PromptBuilder",
+      "nodes": [
+        "MiniMaxH3FantasticVideoEditLatent"
+      ]
+    },
+    {
+      "name": "ComfyUI-KJNodes",
+      "url": "https://github.com/kijai/ComfyUI-KJNodes",
+      "nodes": [
+        "GrowMaskWithBlur",
+        "ImageAndMaskPreview",
+        "VRAM_Debug"
+      ]
+    },
+    {
+      "name": "ComfyUI-VideoHelperSuite",
+      "url": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+      "nodes": [
+        "VHS_LoadVideo",
+        "VHS_SelectEveryNthImage",
+        "VHS_VideoCombine"
+      ]
+    },
+    {
+      "name": "ComfyUI-H3-FaceRefine",
+      "url": "https://github.com/Carasibana/ComfyUI-H3-FaceRefine",
+      "nodes": [
+        "H3FaceTrackCrop",
+        "H3FaceMaskSAM",
+        "H3FaceStitch"
+      ]
+    },
+    {
+      "name": "ComfyUI-Impact-Pack",
+      "url": "https://github.com/ltdrdata/ComfyUI-Impact-Pack",
+      "nodes": [
+        "SAMLoader"
+      ]
+    },
+    {
+      "name": "comfyui-image-detail-contrast",
+      "url": "https://github.com/D3voz/comfyui-image-detail-contrast",
+      "nodes": [
+        "ImageDetailContrast"
+      ]
+    },
+    {
+      "name": "Orion4D_FXMax",
+      "url": "https://github.com/orion4d/Orion4D_FXMax",
+      "nodes": [
+        "Orion4D_FXMax_DCTLToneMapper"
+      ]
+    },
+    {
+      "name": "SolarRenderer",
+      "url": "https://github.com/Enderfga/SolarRenderer/tree/main/comfyui",
+      "nodes": [
+        "SolarRendererModel",
+        "SolarRendererLoraLoader",
+        "SolarRendererConditioning",
+        "SolarRendererSigmas"
+      ]
+    },
+    {
+      "name": "comfyui_controlnet_aux",
+      "url": "https://github.com/Fannovel16/comfyui_controlnet_aux",
+      "nodes": [
+        "Metric3D-NormalMapPreprocessor"
+      ]
+    }
+  ]
+}

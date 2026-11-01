@@ -41,6 +41,7 @@ import video_faceswap
 import moss
 import canvas_projects
 import library_actions
+import openjutsu
 
 
 class Studio:
@@ -67,6 +68,7 @@ class Studio:
         self.lock = threading.RLock()
         self.cancel = threading.Event()
         self.engine = Engine(self.root, self.report)
+        self.openjutsu = openjutsu.Workspace(self.root)
         self.videos = load_json(self.root / "library.json", [])
         self.images = load_json(self.root / 'images.json', [])
         self.events.extend(migrate_metadata(self.images,self.videos))
@@ -159,6 +161,7 @@ class Studio:
                     'prompt_enhancer':self.prompts.snapshot(),
                     'enhancers': enhancements.inventory(self.root),
                     'video_faceswap':video_faceswap.inventory(self.root),
+                    'openjutsu':self.openjutsu.snapshot(),
                     'updates': self.updates.snapshot(),
                     'resources': self.resources.snapshot(),
                     'attention':attention_support.snapshot(self.root,self.settings.get('attention','pytorch'),self.engine),
@@ -574,6 +577,8 @@ class Studio:
 
     def enqueue(self,kind,raw,priority=5):
         with self.lock:
+            if self.openjutsu.processes:
+                raise ValueError('Finish and stop the OpenJutsu workspace before queuing Studio generation.')
             _,options=self.prepare_queued(kind,raw)
             if self.removing_model and (options.get('model')==self.removing_model or (self.removing_model=='qwen21' and options.get('upscale',{}).get('enabled'))):
                 raise ValueError('That model is being removed. Wait for removal to finish.')
@@ -581,8 +586,59 @@ class Studio:
             self._kick_queue()
             return item['id']
 
+    def openjutsu_action(self, action, data, parent):
+        with self.lock:
+            if self.state['busy']:
+                raise ValueError('Finish or cancel the current Studio operation first.')
+            if action == 'settings':
+                self.openjutsu.configure(data.get('backend'),data.get('mode'),data.get('models'))
+                return
+            if action == 'check':
+                def check():
+                    result = self.openjutsu.check()
+                    self.report('OpenJutsu backend connected. The editor checks models for each mode.' if result['connected'] else
+                        'OpenJutsu backend unavailable. See its setup details.',1 if result['connected'] else 0)
+                self.run_job(check)
+                return
+            if action == 'install':
+                if self.openjutsu.processes:
+                    raise ValueError('Stop the OpenJutsu workspace before repairing its app.')
+                self.run_job(lambda:openjutsu.install(self.root,self.report,self.cancel))
+                return
+            if action == 'install-managed':
+                if self.openjutsu.processes:raise ValueError('Stop OpenJutsu before installing its backend or models.')
+                import openjutsu_backend
+                keys = data.get('groups', [])
+                token = data.get('token', '')
+                openjutsu_backend.preflight(self.root,keys,token)
+                def install_managed():
+                    self.engine.stop()
+                    openjutsu_backend.install_software(self.root,self.report,self.cancel)
+                    openjutsu_backend.install_models(self.root,keys,self.report,self.cancel,token)
+                    if not openjutsu.ready(self.root):openjutsu.install(self.root,self.report,self.cancel)
+                    self.report('OpenJutsu setup complete. Open the workspace to begin.',1)
+                self.run_job(install_managed)
+                return
+            if action == 'start':
+                # Two independent queues must not silently compete for the GPU.
+                self.queue.paused = True
+                self.queue.save()
+                def start():
+                    self.engine.stop()
+                    self.openjutsu.start(parent,self.report,self.cancel)
+                self.run_job(start)
+                return
+            if action == 'stop':
+                def stop():
+                    confirmed = self.openjutsu.stop()
+                    self.report('OpenJutsu workspace stopped. Studio queue remains paused.' if confirmed else
+                        'Workspace stopped; backend unavailable. Check ComfyUI for unfinished jobs before resuming Studio.',0)
+                self.run_job(stop)
+                return
+            raise ValueError('Unknown OpenJutsu action.')
+
     def _kick_queue(self):
-        if self.state['busy'] or self.closing:return
+        if self.state['busy'] or self.closing or self.openjutsu.processes:return
         while (item:=self.queue.next()) is not None:
             try:
                 target,_=self.prepare_queued(item['kind'],self.hydrate_queued(item),item['output'])
@@ -600,6 +656,8 @@ class Studio:
         with self.lock:
             action=data.get('action');identifier=data.get('id')
             if action in ('pause','resume'):
+                if action=='resume' and self.openjutsu.processes:
+                    raise ValueError('Finish and stop the OpenJutsu workspace before resuming the Studio queue.')
                 self.queue.paused=action=='pause';self.queue.save()
             elif action=='failure_policy':
                 value=data.get('continue_on_error')
@@ -748,6 +806,7 @@ class Studio:
                 raise
 
     def check_attention(self, enable=False):
+        if self.openjutsu.processes:raise ValueError('Stop the OpenJutsu workspace before checking Studio GPU acceleration.')
         if not isinstance(enable,bool):raise ValueError('Choose whether to enable SageAttention after checking.')
         def job():
             self.engine.stop()
@@ -961,6 +1020,8 @@ def make_handler(studio, shutdown):
                 return self.send_file(resource('studio-avatars.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-video-faceswap.js':
                 return self.send_file(resource('studio-video-faceswap.js'), 'text/javascript; charset=utf-8')
+            if url.path == '/studio-openjutsu.js':
+                return self.send_file(resource('studio-openjutsu.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-moss.js':
                 return self.send_file(resource('studio-moss.js'), 'text/javascript; charset=utf-8')
             if url.path == '/studio-canvas.js':
@@ -997,7 +1058,7 @@ def make_handler(studio, shutdown):
                 self.send_header("Content-Length", str(len(body)))
                 self.send_header("Cache-Control", "no-store")
                 self.send_header("Referrer-Policy", "no-referrer")
-                self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src 'self'; connect-src 'self'; img-src 'self' data:")
+                self.send_header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src 'self'; connect-src 'self'; img-src 'self' data:; frame-src http://127.0.0.1:*")
                 self.end_headers()
                 return self.wfile.write(body)
             return self.send_json({"error": "Not found"}, 404)
@@ -1062,6 +1123,8 @@ def make_handler(studio, shutdown):
                     raise ValueError("Expected an object.")
                 if self.path == '/api/updates/check':
                     return self.send_json(studio.updates.check())
+                elif self.path.startswith('/api/openjutsu/'):
+                    studio.openjutsu_action(self.path.rsplit('/',1)[-1],data,f'http://127.0.0.1:{self.server.server_port}')
                 elif self.path in ('/api/canvas/import','/api/canvas/export'):
                     return self.send_json({'ok':True,'item':studio.canvas_image(data,self.path.endswith('/export'))})
                 elif self.path in ('/api/canvas/project','/api/canvas/draft'):
@@ -1285,6 +1348,7 @@ def main():
     atomic_json(instance_path, instance_data)
     atexit.register(studio.engine.stop)
     atexit.register(studio.prompts.close)
+    atexit.register(studio.openjutsu.close)
     host = None
     server_thread = None
     try:
@@ -1324,6 +1388,7 @@ def main():
             server.shutdown()
             server_thread.join(timeout=5)
         studio.engine.stop()
+        studio.openjutsu.close()
         server.server_close()
         if load_json(instance_path, {}).get("token") == studio.token:
             instance_path.unlink(missing_ok=True)
@@ -1333,6 +1398,20 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as error:
+        # A windowed executable has no stderr. Preserve startup failures before
+        # showing a dialog; headless diagnostics must never wait on a hidden one.
+        import traceback
+        try:
+            failure_root = Path(sys.argv[sys.argv.index('--root') + 1]) if '--root' in sys.argv else app_root()
+            failure_log = failure_root / 'logs/startup.log'
+            failure_log.parent.mkdir(parents=True, exist_ok=True)
+            with failure_log.open('a', encoding='utf-8') as stream:
+                stream.write(time.strftime('%Y-%m-%d %H:%M:%S') + '\n' + traceback.format_exc() + '\n')
+        except (OSError, ValueError, IndexError):
+            pass
+        if '--headless' in sys.argv or '--no-browser' in sys.argv:
+            if sys.stderr:print(str(error), file=sys.stderr)
+            raise SystemExit(1)
         import tkinter as tk
         from tkinter import messagebox
         window = tk.Tk()

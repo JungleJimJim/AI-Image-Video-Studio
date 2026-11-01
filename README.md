@@ -27,6 +27,18 @@ If you'd like to support this project, you can make a donation through [Gumroad]
 
 ![A.I. Image & Video Studio Talking Avatar interface](https://github.com/JungleJimJim/AI-Image-Video-Studio/blob/main/Screenshot%202026-11-01%20003505.png?raw=true)
 
+## Video Editor with managed OpenJutsu in 1.17.3
+
+**Video Editor**, beside Video, hosts the complete [OpenJutsu editor](https://github.com/D3voz/openjutsu): Simple/Advanced character swaps, Montage/Find people, object Change/Remove/Add/Background, From picture, Relight, Fix faces and Fix colours. **Models → OpenJutsu → Open setup** opens the same setup page.
+
+Version 1.17.2 waits until the editor and proxy answer their HTTP checks before loading the embedded workspace, preventing an initial connection-refused page. It also includes 1.17.1's longer backend startup allowance and elapsed-time reporting. Installed editor, backend and model components are reused.
+
+Choose **Managed by Studio**, select a model folder and packs, then click **Install selected setup**. Studio installs the editor, portable Node runtime, proxy, separate ComfyUI engine, all 13 required node packs, FFmpeg and selected verified models. No manual ComfyUI installation is required. Studio's base runtime and internet access are needed. **Software only** installs the engine and editor without model weights.
+
+Allow about 6 GB for software, caches and builds. The three model packs total about 69.5 GB before reuse: character/object editing 48.0 GB, relighting 20.8 GB, and face refinement 0.7 GB. Matching Studio models are verified and reused without moving them. Choose another drive if needed. FLUX relighting requires accepting its Hugging Face access conditions and entering a read token; Studio does not save the token. Models and node packs retain their individual terms. An existing external ComfyUI remains optional.
+
+**Open workspace** pauses Studio's queue and releases its generation engine. OpenJutsu uses its own queue and cancellation controls. Finish/cancel its jobs before **Stop workspace**, then explicitly resume Studio's queue. Closing Studio stops its managed editor, proxy and backend, including active managed renders; external ComfyUI services remain running. Download a completed video in OpenJutsu, then use **Import finished video** to copy it into Studio's Library. Installation checks all required node imports on CPU; all-mode AI inference has not been validated. [Setup details](docs/RELEASE-1.17.0.md).
+
 ## Models controls in 1.15.2
 
 The **Install selected models** toolbar stays visible at the top of Models while you scroll through the catalog. Its selection controls and download estimate remain together, including on narrower windows.

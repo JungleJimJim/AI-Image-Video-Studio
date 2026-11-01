@@ -45,3 +45,5 @@ engine-profiles/
 .avatar-*/
 .ref2va-*/
 .ui-validation/
+.openjutsu-validation/
+.openjutsu-backend-validation/

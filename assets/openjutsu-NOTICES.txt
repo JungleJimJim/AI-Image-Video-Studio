@@ -1,0 +1,27 @@
+MIT License
+
+Copyright (c) 2026 D3voz
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+Studio integration: full upstream UI/workflows; local framing middleware is adapted to permit only the owning Studio origin. Upstream API authentication and origin checks remain enabled.
+Node.js, proxy, ComfyUI, FFmpeg and node dependencies retain their own licenses, included in their downloaded distributions. Managed setup preserves the pinned node sources and their license files. ComfyUI is GPL-3.0. KJNodes and controlnet_aux use minimal import adapters for the nodes required by OpenJutsu; original entry points are preserved as __init__.upstream.py.
+
+The Python 3.13 InsightFace 0.7.3 Windows wheel comes from the pinned Gourieff/Assets repository. InsightFace software and pretrained models have distinct terms; buffalo_l pretrained models are intended for non-commercial research. Model download URLs, revisions, sizes and SHA-256 checksums are recorded in openjutsu-backend.json. Hugging Face model cards and original publishers define each model's usage and access conditions. Installing model files does not grant additional usage rights.

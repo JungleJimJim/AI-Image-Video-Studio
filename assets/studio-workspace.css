@@ -48,3 +48,16 @@ body.filmstrip-hidden,body.workspace-focus{grid-template-rows:54px 34px 26px min
 .prompt-enhancer-action{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:6px}.prompt-enhancer-action button{font-size:11px;padding:5px 9px}
 .prompt-ai-comparison{display:grid;grid-template-columns:1fr 1fr;gap:14px}.prompt-ai-comparison textarea{min-height:200px;resize:vertical}#prompt-ai-dialog{width:min(980px,92vw);max-height:90vh;overflow:auto}#prompt-ai-dialog .row{flex-wrap:wrap}
 @media(max-width:750px){.prompt-ai-comparison{grid-template-columns:1fr}.prompt-ai-comparison textarea{min-height:130px}}
+/* OpenJutsu owns its editor layout inside its separate local origin. */
+.oj-workspace .oj-editor{position:relative;flex:1;min-height:0;display:flex;background:#111214}
+.oj-editor iframe{border:0;width:100%;height:100%;flex:1;min-height:0;background:#111214}
+.oj-editor [hidden]{display:none}
+.oj-empty{margin:auto;max-width:620px;padding:48px;color:#b8bdc7;line-height:1.7}
+.oj-empty h2{font-size:clamp(24px,3vw,42px);line-height:1.2;color:#eef0f4;max-width:500px}
+.oj-empty h2::before{content:'OPENJUTSU';display:block;font-size:12px;letter-spacing:.16em;color:#bfccff;margin-bottom:20px}
+.oj-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.oj-workspace .control-scroll>h2{font-size:18px;margin-bottom:14px}
+#oj-backend{width:100%;margin:8px 0 12px}
+#oj-missing small{display:block;overflow-wrap:anywhere;margin:5px 0 12px}
+#oj-missing ul{padding-left:18px}
+@media(max-width:900px){.oj-empty{padding:28px}}

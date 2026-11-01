@@ -1,0 +1,844 @@
+{
+  "engine": {
+    "label": "MOSS compatible engine",
+    "filename": "ComfyUI-moss-7a283320.zip",
+    "url": "https://api.github.com/repos/Comfy-Org/ComfyUI/zipball/7a28332047b6af638dc6c7f72ef3481a718769fd",
+    "size": 13462567,
+    "sha256": "e7de22a06cfbecab179addbeefd0e10a3d35b72c068ca9e0c8c9d002dd741d27"
+  },
+  "nodes": [
+    {
+      "name": "ComfyUI-Fantastic-MiniMaxH3-PromptBuilder",
+      "repository": "https://github.com/Adudeguyman/ComfyUI-Fantastic-MiniMaxH3-PromptBuilder",
+      "revision": "22e719fe89336c628383363182a4da3cb58d4f9b",
+      "archive": {
+        "label": "ComfyUI-Fantastic-MiniMaxH3-PromptBuilder",
+        "filename": "ComfyUI-Fantastic-MiniMaxH3-PromptBuilder-22e719fe.zip",
+        "url": "https://codeload.github.com/Adudeguyman/ComfyUI-Fantastic-MiniMaxH3-PromptBuilder/zip/22e719fe89336c628383363182a4da3cb58d4f9b",
+        "size": 3865224,
+        "sha256": "2b952a602746e842e122b8ace3f90636b6f56fd2760e2738fc4db9213616e3ac"
+      }
+    },
+    {
+      "name": "ComfyUI-H3-FaceRefine",
+      "repository": "https://github.com/Carasibana/ComfyUI-H3-FaceRefine",
+      "revision": "d8521d14fe0d721d80cd9417fff5a559cbc21aba",
+      "archive": {
+        "label": "ComfyUI-H3-FaceRefine",
+        "filename": "ComfyUI-H3-FaceRefine-d8521d14.zip",
+        "url": "https://codeload.github.com/Carasibana/ComfyUI-H3-FaceRefine/zip/d8521d14fe0d721d80cd9417fff5a559cbc21aba",
+        "size": 20641079,
+        "sha256": "9268570fea9f76e5ac9e4244c792c99618e8b68a688060d9bd6a939612bf92f7"
+      }
+    },
+    {
+      "name": "comfyui-h3-oneclick-swap",
+      "repository": "https://github.com/D3voz/comfyui-h3-oneclick-swap",
+      "revision": "e44a56e92920000e675d14be484aea0d7498d63e",
+      "archive": {
+        "label": "comfyui-h3-oneclick-swap",
+        "filename": "comfyui-h3-oneclick-swap-e44a56e9.zip",
+        "url": "https://codeload.github.com/D3voz/comfyui-h3-oneclick-swap/zip/e44a56e92920000e675d14be484aea0d7498d63e",
+        "size": 47511,
+        "sha256": "6d9783d8600ab531d121cf350440edbcdca97b00ad0fa744406a0b0efcf4e656"
+      }
+    },
+    {
+      "name": "comfyui-image-detail-contrast",
+      "repository": "https://github.com/D3voz/comfyui-image-detail-contrast",
+      "revision": "485a5e246424ce012b998862b45f06d21e8d63b2",
+      "archive": {
+        "label": "comfyui-image-detail-contrast",
+        "filename": "comfyui-image-detail-contrast-485a5e24.zip",
+        "url": "https://codeload.github.com/D3voz/comfyui-image-detail-contrast/zip/485a5e246424ce012b998862b45f06d21e8d63b2",
+        "size": 4054,
+        "sha256": "88aae48c48a40221c4bf507fd51327c36300630c36691f5e3920794efa2ec403"
+      }
+    },
+    {
+      "name": "comfyui-websocket-reconnect-fix",
+      "repository": "https://github.com/D3voz/comfyui-websocket-reconnect-fix",
+      "revision": "12b5fdf38e8bdbf8a560b9196561244bf65621f4",
+      "archive": {
+        "label": "comfyui-websocket-reconnect-fix",
+        "filename": "comfyui-websocket-reconnect-fix-12b5fdf3.zip",
+        "url": "https://codeload.github.com/D3voz/comfyui-websocket-reconnect-fix/zip/12b5fdf38e8bdbf8a560b9196561244bf65621f4",
+        "size": 3412,
+        "sha256": "8ac7b731b1e7f08827489e4845f75393b13d8ad4cf92dcc2f48fb697c28362de"
+      }
+    },
+    {
+      "name": "SolarRenderer",
+      "repository": "https://github.com/Enderfga/SolarRenderer",
+      "revision": "0ca4f5e45b062cc9e9aee506de46aabdc22e4c3d",
+      "archive": {
+        "label": "SolarRenderer",
+        "filename": "SolarRenderer-0ca4f5e4.zip",
+        "url": "https://codeload.github.com/Enderfga/SolarRenderer/zip/0ca4f5e45b062cc9e9aee506de46aabdc22e4c3d",
+        "size": 47847620,
+        "sha256": "1ed0310ba44d0921b2de37511eb293b44eaacd960357b6aef8868c7d0dcfe762"
+      },
+      "subdirectory": "comfyui"
+    },
+    {
+      "name": "comfyui_controlnet_aux",
+      "repository": "https://github.com/Fannovel16/comfyui_controlnet_aux",
+      "revision": "a587a4c1594524c1d2de5cd1a86cd868ff448e1c",
+      "archive": {
+        "label": "comfyui_controlnet_aux",
+        "filename": "comfyui_controlnet_aux-a587a4c1.zip",
+        "url": "https://codeload.github.com/Fannovel16/comfyui_controlnet_aux/zip/a587a4c1594524c1d2de5cd1a86cd868ff448e1c",
+        "size": 39937384,
+        "sha256": "3d717b853303c3c030effbb5ee23fd461ba427917b161b9340a01ea3c0341868"
+      },
+      "adapter": "import sys\nfrom pathlib import Path\nhere=Path(__file__).resolve().parent\nsys.path[:0]=[str(here/\"src\"),str(here/\"src/custom_controlnet_aux\"),str(here/\"src/custom_mmpkg\")]\nfrom .node_wrappers.metric3d import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS\n"
+    },
+    {
+      "name": "ComfyUI-VideoHelperSuite",
+      "repository": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite",
+      "revision": "4d907bee61e92c2e65af3bd6383a4e4d356126d1",
+      "archive": {
+        "label": "ComfyUI-VideoHelperSuite",
+        "filename": "ComfyUI-VideoHelperSuite-4d907bee.zip",
+        "url": "https://codeload.github.com/Kosinkadink/ComfyUI-VideoHelperSuite/zip/4d907bee61e92c2e65af3bd6383a4e4d356126d1",
+        "size": 116108,
+        "sha256": "5114977eefb133c76592a5213c45ad3caa1ad7b1c2e4a77905b5ff0c48ca4363"
+      }
+    },
+    {
+      "name": "ComfyUI-MiniMaxH3-Context-Loop",
+      "repository": "https://github.com/ethanfel/ComfyUI-MiniMaxH3-Context-Loop",
+      "revision": "43afeffcc570beb5f7382593e79e4b211c7e02f6",
+      "archive": {
+        "label": "ComfyUI-MiniMaxH3-Context-Loop",
+        "filename": "ComfyUI-MiniMaxH3-Context-Loop-43afeffc.zip",
+        "url": "https://codeload.github.com/ethanfel/ComfyUI-MiniMaxH3-Context-Loop/zip/43afeffcc570beb5f7382593e79e4b211c7e02f6",
+        "size": 22528798,
+        "sha256": "497eb7e049ed77c2c99e2d8940225281d1308a1a1870932965529c1ae079cf91"
+      }
+    },
+    {
+      "name": "ComfyUI-KJNodes",
+      "repository": "https://github.com/kijai/ComfyUI-KJNodes",
+      "revision": "ab72eda7ffad6280422d71ab7d54d3fb87c0ba18",
+      "archive": {
+        "label": "ComfyUI-KJNodes",
+        "filename": "ComfyUI-KJNodes-ab72eda7.zip",
+        "url": "https://codeload.github.com/kijai/ComfyUI-KJNodes/zip/ab72eda7ffad6280422d71ab7d54d3fb87c0ba18",
+        "size": 1189105,
+        "sha256": "632b3ad45a67caf11e21d2c4c751caafb097d20a72ea2e6383545a628da7b9ef"
+      },
+      "adapter": "from .nodes.mask_nodes import GrowMaskWithBlur\nfrom .nodes.image_nodes import ImageAndMaskPreview\nfrom .nodes.nodes import VRAM_Debug\nNODE_CLASS_MAPPINGS = dict(GrowMaskWithBlur=GrowMaskWithBlur, ImageAndMaskPreview=ImageAndMaskPreview, VRAM_Debug=VRAM_Debug)\n"
+    },
+    {
+      "name": "ComfyUI-Impact-Pack",
+      "repository": "https://github.com/ltdrdata/ComfyUI-Impact-Pack",
+      "revision": "edabb4a66827193fbffe9e5704a1e6eeb2be18de",
+      "archive": {
+        "label": "ComfyUI-Impact-Pack",
+        "filename": "ComfyUI-Impact-Pack-edabb4a6.zip",
+        "url": "https://codeload.github.com/ltdrdata/ComfyUI-Impact-Pack/zip/edabb4a66827193fbffe9e5704a1e6eeb2be18de",
+        "size": 2791165,
+        "sha256": "91336246987bff6c256d64cc3dd9de750811b79d6be08a9db0f83873be2c761f"
+      }
+    },
+    {
+      "name": "Orion4D_FXMax",
+      "repository": "https://github.com/orion4d/Orion4D_FXMax",
+      "revision": "7048e8423ad7d1a6a52119d0d4870c2b7fc2885f",
+      "archive": {
+        "label": "Orion4D_FXMax",
+        "filename": "Orion4D_FXMax-7048e842.zip",
+        "url": "https://codeload.github.com/orion4d/Orion4D_FXMax/zip/7048e8423ad7d1a6a52119d0d4870c2b7fc2885f",
+        "size": 89879,
+        "sha256": "62de80390fa80909a82d4f66781043d9dbc93257c923a474598e593e0ea05853"
+      }
+    },
+    {
+      "name": "ComfyUI-Spectrum-MiniMax-H3",
+      "repository": "https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3",
+      "revision": "806fe498d574a726fecb8818917f00a4b993fd77",
+      "archive": {
+        "label": "ComfyUI-Spectrum-MiniMax-H3",
+        "filename": "ComfyUI-Spectrum-MiniMax-H3-806fe498.zip",
+        "url": "https://codeload.github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3/zip/806fe498d574a726fecb8818917f00a4b993fd77",
+        "size": 636346,
+        "sha256": "949eb9410fd1dfcf812843af2c92bcdc81a7732cc30c60c9f8b4e244b106684f"
+      }
+    }
+  ],
+  "wheels": [
+    {
+      "filename": "addict-2.4.0-py3-none-any.whl",
+      "sha256": "249bb56bbfd3cdc2a004ea0ff4c2b6ddc84d53bc2194761636eb314d5cfa5dfc",
+      "size": 3832,
+      "url": "https://files.pythonhosted.org/packages/6a/00/b08f23b7d7e1e14ce01419a467b583edbb93c6cdb8654e54a9cc579cd61f/addict-2.4.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 addict-2.4.0-py3-none-any.whl"
+    },
+    {
+      "filename": "albucore-0.0.24-py3-none-any.whl",
+      "sha256": "adef6e434e50e22c2ee127b7a3e71f2e35fa088bcf54431e18970b62d97d0005",
+      "size": 15372,
+      "url": "https://files.pythonhosted.org/packages/0a/e2/91f145e1f32428e9e1f21f46a7022ffe63d11f549ee55c3b9265ff5207fc/albucore-0.0.24-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 albucore-0.0.24-py3-none-any.whl"
+    },
+    {
+      "filename": "albumentations-2.0.8-py3-none-any.whl",
+      "sha256": "c4c4259aaf04a7386ad85c7fdcb73c6c7146ca3057446b745cc035805acb1017",
+      "size": 369423,
+      "url": "https://files.pythonhosted.org/packages/8e/64/013409c451a44b61310fb757af4527f3de57fc98a00f40448de28b864290/albumentations-2.0.8-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 albumentations-2.0.8-py3-none-any.whl"
+    },
+    {
+      "filename": "cloudpickle-3.1.2-py3-none-any.whl",
+      "sha256": "9acb47f6afd73f60dc1df93bb801b472f05ff42fa6c84167d25cb206be1fbf4a",
+      "size": 22228,
+      "url": "https://files.pythonhosted.org/packages/88/39/799be3f2f0f38cc727ee3b4f1445fe6d5e4133064ec2e4115069418a5bb6/cloudpickle-3.1.2-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 cloudpickle-3.1.2-py3-none-any.whl"
+    },
+    {
+      "filename": "color_matcher-0.6.0-py3-none-any.whl",
+      "sha256": "fd642f9414c33b7f3ebc96fe0888c1c6200836142664589ce2ccb52ebcda7734",
+      "size": 1803956,
+      "url": "https://files.pythonhosted.org/packages/a0/3a/f3c2c5012f59235ff5885db7cc75dc209eca90e42ae3728db56f8a9e28a4/color_matcher-0.6.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 color_matcher-0.6.0-py3-none-any.whl"
+    },
+    {
+      "filename": "contourpy-1.4.0-cp313-cp313-win_amd64.whl",
+      "sha256": "6507a016976a75a15aee47809a34605de6244ccc056e6164bf9fb14b27eecad4",
+      "size": 234084,
+      "url": "https://files.pythonhosted.org/packages/68/c1/a59df0754bf83a6f3e153cc19d550a5b01f607e389b1c4d57f436f9139e0/contourpy-1.4.0-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 contourpy-1.4.0-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "cycler-0.12.1-py3-none-any.whl",
+      "sha256": "85cef7cff222d8644161529808465972e51340599459b8ac3ccbac5a854e0d30",
+      "size": 8321,
+      "url": "https://files.pythonhosted.org/packages/e7/05/c19819d5e3d95294a6f5947fb9b9629efb316b96de511b418c53d245aae6/cycler-0.12.1-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 cycler-0.12.1-py3-none-any.whl"
+    },
+    {
+      "filename": "cython-3.3.0-cp313-cp313-win_amd64.whl",
+      "sha256": "ab24d1a4fb6aaf0b5b6fcd75a6d70255fbd3130fa78884c26991f8d5502616b5",
+      "size": 2866216,
+      "url": "https://files.pythonhosted.org/packages/d8/d7/376572ff69ef39a9bdcd727124f6c38aa066300e97734a4902a3ae0d2af0/cython-3.3.0-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 cython-3.3.0-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "ddt-1.7.2-py2.py3-none-any.whl",
+      "sha256": "6adcfaf9785f0a36f9e73a89b91e412de9ef8649e289b750e3683bc79d5e2354",
+      "size": 7065,
+      "url": "https://files.pythonhosted.org/packages/61/7c/38d1aec205833096eddefcbb3492fbb2c886e74174c72bc160da9522b2f0/ddt-1.7.2-py2.py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 ddt-1.7.2-py2.py3-none-any.whl"
+    },
+    {
+      "filename": "dill-0.4.1-py3-none-any.whl",
+      "sha256": "1e1ce33e978ae97fcfcff5638477032b801c46c7c65cf717f95fbc2248f79a9d",
+      "size": 120019,
+      "url": "https://files.pythonhosted.org/packages/1e/77/dc8c558f7593132cf8fefec57c4f60c83b16941c574ac5f619abb3ae7933/dill-0.4.1-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 dill-0.4.1-py3-none-any.whl"
+    },
+    {
+      "filename": "docutils-0.23-py3-none-any.whl",
+      "sha256": "25d013af9bf23bc1c7b2b093dff4208166c53a94786c9e447808335ef1185fea",
+      "size": 634701,
+      "url": "https://files.pythonhosted.org/packages/32/91/30151a39f7570f448ed84529390628a651d7f27c87d73c9b887f8189695e/docutils-0.23-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 docutils-0.23-py3-none-any.whl"
+    },
+    {
+      "filename": "easydict-1.13-py3-none-any.whl",
+      "sha256": "6b787daf4dcaf6377b4ad9403a5cee5a86adbc0ca9a5bcf5410e9902002aeac2",
+      "size": 6804,
+      "url": "https://files.pythonhosted.org/packages/05/ec/fa6963f1198172c2b75c9ab6ecefb3045991f92f75f5eb41b6621b198123/easydict-1.13-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 easydict-1.13-py3-none-any.whl"
+    },
+    {
+      "filename": "flatbuffers-25.12.19-py2.py3-none-any.whl",
+      "sha256": "7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4",
+      "size": 26661,
+      "url": "https://files.pythonhosted.org/packages/e8/2d/d2a548598be01649e2d46231d151a6c56d10b964d94043a335ae56ea2d92/flatbuffers-25.12.19-py2.py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 flatbuffers-25.12.19-py2.py3-none-any.whl"
+    },
+    {
+      "filename": "fonttools-4.68.0-cp313-cp313-win_amd64.whl",
+      "sha256": "6ed796b220654b4d37ad20af73419ec7969b669dd678cab88afb602c5683a331",
+      "size": 2531658,
+      "url": "https://files.pythonhosted.org/packages/61/2b/6c6f578176edeec83c5e02b7e745c1c8029f8cec4e32b4898d2c573bb881/fonttools-4.68.0-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 fonttools-4.68.0-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "imageio-2.38.1-py3-none-any.whl",
+      "sha256": "36d23eb7423d2fb63f637098758edb3d2df3687f7125e0a5ce8596572022dcf9",
+      "size": 328389,
+      "url": "https://files.pythonhosted.org/packages/7d/8a/3b7f62b9df56460959f1b9bef094248d2a4d7f393c5b0d2da8efcdf0e40e/imageio-2.38.1-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 imageio-2.38.1-py3-none-any.whl"
+    },
+    {
+      "label": "InsightFace Windows wheel \u00b7 Gourieff build",
+      "filename": "insightface-0.7.3-cp313-cp313-win_amd64.whl",
+      "url": "https://raw.githubusercontent.com/Gourieff/Assets/606558ed08f16b99a29ef30b0df0b4622164c524/Insightface/insightface-0.7.3-cp313-cp313-win_amd64.whl",
+      "size": 874718,
+      "sha256": "7aa0ce24bc76a31d48b22f5ced38f344a857bc7d6a56071e4f23ab033a638f1c"
+    },
+    {
+      "filename": "joblib-1.6.0-py3-none-any.whl",
+      "sha256": "3dbbf9f6e4b592a2357b854608e980fe6390d131d7a82f011a377ef2ebef7aba",
+      "size": 306115,
+      "url": "https://files.pythonhosted.org/packages/18/53/84099323c2ec4be98d935f63c033ac4151ee83836ca1050ede3b3aadf155/joblib-1.6.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 joblib-1.6.0-py3-none-any.whl"
+    },
+    {
+      "filename": "kiwisolver-1.5.1-cp313-cp313-win_amd64.whl",
+      "sha256": "dc23390afe9f4ef9ac3bcc72a03a56eebbde03f4c571a32cb38f859cff9a6524",
+      "size": 70758,
+      "url": "https://files.pythonhosted.org/packages/f5/22/deabbb3ad6d918d74b7831b2d8ae7151b09d21c87974e5ee8a456f58c94c/kiwisolver-1.5.1-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 kiwisolver-1.5.1-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "lazy_loader-0.6-py3-none-any.whl",
+      "sha256": "77253be3391b06124a0e16105bd663b6c54470af1a9ca8e1cf026f38d58ed056",
+      "size": 8791,
+      "url": "https://files.pythonhosted.org/packages/23/93/4e45e37f26c820216704b36b8e67cc55c490a7abd287a78a26a2c0e21386/lazy_loader-0.6-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 lazy_loader-0.6-py3-none-any.whl"
+    },
+    {
+      "filename": "matplotlib-3.11.2-cp313-cp313-win_amd64.whl",
+      "sha256": "bc067c462a86f0e57bf52fc6e058d90171a5420007dac00c46e90153050c69a7",
+      "size": 9349539,
+      "url": "https://files.pythonhosted.org/packages/94/2e/6d1d33f242c705b5c6c6fb3f0fc141add51cb1abb62912e59de0835d28c4/matplotlib-3.11.2-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 matplotlib-3.11.2-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "ml_dtypes-0.6.0-cp313-cp313-win_amd64.whl",
+      "sha256": "fb87f46b4f7ad7b5d3ad8f4b452b024bd4229d44c8ff934798c1fe656210387a",
+      "size": 439357,
+      "url": "https://files.pythonhosted.org/packages/e2/55/4561acefa00fa4bcbfb82ca6a48578b41f372cd7dd7cdd6eb4720abc2e5f/ml_dtypes-0.6.0-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 ml_dtypes-0.6.0-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "mmengine-0.10.7-py3-none-any.whl",
+      "sha256": "262ac976a925562f78cd5fd14dd1bc9b680ed0aa81f0d85b723ef782f99c54ee",
+      "size": 452720,
+      "url": "https://files.pythonhosted.org/packages/98/8e/f98332248aad102511bea4ae19c0ddacd2f0a994f3ca4c82b7a369e0af8b/mmengine-0.10.7-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 mmengine-0.10.7-py3-none-any.whl"
+    },
+    {
+      "filename": "mss-10.2.0-py3-none-any.whl",
+      "sha256": "e79f428899280e7e64e38365b5bfed683851ebea807eeaeadaf06eb8e0d67197",
+      "size": 67106,
+      "url": "https://files.pythonhosted.org/packages/f2/c3/313e14f245c79b4c05bd0f3a84a4813aa26fa10f8993aebd91d04c5fad3f/mss-10.2.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 mss-10.2.0-py3-none-any.whl"
+    },
+    {
+      "filename": "narwhals-2.28.0-py3-none-any.whl",
+      "sha256": "1f69d6385ec30e2fa6e1fdeb37c562ecabd0f713f6f3e3b58a668c5c9df9567f",
+      "size": 490591,
+      "url": "https://files.pythonhosted.org/packages/cf/82/8ef9c7e0f50493307a49c09cfa7f00c5a778b6d1921f7b2dabe1d3a5809e/narwhals-2.28.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 narwhals-2.28.0-py3-none-any.whl"
+    },
+    {
+      "filename": "numkong-7.8.6-cp313-cp313-win_amd64.whl",
+      "sha256": "e5c1b877f05145b809f65513bcde1f1c03b586a3fe29eac645774064bdfb33ed",
+      "size": 495272,
+      "url": "https://files.pythonhosted.org/packages/18/a3/a90b6219635c141b0b198aacc7adf3088232b92ac6f54cf866fa69bd130a/numkong-7.8.6-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 numkong-7.8.6-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "nvidia_ml_py-13.615.71-py3-none-any.whl",
+      "sha256": "959bf4adf6fe1308e4bd739e722236b0d1ec8392e2cefad33ff70c311380b9b6",
+      "size": 58132,
+      "url": "https://files.pythonhosted.org/packages/53/a1/1681dfa1c904d4e3e72e51b55a0ff012d50b766843ef832d584abe2113c6/nvidia_ml_py-13.615.71-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 nvidia_ml_py-13.615.71-py3-none-any.whl"
+    },
+    {
+      "filename": "omegaconf-2.4.0-py3-none-any.whl",
+      "sha256": "f141a664c777582405e3cc6e0545ecc79429e79f844995b1a6e71c35946a025c",
+      "size": 254152,
+      "url": "https://files.pythonhosted.org/packages/4f/bd/0d9f8247b0819385213d09564eda5c52d3673313c2414d51f72883ec24cd/omegaconf-2.4.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 omegaconf-2.4.0-py3-none-any.whl"
+    },
+    {
+      "filename": "onnx-1.23.2-cp312-abi3-win_amd64.whl",
+      "sha256": "9b382ba898a7c142a0801d03cf04ecabced96c1543c7b643a86f0928143802de",
+      "size": 7872489,
+      "url": "https://files.pythonhosted.org/packages/38/ce/102fd4a0b2a6d111a9c86745e084c4c68c0ee020eaa359a03a8d43e4646f/onnx-1.23.2-cp312-abi3-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 onnx-1.23.2-cp312-abi3-win_amd64.whl"
+    },
+    {
+      "filename": "onnxruntime-1.31.1-cp313-cp313-win_amd64.whl",
+      "sha256": "0558f29d5f6ac09957390c9c5495931485ee8ae7f0ce781ccee86a0ae5c2348b",
+      "size": 14888304,
+      "url": "https://files.pythonhosted.org/packages/59/bf/a1d282b4c753ba3e9b31f4c11abd2bc2390513dc5e3792ca3b78e42401c3/onnxruntime-1.31.1-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 onnxruntime-1.31.1-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl",
+      "sha256": "829717b6a95554f273e49e357cee3b3a2a26b6f4842fbc1bed2b45bdd8f87e0e",
+      "size": 43825962,
+      "url": "https://files.pythonhosted.org/packages/b8/88/763b967f7efd7226b82c9fae16d560cba049b1f0c036647e65c610fd636e/opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 opencv_python_headless-5.0.0.93-cp37-abi3-win_amd64.whl"
+    },
+    {
+      "filename": "packaging-26.3-py3-none-any.whl",
+      "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+      "size": 129956,
+      "url": "https://files.pythonhosted.org/packages/63/34/ba1c580383c9eada3711951fef0795c80b829a078d72188184bcab9dd527/packaging-26.3-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 packaging-26.3-py3-none-any.whl"
+    },
+    {
+      "filename": "piexif-1.1.3-py2.py3-none-any.whl",
+      "sha256": "3bc435d171720150b81b15d27e05e54b8abbde7b4242cddd81ef160d283108b6",
+      "size": 20691,
+      "url": "https://files.pythonhosted.org/packages/2c/d8/6f63147dd73373d051c5eb049ecd841207f898f50a5a1d4378594178f6cf/piexif-1.1.3-py2.py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 piexif-1.1.3-py2.py3-none-any.whl"
+    },
+    {
+      "filename": "platformdirs-4.14.2-py3-none-any.whl",
+      "sha256": "dc1f93390f2a9265e44e5afc8667ec7faf737739604e39bc538fec889720c36b",
+      "size": 35291,
+      "url": "https://files.pythonhosted.org/packages/0b/2d/98af31fdcd7c95c7114e2eb7c2eb0fa55d2a012c37ba4eb3722b7272abcb/platformdirs-4.14.2-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 platformdirs-4.14.2-py3-none-any.whl"
+    },
+    {
+      "filename": "polars-2.1.0-py3-none-any.whl",
+      "sha256": "63c50ce3533f5a03d17c3a2a24f1d0e0c7eda98fbde4268a3cba900d34060e67",
+      "size": 911474,
+      "url": "https://files.pythonhosted.org/packages/d5/d4/e696a46c74ec8cac6434764deaf72f7edcc2e91c2145a9b3f61900a7aa7a/polars-2.1.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 polars-2.1.0-py3-none-any.whl"
+    },
+    {
+      "filename": "polars_runtime_32-2.1.0-cp311-abi3-win_amd64.whl",
+      "sha256": "f2fe32f48af2395cd6ec52a433a03970a69aab1dbb66a613729fd549ce92c904",
+      "size": 53926265,
+      "url": "https://files.pythonhosted.org/packages/4d/4e/2a419d0def2908255dd1b7318c48430319859dc92ca156e2f81ff7bcd78b/polars_runtime_32-2.1.0-cp311-abi3-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 polars_runtime_32-2.1.0-cp311-abi3-win_amd64.whl"
+    },
+    {
+      "filename": "prettytable-3.18.0-py3-none-any.whl",
+      "sha256": "b3346e0e6f79180833aebaac088ae926340586cf6d7d991b9eb125b65f72313a",
+      "size": 37357,
+      "url": "https://files.pythonhosted.org/packages/fe/be/2e6798ace5cc036f5d05d36b7b2fd85346f1a708c87060890b070d0ec607/prettytable-3.18.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 prettytable-3.18.0-py3-none-any.whl"
+    },
+    {
+      "filename": "protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+      "sha256": "a300819d441e078a5608c0d3c709796bb548136058fda017ae51d425b44fd353",
+      "size": 456514,
+      "url": "https://files.pythonhosted.org/packages/8a/55/b77bda4e5e5f5971fb51b07663694690e9afdb9402136c16a522bd621cad/protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 protobuf-7.36.2-cp310-abi3-win_amd64.whl"
+    },
+    {
+      "filename": "pyparsing-3.3.3-py3-none-any.whl",
+      "sha256": "ece8c00a69cf01b45d0b1dedabb469c90d8caf996d4fda40f147627a122849a4",
+      "size": 126420,
+      "url": "https://files.pythonhosted.org/packages/38/bb/d215ee7c73b61497b28a5503f9f53523f294fcc936762b7caf90e0c1c2b5/pyparsing-3.3.3-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 pyparsing-3.3.3-py3-none-any.whl"
+    },
+    {
+      "filename": "python_dateutil-3.0.0-py2.py3-none-any.whl",
+      "sha256": "3c79630202e4152c6add678446984236efe4f57e84d8e892aab0637bab82e9fd",
+      "size": 94659,
+      "url": "https://files.pythonhosted.org/packages/5a/17/cebee01d1c0c1441174cf0456ddc91b280d79acb65340c05e41d77866ee8/python_dateutil-3.0.0-py2.py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 python_dateutil-3.0.0-py2.py3-none-any.whl"
+    },
+    {
+      "filename": "rich-15.0.0-py3-none-any.whl",
+      "sha256": "33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb",
+      "size": 310654,
+      "url": "https://files.pythonhosted.org/packages/82/3b/64d4899d73f91ba49a8c18a8ff3f0ea8f1c1d75481760df8c68ef5235bf5/rich-15.0.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 rich-15.0.0-py3-none-any.whl"
+    },
+    {
+      "filename": "scenedetect-0.7.2-py3-none-any.whl",
+      "sha256": "953b89fe7e6b82a497c263e26245ad599b004aa7afa74814312980479a040641",
+      "size": 149715,
+      "url": "https://files.pythonhosted.org/packages/59/db/2a0701e48dcbe50f91f8ae186ebb275885ef820a5f9348ff0b52299e4def/scenedetect-0.7.2-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 scenedetect-0.7.2-py3-none-any.whl"
+    },
+    {
+      "filename": "scikit_image-0.26.0-cp313-cp313-win_amd64.whl",
+      "sha256": "ac529eb9dbd5954f9aaa2e3fe9a3fd9661bfe24e134c688587d811a0233127f1",
+      "size": 11906770,
+      "url": "https://files.pythonhosted.org/packages/8f/58/2b11b933097bc427e42b4a8b15f7de8f24f2bac1fd2779d2aea1431b2c31/scikit_image-0.26.0-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 scikit_image-0.26.0-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "scikit_learn-1.9.1-cp313-cp313-win_amd64.whl",
+      "sha256": "2070f271e5375dc42c6bb93b461ab1c0aa5841d4009267e0cfd95a39dca94a43",
+      "size": 8237244,
+      "url": "https://files.pythonhosted.org/packages/96/45/a10add34c08184d373be9384660c75758128ca881ed27b503b6f6a742478/scikit_learn-1.9.1-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 scikit_learn-1.9.1-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "segment_anything-1.0-py3-none-any.whl",
+      "sha256": "86f67d417a915823c3302098effe9008b688945772517310956bb49de0e7f02e",
+      "size": 36560,
+      "url": "https://files.pythonhosted.org/packages/75/77/8e0c16abf151a1dd076b562febc0da2ecf1132b0b41826087af96f101f42/segment_anything-1.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 segment_anything-1.0-py3-none-any.whl"
+    },
+    {
+      "filename": "simsimd-6.5.16-cp313-cp313-win_amd64.whl",
+      "sha256": "fe7a0fa49b09651cc1721f5928fa68665f4957c492937241bbdd6ed040dc4a5d",
+      "size": 87460,
+      "url": "https://files.pythonhosted.org/packages/5d/54/dbc23d585a57c9b0e71ab10705c4121ce91a807df374d433dd86fb438caa/simsimd-6.5.16-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 simsimd-6.5.16-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "six-1.17.0-py2.py3-none-any.whl",
+      "sha256": "4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274",
+      "size": 11050,
+      "url": "https://files.pythonhosted.org/packages/b7/ce/149a00dd41f10bc29e5921b496af8b574d8413afcd5e30dfa0ed46c2cc5e/six-1.17.0-py2.py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 six-1.17.0-py2.py3-none-any.whl"
+    },
+    {
+      "filename": "stringzilla-5.3.2-cp313-cp313-win_amd64.whl",
+      "sha256": "67848427363f2008d1995ca07fe6f320ce01b37b745ab4ca1cc9e73d75042137",
+      "size": 751105,
+      "url": "https://files.pythonhosted.org/packages/cd/4c/799e9ba84b4cf9d945a8ac8016b0cf4336d4e032e58c24f03cf2eb5953d8/stringzilla-5.3.2-cp313-cp313-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 stringzilla-5.3.2-cp313-cp313-win_amd64.whl"
+    },
+    {
+      "filename": "termcolor-3.3.0-py3-none-any.whl",
+      "sha256": "cf642efadaf0a8ebbbf4bc7a31cec2f9b5f21a9f726f4ccbb08192c9c26f43a5",
+      "size": 7734,
+      "url": "https://files.pythonhosted.org/packages/33/d1/8bb87d21e9aeb323cc03034f5eaf2c8f69841e40e4853c2627edf8111ed3/termcolor-3.3.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 termcolor-3.3.0-py3-none-any.whl"
+    },
+    {
+      "filename": "threadpoolctl-3.7.0-py3-none-any.whl",
+      "sha256": "cd8b60b5641b45c67bbf73c64c843235fc2d8a480c87389f52f5dbee893b86be",
+      "size": 26362,
+      "url": "https://files.pythonhosted.org/packages/43/3f/f88a53f60a472b46f4023f56d204dd7de33d34c5d2acbfa0d70a674e639e/threadpoolctl-3.7.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 threadpoolctl-3.7.0-py3-none-any.whl"
+    },
+    {
+      "filename": "tifffile-2026.10.15-py3-none-any.whl",
+      "sha256": "3dcf6c56731a45c1f85c81e90dad922b0a380a2d639e77f71207e010f8ef0f7b",
+      "size": 276988,
+      "url": "https://files.pythonhosted.org/packages/5b/bc/9e7664e2d30d4e82ada1b29dbb249d2dcac1ed1114cbbf11764f670d8be7/tifffile-2026.10.15-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 tifffile-2026.10.15-py3-none-any.whl"
+    },
+    {
+      "filename": "timm-1.0.30-py3-none-any.whl",
+      "sha256": "c8e27adf6801a2fdfb570dbbdd171f2f084756eefc673df8cfaab06bd14864f3",
+      "size": 2668917,
+      "url": "https://files.pythonhosted.org/packages/f5/85/b897716d0fa016af23b11e6526f5ef76d2013e8bc36b9c7ce15d9200e456/timm-1.0.30-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 timm-1.0.30-py3-none-any.whl"
+    },
+    {
+      "filename": "tzdata-2026.6-py2.py3-none-any.whl",
+      "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec",
+      "size": 348210,
+      "url": "https://files.pythonhosted.org/packages/0a/66/9a06c2227fedfd4919f0eaaa8b94377d9730882a7e4f95823c9a331ab5e1/tzdata-2026.6-py2.py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 tzdata-2026.6-py2.py3-none-any.whl"
+    },
+    {
+      "filename": "ultralytics-8.4.196-py3-none-any.whl",
+      "sha256": "40bf10df09e9dea6812f92befda1e5e314b62ffdd0c9f64aa2a1800af45a66c3",
+      "size": 1434981,
+      "url": "https://files.pythonhosted.org/packages/06/86/d1538d1f98438887a1496c3da36300f492a7cc81fc4473dd0cd016e2a8a3/ultralytics-8.4.196-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 ultralytics-8.4.196-py3-none-any.whl"
+    },
+    {
+      "filename": "ultralytics_platform-0.1.102-py3-none-any.whl",
+      "sha256": "6acfe3f9304a8fa47ce0aef85085e7d97a2d9b78f3fbccdb1df714eaa3b6769b",
+      "size": 100127,
+      "url": "https://files.pythonhosted.org/packages/bc/8c/7561a597f291ecce0a919d6e0bb0878b61eea54334dd9db59ea94f1bcfb5/ultralytics_platform-0.1.102-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 ultralytics_platform-0.1.102-py3-none-any.whl"
+    },
+    {
+      "filename": "ultralytics_thop-2.2.3-py3-none-any.whl",
+      "sha256": "d56c860b9422b6abfd7e9d7afdd8af3b1242a854c17305bd60ad05cbc7f4b5b6",
+      "size": 32807,
+      "url": "https://files.pythonhosted.org/packages/0e/9f/5246244e2674210549e8b6247bf28a6b586878c2e744d2c82b4d4f872bf7/ultralytics_thop-2.2.3-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 ultralytics_thop-2.2.3-py3-none-any.whl"
+    },
+    {
+      "filename": "wcwidth-0.9.4-cp310-abi3-win_amd64.whl",
+      "sha256": "f28d77153303450ee13ebbe888297e75cf532c754555b6cabafc9bdda16c421c",
+      "size": 597780,
+      "url": "https://files.pythonhosted.org/packages/d6/f1/c123f902bc2ff9e9c2ab66241b8872204df87cbb18ecdf035e120860fedc/wcwidth-0.9.4-cp310-abi3-win_amd64.whl",
+      "label": "OpenJutsu backend \u00b7 wcwidth-0.9.4-cp310-abi3-win_amd64.whl"
+    },
+    {
+      "filename": "yacs-0.1.8-py3-none-any.whl",
+      "sha256": "99f893e30497a4b66842821bac316386f7bd5c4f47ad35c9073ef089aa33af32",
+      "size": 14747,
+      "url": "https://files.pythonhosted.org/packages/38/4f/fe9a4d472aa867878ce3bb7efb16654c5d63672b86dc0e6e953a67018433/yacs-0.1.8-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 yacs-0.1.8-py3-none-any.whl"
+    },
+    {
+      "filename": "yapf-0.43.0-py3-none-any.whl",
+      "sha256": "224faffbc39c428cb095818cf6ef5511fdab6f7430a10783fdfb292ccf2852ca",
+      "size": 256158,
+      "url": "https://files.pythonhosted.org/packages/37/81/6acd6601f61e31cfb8729d3da6d5df966f80f374b78eff83760714487338/yapf-0.43.0-py3-none-any.whl",
+      "label": "OpenJutsu backend \u00b7 yapf-0.43.0-py3-none-any.whl"
+    },
+    {
+      "filename": "comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/c8/d3/dcdcbc268559613975409d280234e35f3b49e26e1161e66d095201ec4bc7/comfy_aimdo-0.5.6-cp39-abi3-win_amd64.whl",
+      "size": 280910,
+      "sha256": "a323be8befb312398565627a7dc59ec9c8ac7ed1f2e106c9317dfa0f6e718a03",
+      "label": "FLUX 3 isolated dynamic VRAM support"
+    },
+    {
+      "label": "MOSS compatible kernels",
+      "filename": "comfy_kitchen-0.2.39-cp312-abi3-win_amd64.whl",
+      "url": "https://files.pythonhosted.org/packages/80/15/3907945e97063945b0dc58c4fc203dd1a3d050ce24acf6d6c1e8d50ed972/comfy_kitchen-0.2.39-cp312-abi3-win_amd64.whl",
+      "size": 61931646,
+      "sha256": "fa2da09c8ae68748baed7d38e1d4915c55f3fb098039192c004920d773de6dfc"
+    }
+  ],
+  "ffmpeg": {
+    "label": "ffmpeg-9.0.2-essentials_build.zip",
+    "filename": "ffmpeg-9.0.2-essentials_build.zip",
+    "url": "https://github.com/GyanD/codexffmpeg/releases/download/9.0.2/ffmpeg-9.0.2-essentials_build.zip",
+    "size": 114768076,
+    "sha256": "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba"
+  },
+  "groups": {
+    "swap": {
+      "name": "Character & object swaps \u00b7 H3 / SAM / visual describer",
+      "source": "https://github.com/D3voz/openjutsu",
+      "files": [
+        {
+          "label": "MiniMax H3 \u00b7 minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "filename": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "folder": "diffusion_models",
+          "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/diffusion_models/minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "size": 20970379616,
+          "sha256": "9255f52b6677845ad238f20dfaafa94727053694127ab7f255c048f0f9365779"
+        },
+        {
+          "label": "MiniMax H3 \u00b7 qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "filename": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "folder": "text_encoders",
+          "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "size": 15687142551,
+          "sha256": "35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6"
+        },
+        {
+          "label": "OpenJutsu \u00b7 minimax_h3_video_vae_int8_convrot.safetensors",
+          "folder": "vae",
+          "filename": "minimax_h3_video_vae_int8_convrot.safetensors",
+          "size": 2811065184,
+          "sha256": "52a2c8c73583c86e4f41cdcce3a6ad0ea562987bc0bf3d60a0cef5f5c8e60c0e",
+          "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/912b6e38b2092ec4d2e86d24183e0d59ea059d48/vae/minimax_h3_video_vae_int8_convrot.safetensors"
+        },
+        {
+          "label": "MiniMax H3 \u00b7 minimax_h3_audio_vae_fp32.safetensors",
+          "filename": "minimax_h3_audio_vae_fp32.safetensors",
+          "folder": "vae",
+          "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/e5eb578a89295337b8ff433a035929ce0279e0b6/vae/minimax_h3_audio_vae_fp32.safetensors",
+          "size": 605254808,
+          "sha256": "8e505d95dd1561d47abd43d4238fd40d9bb1ae9e147ed0a4cba778d76ae4db48"
+        },
+        {
+          "label": "OpenJutsu \u00b7 qwen3vl_8b_int8_convrot.safetensors",
+          "folder": "text_encoders",
+          "filename": "qwen3vl_8b_int8_convrot.safetensors",
+          "size": 9350798360,
+          "sha256": "8bfd0f6e12abf2d2d697ecc888e5e90b0d6741d6708f05799f53afa560452e8f",
+          "url": "https://huggingface.co/Comfy-Org/Qwen3-VL/resolve/02f0d3eefb59528799653d16735818801177ef1f/text_encoders/qwen3vl_8b_int8_convrot.safetensors"
+        },
+        {
+          "label": "OpenJutsu \u00b7 sam3.1_multiplex_fp16.safetensors",
+          "folder": "checkpoints",
+          "filename": "sam3.1_multiplex_fp16.safetensors",
+          "size": 1745546848,
+          "sha256": "9ba99c92703c2e8b4f47de2d34a539bb8e18923049e238b780d70dbe6368eb03",
+          "url": "https://huggingface.co/Comfy-Org/sam3.1/resolve/7bb8374780a725b4353ed31f3a9395c9742b5621/checkpoints/sam3.1_multiplex_fp16.safetensors"
+        },
+        {
+          "label": "OpenJutsu \u00b7 minimax_h3_DMAD_4step_full_lora_avg_rank_39_bf16.safetensors",
+          "folder": "loras",
+          "filename": "minimax_h3_DMAD_4step_full_lora_avg_rank_39_bf16.safetensors",
+          "size": 366647000,
+          "sha256": "ddfdd94f4c9a0f32bf3649bb8e98ca20db572e4db6bcd9cca546a5b33ea32d11",
+          "url": "https://huggingface.co/Kijai/MiniMax-H3-experimental/resolve/f5c3b1d5a63e008a691fca1b6096fd57a5307536/loras/minimax_h3_DMAD_4step_full_lora_avg_rank_39_bf16.safetensors"
+        }
+      ]
+    },
+    "relight": {
+      "name": "From picture & relighting \u00b7 FLUX / SolarRenderer",
+      "source": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy",
+      "gated": true,
+      "files": [
+        {
+          "label": "FLUX 3 flux3_image_klein_sd_int8_convrot.safetensors",
+          "filename": "flux3_image_klein_sd_int8_convrot.safetensors",
+          "folder": "diffusion_models",
+          "size": 5827874779,
+          "sha256": "847d8933548afd93df4af2cac2498e70891bf28d9dae06d695f536992e168fe2",
+          "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/diffusion_models/flux3_image_klein_sd_int8_convrot.safetensors"
+        },
+        {
+          "label": "FLUX 3 qwen3vl_4b_int8_convrot.safetensors",
+          "filename": "qwen3vl_4b_int8_convrot.safetensors",
+          "folder": "text_encoders",
+          "size": 4858559240,
+          "sha256": "32de113cbf8282b02cbff0794b637b9d6676da09314a1db5a30bcea9bf4ee01c",
+          "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/text_encoders/qwen3vl_4b_int8_convrot.safetensors"
+        },
+        {
+          "label": "FLUX 3 flux2-vae.safetensors",
+          "filename": "flux3-vae.safetensors",
+          "folder": "vae",
+          "size": 336211292,
+          "sha256": "868fe7b343cc8f3a19dbcfcafbc3d5f888802be3f89bd81b65b3621a066ce8f3",
+          "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/8c99a01a583c409a02b302105d59aa8337b506c4/vae/flux2-vae.safetensors"
+        },
+        {
+          "label": "OpenJutsu \u00b7 qwen3.5_9b_flux3_prompt_upsampler_int8_convrot.safetensors",
+          "folder": "text_encoders",
+          "filename": "qwen3.5_9b_flux3_prompt_upsampler_int8_convrot.safetensors",
+          "size": 9748113996,
+          "sha256": "cb8cb9b9dcd2569509de755dca54d96fd93a16a7aabfd2f4051f0a144230620f",
+          "url": "https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy/resolve/feef60b0aaf63a4773ace96636ebbcf43b881312/text_encoders/qwen3.5_9b_flux3_prompt_upsampler_int8_convrot.safetensors"
+        },
+        {
+          "label": "OpenJutsu \u00b7 solarrenderer_4step_lora_rank64.safetensors",
+          "folder": "loras",
+          "filename": "solarrenderer_4step_lora_rank64.safetensors",
+          "size": 691873992,
+          "sha256": "3ad1a6593813499bc351822062cc5f0b35ec761c69110614b2d2ccd7d34ae3e8",
+          "url": "https://huggingface.co/mdevoz/SolarRendererRank64/resolve/984a10b7c167bbb94614f9644d5fedbb93a8c6e6/solarrenderer_4step_lora_rank64.safetensors"
+        },
+        {
+          "label": "OpenJutsu \u00b7 solarrenderer_control_lora_rank64.safetensors",
+          "folder": "loras",
+          "filename": "solarrenderer_control_lora_rank64.safetensors",
+          "size": 691873968,
+          "sha256": "5ab559206030075e268b788547b9f3e420e6d96a4711a8f58a8fc7744c01365f",
+          "url": "https://huggingface.co/mdevoz/SolarRendererRank64/resolve/984a10b7c167bbb94614f9644d5fedbb93a8c6e6/solarrenderer_control_lora_rank64.safetensors"
+        },
+        {
+          "label": "OpenJutsu \u00b7 metric_depth_vit_small_800k.pth",
+          "folder": "controlnet_aux/JUGGHM/Metric3D",
+          "filename": "metric_depth_vit_small_800k.pth",
+          "size": 150120967,
+          "sha256": "b34b2a2be9148054991cef7e417930e1320602ba7bc503b0ee4e7888543728f6",
+          "url": "https://huggingface.co/JUGGHM/Metric3D/resolve/80d2d1410afb4b23cd9d18c6be9144483d4b70b6/metric_depth_vit_small_800k.pth"
+        }
+      ]
+    },
+    "faces": {
+      "name": "Face refinement \u00b7 detectors / SAM / InsightFace",
+      "source": "https://github.com/Carasibana/ComfyUI-H3-FaceRefine",
+      "files": [
+        {
+          "label": "OpenJutsu \u00b7 face_yolov8m.pt",
+          "folder": "ultralytics/bbox",
+          "filename": "face_yolov8m.pt",
+          "size": 52026019,
+          "sha256": "717923c19b3f4bbf5250b728f1fa6b2cb72a33aed1d236ea9caf0e21ad943e5f",
+          "url": "https://huggingface.co/Bingsu/adetailer/resolve/53cc19de382014514d9d4038601d261a7faa9b7b/face_yolov8m.pt"
+        },
+        {
+          "label": "OpenJutsu \u00b7 person_yolov8m-seg.pt",
+          "folder": "ultralytics/segm",
+          "filename": "person_yolov8m-seg.pt",
+          "size": 54827683,
+          "sha256": "c8ab26f517173b1fe8342d336a09f443eb61cb08dcbfc78d53fff4c2547ae81e",
+          "url": "https://huggingface.co/Bingsu/adetailer/resolve/53cc19de382014514d9d4038601d261a7faa9b7b/person_yolov8m-seg.pt"
+        },
+        {
+          "label": "OpenJutsu \u00b7 sam_vit_b_01ec64.pth",
+          "folder": "sams",
+          "filename": "sam_vit_b_01ec64.pth",
+          "size": 375042383,
+          "sha256": "ec2df62732614e57411cdcf32a23ffdf28910380d03139ee0f4fcbe91eb8c912",
+          "url": "https://huggingface.co/mashb1t/misc/resolve/f93e6891b34e7acd732c52e3274c0c2a2ec836d4/sam_vit_b_01ec64.pth"
+        },
+        {
+          "label": "OpenJutsu \u00b7 buffalo_l.zip",
+          "folder": "insightface",
+          "filename": "buffalo_l.zip",
+          "size": 288621354,
+          "sha256": "80ffe37d8a5940d59a7384c201a2a38d4741f2f3c51eef46ebb28218a7b0ca2f",
+          "url": "https://huggingface.co/datasets/Gourieff/ReActor/resolve/079e0e459cd4261bbcba8c71d47df54a4ded7642/models/buffalo_l.zip",
+          "unpack": true,
+          "members": [
+            "1k3d68.onnx",
+            "2d106det.onnx",
+            "det_10g.onnx",
+            "genderage.onnx",
+            "w600k_r50.onnx"
+          ]
+        }
+      ]
+    }
+  },
+  "required_nodes": [
+    "GrowMaskWithBlur",
+    "H3AddFitCheck",
+    "H3AddMovingArea",
+    "H3AdvancedSwapPlan",
+    "H3ClipShots",
+    "H3FaceChunks",
+    "H3FaceJoin",
+    "H3FaceMaskSAM",
+    "H3FaceStitch",
+    "H3FaceTrackCrop",
+    "H3FillShots",
+    "H3GreyMannequins",
+    "H3MontagePass",
+    "H3MontagePeople",
+    "H3MontagePicks",
+    "H3MontagePlan",
+    "H3MontageTracks",
+    "H3ObjectPlacementMask",
+    "H3ObjectSwapPlan",
+    "H3OneClickSwapPlan",
+    "H3PaintedEditArea",
+    "H3PeopleMask",
+    "H3RoleMask",
+    "H3SoundtrackOrSilence",
+    "H3SourceSlice",
+    "H3SubjectPrompt",
+    "H3TrackCrops",
+    "H3TrackRoles",
+    "ImageAndMaskPreview",
+    "ImageDetailContrast",
+    "Metric3D-NormalMapPreprocessor",
+    "MiniMaxH3ChainAssemble",
+    "MiniMaxH3ChainContext",
+    "MiniMaxH3ChainCurrent",
+    "MiniMaxH3ChainLoopEnd",
+    "MiniMaxH3ChainLoopStart",
+    "MiniMaxH3ChainPlanModern",
+    "MiniMaxH3ChainReview",
+    "MiniMaxH3ChainSegmentSave",
+    "MiniMaxH3ContexLoopMaskSlice",
+    "MiniMaxH3ContexMaskGridPreview",
+    "MiniMaxH3ContexMaskedTarget",
+    "MiniMaxH3FantasticVideoEditLatent",
+    "MiniMaxH3FunControlNetApply",
+    "MiniMaxH3GenerationProfile",
+    "MiniMaxH3LoopTrim",
+    "MiniMaxH3ReferenceToVideo",
+    "MiniMaxH3SigmaShift",
+    "MiniMaxH3SourceTimeline",
+    "Orion4D_FXMax_DCTLToneMapper",
+    "SAM3_TrackToMask",
+    "SAM3_VideoTrack",
+    "SAMLoader",
+    "SolarRendererConditioning",
+    "SolarRendererLoraLoader",
+    "SolarRendererModel",
+    "SolarRendererSigmas",
+    "SpectrumApplyMiniMaxH3",
+    "TextGenerate",
+    "VHS_LoadVideo",
+    "VHS_SelectEveryNthImage",
+    "VHS_VideoCombine",
+    "VRAM_Debug"
+  ],
+  "defaults": {
+    "encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+    "flux_vae": "flux3-vae.safetensors",
+    "flux_encoder": "qwen3vl_4b_int8_convrot.safetensors",
+    "solar_rank": 64
+  },
+  "revision": "3125f2de87b7d1192da1ad5946b5bcaa8dde0dafba3a14e7c12604b0c7624e09"
+}

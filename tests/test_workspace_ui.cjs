@@ -20,7 +20,7 @@ async function open(preferences){
  await wait(()=>w.eval('typeof initialized!=="undefined"&&initialized')&&$('workspace-recent').querySelectorAll('button').length===2);
  const controlsBefore=[...d.querySelectorAll('#pages input,#pages textarea,#pages select')].length;
  const nav=[...d.querySelectorAll('#navigation [data-page]')];
- assert.equal(nav.length,13);
+ assert.equal(nav.length,14);
  $('iprompt').value='Preserve this unsaved image prompt';
  $('vprompt').value='Preserve this unsaved video prompt';
  for(const button of nav){

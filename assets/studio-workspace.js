@@ -7,6 +7,7 @@
   editor:'<path d="m4 16 11-11 4 4L8 20H4zM13 7l4 4M15 5l2-2 4 4-2 2"/>',
   canvas:'<rect x="3" y="3" width="18" height="18" rx="1"/><path d="M7 1v6M1 7h6M17 17h6M17 17v6M8 8h8v8H8z"/>',
   video:'<rect x="2" y="5" width="14" height="14" rx="2"/><path d="m16 10 6-4v12l-6-4M7 9l5 3-5 3z"/>',
+  openjutsu:'<path d="M4 5h6M14 5h6M4 19h6M14 19h6M8 3v4M16 17v4M5 9l6 3-6 3zM19 9l-6 3 6 3z"/>',
   upscale:'<path d="M4 10V4h6M14 4h6v6M20 14v6h-6M10 20H4v-6M4 4l6 6M20 20l-6-6"/>',
   avatar:'<circle cx="12" cy="7" r="4"/><path d="M4 21v-3a8 8 0 0 1 16 0v3M8 21v-4M16 21v-4"/>',
   voice:'<rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/>',
