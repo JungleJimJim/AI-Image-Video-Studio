@@ -2,13 +2,16 @@
 
 # A.I. Image & Video Studio
 
-A Windows desktop app for n00bs, with local AI tools for:
+A Windows desktop app for n00bs with 8gb or 16gb VRAM, with local AI tools for:
 
+- One-click installation of the most popular A.I. models.
 - Text-to-image generation and image editing.
 - Text-to-video and image-to-video generation.
-- Drawing Canvas
-- Talking avatars, lip sync and speech generation.
-- AI prompt enhancement with editable drafts.
+- Drawing Canvas.
+- Talking avatars.
+- Lip sync.
+- Speech generation.
+- AI prompt enhancement.
 - Image/video upscaling
 - Image & Video Library
 - One-click model downloads and LoRA installation and management.
