@@ -44,6 +44,28 @@ class QueueTests(unittest.TestCase):
     def add(self,prompt,priority=5,**extra):
         return self.studio.enqueue('image',dict(model='juggernaut',prompt=prompt,**extra),priority)
 
+    def test_generation_queued_during_lora_import_starts_after_import(self):
+        from loras import import_loras
+        from test_loras import fixture
+        source = self.root / 'style.safetensors'
+        fixture(source)
+        started, release = threading.Event(), threading.Event()
+        def import_job():
+            self.studio.engine.stop()
+            import_loras(self.root, [str(source)], self.studio.report, self.studio.cancel, 'juggernaut')
+            started.set()
+            if not release.wait(3):
+                raise RuntimeError('Import test timed out')
+        self.studio.queue.paused = False
+        self.studio.run_job(import_job)
+        self.assertTrue(started.wait(3))
+        identifier = self.add('After import')
+        self.assertEqual(self.studio.queue.get(identifier)['status'], 'queued')
+        release.set()
+        self.wait_idle()
+        self.assertEqual(self.studio.queue.get(identifier)['status'], 'completed')
+        self.assertEqual(self.studio.engine.generate.call_count, 1)
+
     def test_priority_serial_execution_and_seed_snapshot(self):
         seen=[];active=0;maximum=0
         def generate(options,*args,**kwargs):

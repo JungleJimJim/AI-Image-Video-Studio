@@ -115,6 +115,8 @@ def installed_loras(root, model=None):
         if model is not None and models[model]['scope'] != scope:
             continue
         note = notes.get(relative.as_posix(), {})
+        if note.get('hidden'):
+            continue
         result.append(dict(name=relative.as_posix(), display_name=path.name, size=path.stat().st_size, scope=scope,
             models=[key for key, info in models.items() if info['scope']==scope],
             sha256=note.get('sha256',''), source=note.get('source','Local file'), declared_base=note.get('declared_base','')))
@@ -156,7 +158,8 @@ def import_loras(root, paths, report, cancel, model='wan13'):
         digest = checksum(source, cancel)
         destination = choose_destination(root, source.name, digest, model)
         if destination.exists():
-            report("Already installed: " + destination.name, 1)
+            save_record(root, destination, digest, 'Local file', model, metadata)
+            report("Available in the list: " + destination.name, 1)
             continue
         if shutil.disk_usage(existing_parent(destination)).free < source.stat().st_size + 100 * 1024**2:
             raise ValueError("There is not enough space on the model drive for this LoRA.")
@@ -177,7 +180,7 @@ def import_loras(root, paths, report, cancel, model='wan13'):
             save_record(root, destination, digest, 'Local file', model, metadata)
         finally:
             partial.unlink(missing_ok=True)
-    report("LoRA files installed. Enable the ones you want to use below.", 1)
+    report("LoRA import complete. Enable adapters in the installed list and save your selection.", 1)
 
 
 def hf_spec(url, token=""):
@@ -227,7 +230,7 @@ def download_lora(root, url, token, report, cancel, model='wan13'):
         os.replace(downloaded, quarantine)
         raise
     save_record(root, downloaded, spec['sha256'], spec['url'], model, metadata)
-    report("Installed " + destination.name + ". Enable it below to use it.", 1)
+    report("Installed " + destination.name + ". Enable it in the installed list and save your selection.", 1)
 
 
 def validate_selection(root, selection, model='wan13'):

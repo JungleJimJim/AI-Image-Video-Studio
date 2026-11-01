@@ -31,6 +31,10 @@ If you'd like to support this project, you can make a donation through [Gumroad]
 
 ![A.I. Image & Video Studio Talking Avatar interface](https://github.com/JungleJimJim/AI-Image-Video-Studio/blob/main/Screenshot%202026-11-01%20003505.png?raw=true)
 
+## LoRA management and queue visibility in 1.17.4
+
+Remove LoRAs from the list with the Remove button or right-click menu; their files are preserved and can be imported again. A paused queue with waiting jobs now shows a Resume queue button in the status bar. [Release notes](docs/RELEASE-1.17.4.md).
+
 ## Video Editor with managed OpenJutsu in 1.17.3
 
 **Video Editor**, beside Video, hosts the complete [OpenJutsu editor](https://github.com/D3voz/openjutsu): Simple/Advanced character swaps, Montage/Find people, object Change/Remove/Add/Background, From picture, Relight, Fix faces and Fix colours. **Models → OpenJutsu → Open setup** opens the same setup page.

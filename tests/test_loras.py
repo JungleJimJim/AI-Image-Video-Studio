@@ -38,6 +38,26 @@ class LoRATests(unittest.TestCase):
         self.assertEqual(len(installed_loras(self.root)), 1)
         self.assertTrue(installed_loras(self.root)[0]["sha256"])
 
+    def test_remove_from_list_preserves_file_clears_shared_selections_and_reimport_restores(self):
+        source = self.root / 'style.safetensors'
+        fixture(source)
+        import_loras(self.root, [str(source)], lambda *x: None, threading.Event(), 'juggernaut')
+        adapter = installed_loras(self.root, 'juggernaut')[0]['name']
+        stored = lora_folder(self.root) / adapter
+        with patch('app.gpu_info', return_value={}):
+            studio = Studio(self.root)
+        for model in ('juggernaut', 'dreamshaper'):
+            studio.update_loras([{'name': adapter, 'strength': .7}], model)
+        studio.remove_lora_from_list(adapter, 'juggernaut')
+        self.assertTrue(stored.exists())
+        self.assertEqual(installed_loras(self.root, 'dreamshaper'), [])
+        self.assertEqual(studio.settings['model_loras']['juggernaut'], [])
+        self.assertEqual(studio.settings['model_loras']['dreamshaper'], [])
+        with self.assertRaises(ValueError):
+            studio.remove_lora_from_list('../style.safetensors', 'juggernaut')
+        import_loras(self.root, [str(source)], lambda *x: None, threading.Event(), 'juggernaut')
+        self.assertEqual(installed_loras(self.root, 'dreamshaper')[0]['name'], adapter)
+
     def test_conflicting_names_preserve_both_files(self):
         source = self.root / "style.safetensors"
         fixture(source)

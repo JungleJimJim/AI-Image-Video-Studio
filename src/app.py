@@ -753,6 +753,25 @@ class Studio:
                     saved['loras'] = adapters
             atomic_json(self.root / "settings.json", self.settings)
 
+    def remove_lora_from_list(self, name, model):
+        with self.lock:
+            if self.state['busy']:
+                raise ValueError('Finish or cancel the running operation before removing a LoRA.')
+            validate_model(model)
+            if not isinstance(name, str) or name not in {item['name'] for item in installed_loras(self.root, model)}:
+                raise ValueError('This LoRA is not available in the selected model library.')
+            records = load_json(self.root / 'loras.json', {})
+            records.setdefault(name, {})['hidden'] = True
+            atomic_json(self.root / 'loras.json', records)
+            for key, adapters in self.settings['model_loras'].items():
+                self.settings['model_loras'][key] = [item for item in adapters if item.get('name') != name]
+            self.settings['wan_loras'] = self.settings['model_loras'].get('wan13', [])
+            for key in ('options', 'image_options', 'edit_options', 'face_options'):
+                saved = self.settings.get(key, {})
+                if isinstance(saved.get('loras'), list):
+                    saved['loras'] = [item for item in saved['loras'] if item.get('name') != name]
+            atomic_json(self.root / 'settings.json', self.settings)
+
     def install_update(self, ticket, shutdown):
         with self.lock:
             if self.state['busy'] or self.prompts.snapshot()['busy']:raise ValueError('Finish or cancel the current operation before installing an update.')
@@ -1213,6 +1232,8 @@ def make_handler(studio, shutdown):
                     studio.run_job(pack_job)
                 elif self.path == "/api/loras/select":
                     studio.update_loras(data.get('loras', []),data.get('model','wan13'))
+                elif self.path == "/api/loras/remove":
+                    studio.remove_lora_from_list(data.get('name'), data.get('model', 'wan13'))
                 elif self.path == "/api/loras/import":
                     paths = data.get("paths", [])
                     model = validate_model(data.get('model','wan13'))
